@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+xmlns:content="http://purl.org/rss/1.0/modules/content/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+xmlns:atom="http://www.w3.org/2005/Atom"
+xmlns:wfw="http://wellformedweb.org/CommentAPI/">
+<channel>
+<title>某储备粮的“学习笔记” - dictionary</title>
+<link>http://blog.gregwym.info/tag/dictionary/</link>
+<atom:link href="http://blog.gregwym.info/feed/tag/dictionary/" rel="self" type="application/rss+xml" />
+<language>zh-CN</language>
+<description></description>
+<lastBuildDate>Fri, 08 Apr 2011 03:03:14 +0800</lastBuildDate>
+<pubDate>Fri, 08 Apr 2011 03:03:14 +0800</pubDate>
+<item>
+<title>CS 240复习总结之六: Dictionary Tricks</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html</link>
+<guid>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html</guid>
+<pubDate>Fri, 08 Apr 2011 03:03:14 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[各种Binary Search的变种 (杂种?)插值查找法 Interpolation Search在已知Array A大小的前提下, 假设A中的数据呈线性排列用比例推测所查找值 K, 可能存在...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<h3>各种Binary Search的变种 <del>(杂种?)</del></h3><br /><blockquote>插值查找法 Interpolation Search<br /><ul>
+<li><a href="http://blog.gregwym.info/usr/uploads/2011/04/3697520527.jpg" title="Interpolation_Search.jpg"><img src="http://blog.gregwym.info/usr/uploads/2011/04/3697520527.jpg" alt="Interpolation_Search.jpg" width="70%" /></a></li>
+<li>在已知Array A大小的前提下, 假设A中的数据呈线性排列</li>
+<li>用比例推测所查找值 K, 可能存在的Index I<br />
+I = I<sub>low</sub> + (I<sub>upper</sub> - I<sub>low</sub>)(K - K<sub>low</sub>) / (K<sub>upper</sub> - K<sub>low</sub>)</li>
+<li>如果A中的数据分布比较平均, 此法效率比BS高</li>
+<li>否则相反</li>
+<li>更详细的解释, 可参考: <a target="_blank" href="http://program-lover.blogspot.com/2008/12/interpolation-search.html">【演算】內插搜尋法 - Interpolation Search</a></li>
+</ul><br />Gallop Search<br /><ul>
+<li>先推测出K所在的范围, 然后执行BS</li>
+<li>适用于数据量大的搜索. 通过减小BS的搜索范围, 优化性能.</li>
+</ul><br />跳跃列表 Skip Lists (我觉得最有意思的数据结构)<br /><ul>
+<li>整个表以多层表的形式出现, 每层均包含"极小"和"极大"两个item</li>
+<li>每个item拥有一个随机的height值</li>
+<li>最顶层只包含两个极值, 层数越低, 包含的item越多, 直到底层.</li>	
+<li>Search方式<ul>
+<li>从顶层起</li>
+<li>如果该层中的下一项item大于K, 则落入下一层</li>
+<li>否则继续在该层向后查找</li>
+</ul></li>
+<li><a href="http://blog.gregwym.info/usr/uploads/2011/04/2207809994.png" title="Skip_List.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/2207809994.png" alt="Skip_List.png" width=100% /></a></li>
+</ul></blockquote><h3>针对访问概率进行的优化</h3><blockquote>自排序搜索 Self-Organizing Search<br /><ul>
+<li>如果我们知道某一系列数据中, 每一个item可能被访问的概率</li>
+<li>依照每一项的概率对数据进行排序, 优化高概率item的访问效率</li>
+<li>如果不知道可能的访问概率, 则需要...</li>
+</ul><p>动态排序 Dynamic Ordering<br /><ul>
+<li>方法一: Move-To-Front(MTF)<br />
+<ul>
+<li>将每次搜索到的item移到最前</li>
+<li>近期内再搜索此item的时候, 效率会提高</li>
+</ul></li>
+<li>方法二: Transpose<br />
+<ul>
+<li>将每次搜索到的item与其前一项互换</li>
+<li>多次访问同一item以后, 该item的排序会提前很多, 访问效率会提高</li>
+</ul></li>
+</ul></blockquote><br />更多CS 240总结请看: <a target="_blank" href="http://blog.gregwym.info/tag/cs240/">http://blog.gregwym.info/tag/cs240/</a><br /></p>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html</wfw:commentRss>
+</item>
+</channel>
+</rss>

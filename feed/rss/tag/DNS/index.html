@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/tag/DNS/">
+<title>某储备粮的“学习笔记” - DNS</title>
+<link>http://blog.gregwym.info/tag/DNS/</link>
+<description></description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/nginx-she-zhi-301-chong-xin-ding-xiang.html"/>
+<rdf:li resource="http://blog.gregwym.info/nginx-er-ji-yu-ming-zi-dong-huo-shou-dong-pi-pei-zi-mu-lu.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/nginx-she-zhi-301-chong-xin-ding-xiang.html">
+<title>Nginx设置301重新定向</title>
+<link>http://blog.gregwym.info/nginx-she-zhi-301-chong-xin-ding-xiang.html</link>
+<dc:date>2011-04-06T03:25:52+08:00</dc:date>
+<description>入了个新的域名, 打算做点小应用试试.原来的Nginx设定里, 子域名会自动对应子目录. 如果碰巧有人输入了我为新域名设定的目录名, 就会造成域名不统一的情况出现...所以研究了下301定向, 发现Nginx的设置真的好简单.在nginx.conf里的自动对应规则之前, 加入下边的内容server { 
+    server_name www.xxxx.com; 
+    rewrite ^(.*) http://xxxx.com$1 permanent; 
+}
+继续去整理240的内容了...</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/nginx-er-ji-yu-ming-zi-dong-huo-shou-dong-pi-pei-zi-mu-lu.html">
+<title>Nginx二级域名自动或手动匹配子目录</title>
+<link>http://blog.gregwym.info/nginx-er-ji-yu-ming-zi-dong-huo-shou-dong-pi-pei-zi-mu-lu.html</link>
+<dc:date>2011-03-31T00:23:51+08:00</dc:date>
+<description>说写就写.刚刚搞定了Nginx二级域名的自动rewrite, 只要把自动匹配的配置放在几个特殊server定义之前, 就不会相互影响, 还挺简单的.需要在nginx.conf里修改http里增加新的server部分先说说标准的二级域名rewrite怎么写:server { 
+    listen 80; 
+    server_name sub.domain.com; 
+    index index.html index.htm index.php;
+    root /***/wwwroot/sub_domain; 
+    include other.conf; 
+
+    location ~ .*\.(php|php5)?$ { 
+        fastcgi_pass unix:/tmp/php-cgi.sock; 
+        fastcgi_index index.php; 
+        include fcgi.conf; 
+    } 
+
+    location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$ { 
+        expires 30d; 
+    } 
+
+    location ~ .*\.(js|css)?$ { 
+        expires 12h; 
+    } 
+
+    access_log off; 
+}
+基本上在server_name里写上地址, root里写上对应的目录就万事大吉了然后是自动匹配的部分, 区别只在server_name和root的解析上:server_name *.domain.com; 
+set $subdomain "default"; 
+if ( $host ~* (.*)\.(.*)\.(.*)) { 
+    set $subdomain $1; 
+} 
+root /***/wwwroot/$subdomain;
+第一篇结束...哈哈注: 以上配置是以Lnmp一键安装包自动生成的配置文件为基础修改的</description>
+</item>
+</rdf:RDF>

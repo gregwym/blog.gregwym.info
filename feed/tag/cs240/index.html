@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+xmlns:content="http://purl.org/rss/1.0/modules/content/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+xmlns:atom="http://www.w3.org/2005/Atom"
+xmlns:wfw="http://wellformedweb.org/CommentAPI/">
+<channel>
+<title>某储备粮的“学习笔记” - cs240</title>
+<link>http://blog.gregwym.info/tag/cs240/</link>
+<atom:link href="http://blog.gregwym.info/feed/tag/cs240/" rel="self" type="application/rss+xml" />
+<language>zh-CN</language>
+<description></description>
+<lastBuildDate>Tue, 12 Apr 2011 07:03:43 +0800</lastBuildDate>
+<pubDate>Tue, 12 Apr 2011 07:03:43 +0800</pubDate>
+<item>
+<title>CS 240复习总结之九: Compression</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-jiu--compression.html</link>
+<guid>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-jiu--compression.html</guid>
+<pubDate>Tue, 12 Apr 2011 07:03:43 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[概念就不说了, 啥压缩比啊, logical/Physical compression, Lossy/Lossless的.Run-Length Encoding (RLE)思路: 将连续的0或1用位数...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>概念就不说了, 啥压缩比啊, logical/Physical compression, Lossy/Lossless的.<br /><br /><h3>Run-Length Encoding (RLE)</h3>思路: 将连续的0或1用位数表示, 缩减重复段所占的位置<br /><ul>
+<li>第一位表示由0或者1开头</li>
+<li>之后用prefix-free integer encoding表示每一个Run的长度<ul>
+<li>后x位表示这个run的binary长度</li>
+<li>前x-1位填零, 为unary表示后x位的长度减一</li>
+</ul></li>
+</ul><br /><br /><h3>Huffman Coding</h3><br />
+思路: 用特殊的binary编码表, 省略ASCII/UTF-8编码中无用字符所占用的位置<br /><ul>
+<li>用binary trie表示字典中的所有字符</li>
+<li>将文本依照trie转成binary</li>
+</ul><br />
+如何建立压缩比最好的trie<br /><ul>
+<li>将每个字符存入独立的trie中</li>
+<li>确定每个字符的出现次数(频率), 一个trie的比重(weight)即为trie中字符的频率和</li>
+<li>将weight最小的两个trie合并成一个新trie</li>
+<li>重复上一步直到只剩下一个trie</li>
+</ul><br /><!--more--></p><h3>MTF</h3><br /><ul>
+<li>用字典中, 字符的index表示字符</li>
+<li>使用动态字典, 将出现过的字符移到字典开头, 以减小下次出现时该字符的index值</li>
+<li>MTF本身不能达到压缩的目的, 需配合prefix-free integer encoding或者huffman</li>
+</ul><br /><br /><h3>LZW</h3><br />
+思路: 给出现过的字符组assign编码, 在重复出现时以一个编码代表整个字符组<br /><ul>
+<li>字典编码使用固定长度k, 字典总共有2<sup>k</sup>个entry</li>
+<li>字典由所有单字符开头, 剩余entry留空</li>
+<li>从第二个encode的字符[组]开始, 将其首字符与上一个encode的字符[组], 组成一个新的字符组, 并存入字典中</li>
+<li>当这个字符组合再次出现的时候, 即可用一个编码代表整个字符组</li>
+</ul><br /><br /><h3>BWT</h3><br />
+思路: 不知道!!!!!!! 他tm就是work了`!!!不知道为什么!!!!<br />Encode方法:<br /><ul>
+<li>将整个string S写成各种cyclic shift, 用$表示string结尾</li>
+<li>比如abcd$可以写成abcd$, bcd$a, cd$ab, d$abc, $abcd</li>
+<li>将所有cyclic shift排序</li>
+<li>将排序后的所有cyclic shift的最后一位按顺序组合成新的string, 既是Encoded的string C</li>
+</ul><br />
+Decode方法:<br /><ul>
+<li>给Encoded的string C的每一个字符一个序号, 从0到n-1</li>
+<li>将字符和序号一起排序. 排序后的序号提取为Array N</li>
+<li>for(i = N[N[0]], i != N[0], i = N[i]) print(C[i]);</li>
+</ul><br />
+BWT本身不进行压缩, 而是将string转化成更容易被MTF压缩的Encoded string.<br />BWT以后, 执行MTF即可达到极佳的英文字符压缩比.<br /><br />更多CS 240总结请看: <a target="_blank" href="http://blog.gregwym.info/tag/cs240/">http://blog.gregwym.info/tag/cs240/</a><br /></p>
+]]></content:encoded>
+<slash:comments>30</slash:comments>
+<comments>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/cs-240-fu-xi-zong-jie-zhi-jiu--compression.html</wfw:commentRss>
+</item>
+<item>
+<title>CS 240复习总结之八: Tries &amp; String Matching</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-ba--tries-and-string-matching.html</link>
+<guid>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-ba--tries-and-string-matching.html</guid>
+<pubDate>Sat, 09 Apr 2011 06:12:41 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[Tries单词查找树 Tries (Radix Tree):    左0右1  item只存在leaf上  Prefix-free: 任意一个key不能有其他key是他的前缀(比如: 1101和110...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<h3>Tries</h3><blockquote><h4>单词查找树 Tries (Radix Tree):</h4><ul>
+  <li><a href="http://blog.gregwym.info/usr/uploads/2011/04/3261964289.png" title="tries.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/3261964289.png" alt="tries.png" width=100% /></a></li>
+  <li>左0右1</li>
+  <li>item只存在leaf上</li>
+  <li>Prefix-free: 任意一个key不能有其他key是他的前缀(比如: 1101和11011不能共存)</li>
+  <li>Search: 逐位执行BS</li>
+  <li>Insert: 逐位执行BS</li>
+  <li>如果找到某leaf与insert的item不等, insert fail. (现存item是新item的prefix)</li>
+  <li>如果在某个node搜索结束, insert fail. (新item是其他key的prefix)</li>
+  <li><p>如果无路可走了, 开路出来.</p></li>
+  <li><p>Delete: Search到对应item以后, 删除这个leaf以及其他无用的node.</p></li>
+  </ul><h4>Compressed Tries (Patricia Tries):</h4><ul>
+  <li><a href="http://blog.gregwym.info/usr/uploads/2011/04/852552282.png" title="compressed_trie.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/852552282.png" alt="compressed_trie.png" width=100% /></a></li>
+  <li>相比普通Tries, compressed tries去除了额外的node(只有一个child的node). 其他基本相同.</li>
+  <li><p>每个node中增加了下一层Search中, 需要检测的位数</p></li>
+  </ul><h4>Multiway Tries:</h4><ul>
+  <li><a href="http://blog.gregwym.info/usr/uploads/2011/04/11477952.png" title="multiway_tries.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/11477952.png" alt="multiway_tries.png" width=60% /></a></li>
+  <li>以特定alphabet集合为基础, 建立的Tries</li>
+  <li>通过$ sigh以允许prefix存在</li>
+  <li>不是Binary Tree</li>
+  <li>同样可以compress, 与Compressed Tries方法相同</li>
+  </ul></blockquote><h3>String Matching 要match的string为T, pattern为P</h3><blockquote><h4>Brute-force Algorithm</h4><ol>
+  <li>从前往后依次比对P的首字母</li>
+  <li>如发现与首字母匹配, 则继续比对剩下的字符直到P结尾</li>
+  <li>如P未结尾时出现不匹配, 则回到与首字母匹配位置的<strong>下一个</strong>, 继续比对首字母</li>
+  <li><p>如T结尾, 则无匹配</p></li>
+  </ol><h4>Boyer-Moore Algorithm</h4><ol>
+  <li>将T和P右对齐</li>
+  <li>从P的结尾开始, 依次向前与T比对</li>
+  <li>如遇到不匹配, 检查T该位置的字符是否在P中出现过 <br />
+  <br />
+  <ul>
+  <li>如出现过, 则将该字符在P中最后出现的位置, 与T对齐</li>
+  <li>如没出现过, 则讲P向后shift一个P的长度</li>
+  <li>重复第二步</li>
+  </ul></li>
+  <li><p>如T结尾, 则无匹配</p></li>
+  </ol><h4>KMP Algorithm</h4><ol>
+  <li>建立KMP Failure Array 位于j点的F(j)值等于P[1..j]的结尾与P的开头所重叠的字符位数 <a href="http://blog.gregwym.info/usr/uploads/2011/04/910986324.png" title="KMP.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/910986324.png" alt="KMP.png" width=60% /></a></li>
+  <li>将T和P左对齐</li>
+  <li>从P的开头开始, 依次向后与T比对</li>
+  <li>如遇到P[i]不匹配, P向后shift[i - F(i-1)]位, 且 i 值assign为F(i-1)</li>
+  <li><p>如T结尾, 则无匹配</p></li>
+  </ol><h4>Suffix Tree (Trie) 与前几个Algorithm相反, 此Algorithm是为了在同一个T中寻找不同P而建立的.</h4><p><br />Post-condition: T长度为n, i值为从0到n-1<br />1.  将所有T[i..n]依次insert进Compressed trie<br />
+  2.  因为<a target="_blank" href="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-ba--tries-and-string-matching.html">Compressed trie的性质 (prefix-free)</a>, 如果某一个T[i..n]是已有node的prefix, 则不会被insert<br />
+  3.  每个node和leaf中, 保存对应的i和n值<br />
+  4.  在Compressed trie中搜索, 将P与每个node进行比对. (长度以P为准)<br />
+  5.  如果遇到node长度小于P长度, 则无匹配.</p></blockquote><p>= =&#96;最后一个Module后天再说...每天都看Algorithm会死人的&#96;明天收拾251</p><p>更多CS 240总结请看: <a target="_blank" href="http://blog.gregwym.info/tag/cs240/">http://blog.gregwym.info/tag/cs240/</a></p>
+]]></content:encoded>
+<slash:comments>2</slash:comments>
+<comments>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-ba--tries-and-string-matching.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/cs-240-fu-xi-zong-jie-zhi-ba--tries-and-string-matching.html</wfw:commentRss>
+</item>
+<item>
+<title>CS 240复习总结之七: Range Search Query</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-qi--range-search-query.html</link>
+<guid>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-qi--range-search-query.html</guid>
+<pubDate>Fri, 08 Apr 2011 12:06:40 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[在我总结这个Module之前允许我吐槽一下...`Assignment 5, 泥玛那个是什么脑残傻缺的ADT啊`! 放着Slide里这么好的三种ADT你不用啊`!!! 你跑去弄什么x-min-heap...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>在我总结这个Module之前允许我吐槽一下...`<br /><blockquote><em>Assignment 5, 泥玛那个是什么脑残傻缺的ADT啊`! 放着Slide里这么好的三种ADT你不用啊`!!! 你跑去弄什么x-min-heap外加y-BST, 还弄个好听的名字叫Heap-tree`!!! 泥玛就是个残废啊`有木有有木有~!!! 不光残废啊, 是连TA自己都搞不懂到底该怎么用啊`!!! 连"You can slightly break the heap proerty"都说出来了...这种东西随便写写就让他过去吧`!!!!! 以后做工程真的用, 程序怎么死的都不知道啊`!!!</em></blockquote><br />
+吐槽完毕= =`回归正题<br /><blockquote>我们日常生活中的很多数据并不是一对一的KVP (不懂KVP的请去看, <a target="_blank" href="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-si--dictionaries-and-balanced-search-trees.html">总结四 - BST篇</a>).<br />拿Slide里的例子来说, 买一台电脑, 不光要看它的CPU是什么型号, 还要看内存多大, 硬盘多大, 显卡怎么样, 价钱多少, etc. 这样的数据都是一个key对多个value.<br /><br />这种情况下, 如果我需要找一台CPU 2.2GHz以上+内存4G-8G的电脑, 就需要从我的data中进行Range Search Query, 而且是2D的Range Search. 如果我在这个条件上再+要至少3T硬盘存xx...那就是3D的Range Search了.<br /></blockquote><br />我们之前学习的Sort也好, Tree也好, 都是针对1D数据的排序和搜索, 碰到2D和3D就都傻了.<br />以下三个ADT就能很好的解决这个问题.<br /><br /><h3>Quadtree</h3><br /><ol>
+<li>将所有数据放在一个平面空间里 (咱们想象力能及的只有2D和3D空间, 这里以2D举例)</li>
+<li>将整个平面以对边中点的连线为基准, 切两刀分成四份 (3D空间的话, 需要多切一刀...)</li>
+<li>针对每一个切出来的平面重复上一步, 直到这个平面内只有一个item为止</li>
+</ol><br />
+<a href="http://blog.gregwym.info/usr/uploads/2011/04/927667422.png" title="Quadtree.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/927667422.png" alt="Quadtree.png" width=100% /></a><br />也就是说, Quadtree每个node最多有4个child, 如果以整个平面的中心为坐标中点的话, 这4个child代表每一个象限内的点的集合, 以此类推. <strong>所有item都只存在于leaf中</strong><br /><ul>
+<li>Search和BST一样, 不解释</li>
+<li>Insert就一个规则, 只要不是单身汉, 别管他3p还是5p, 都要给他们拆散! 直到新item有单间为止</li>
+<li>Delete就是insert相反, 先把item赶走, 然后把单间拆掉</li>
+<li>优点: 简单, 拆两半两半两半再两半就ok了; 对higher dimensions也很容易implementl;</li>
+<li>缺点: 占用空间大; 如果数据分布不平均, Tree就会unbalanced, height就会变得很恐怖;</li>
+</ul><br /><h3>Kd-tree</h3><br /><ol>
+<li>将item以x-coordinate排序, 画一条过median点的纵线(vertical) (同样以2D举例)</li>
+<li>对第1步切分出来的两个平面, 分别以y-coordinate排序, 然后过median画一条横线(horizontal)</li>
+<li>对第2步切分出来的平面(们)...重复第一步</li>
+<li>如果某一步切分出的某个平面内只有一个item, 则停止.</li>
+</ol><br />
+<a href="http://blog.gregwym.info/usr/uploads/2011/04/1772279057.png" title="kd-tree.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/1772279057.png" alt="kd-tree.png" width=100% /></a><br /><ul>
+<li>此法解决了Quadtree会unbalanced的问题, 其他一样.</li>
+<li>与Quadtree相同, <strong>所有item都只存在于leaf中</strong></li>
+</ul><br /><h3>Range Tree</h3><br /><ol>
+<li>以x-coordinate为基准建立balanced BST T (同样以2D举例)</li>
+<li>针对T中的每一个node v<sub>i</sub>, 用v<sub>i</sub>及其所有children建立以y-coordinate为基准的T<sub>assoc</sub>(v<sub>i</sub>)</li>
+<li>将v<sub>i</sub>链接到T<sub>assoc</sub>(v<sub>i</sub>)</li>
+</ol><br />
+<a href="http://blog.gregwym.info/usr/uploads/2011/04/1264267599.png" title="Range_trees.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/1264267599.png" alt="Range_trees.png" width=70% /></a><br /><ul>
+<li>也就是说, Range Tree第一层的每一个subtree背后, 都有一个以y-coordinate排序的另一个BST</li>
+<li>如果是higher dimensions的话, 则要多几层associated BST嵌套</li>
+<li>Search<br />
+<ul>
+<li>用x-coordinate进行BST Search</li>
+<li>对所有inside node的顶部(root of the subtree)的T<sub>assoc</sub>, 执行y-coordinate的BST Search</li>
+<li>对所有不确定的边缘node (卡在指定range的边上), 逐一进行单独判断</li>
+</ul></li>
+<li>Insert<br />
+<ul>
+<li>依照x-coordinate进行BST insertion</li>
+<li>从最终insert的位置, travel回root. 并将item insert到途经的所有node的T<sub>assoc</sub>中</li>
+</ul></li>
+<li>Delete和Insert相反</li>
+<li>缺点: balance难度较大.</li> 
+</ul><br />更新1: 修正了Range Tree的错误解释<br /><br />更多CS 240总结请看: <a target="_blank" href="http://blog.gregwym.info/tag/cs240/">http://blog.gregwym.info/tag/cs240/</a><br /></p>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-qi--range-search-query.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/cs-240-fu-xi-zong-jie-zhi-qi--range-search-query.html</wfw:commentRss>
+</item>
+<item>
+<title>CS 240复习总结之六: Dictionary Tricks</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html</link>
+<guid>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html</guid>
+<pubDate>Fri, 08 Apr 2011 03:03:14 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[各种Binary Search的变种 (杂种?)插值查找法 Interpolation Search在已知Array A大小的前提下, 假设A中的数据呈线性排列用比例推测所查找值 K, 可能存在...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<h3>各种Binary Search的变种 <del>(杂种?)</del></h3><br /><blockquote>插值查找法 Interpolation Search<br /><ul>
+<li><a href="http://blog.gregwym.info/usr/uploads/2011/04/3697520527.jpg" title="Interpolation_Search.jpg"><img src="http://blog.gregwym.info/usr/uploads/2011/04/3697520527.jpg" alt="Interpolation_Search.jpg" width="70%" /></a></li>
+<li>在已知Array A大小的前提下, 假设A中的数据呈线性排列</li>
+<li>用比例推测所查找值 K, 可能存在的Index I<br />
+I = I<sub>low</sub> + (I<sub>upper</sub> - I<sub>low</sub>)(K - K<sub>low</sub>) / (K<sub>upper</sub> - K<sub>low</sub>)</li>
+<li>如果A中的数据分布比较平均, 此法效率比BS高</li>
+<li>否则相反</li>
+<li>更详细的解释, 可参考: <a target="_blank" href="http://program-lover.blogspot.com/2008/12/interpolation-search.html">【演算】內插搜尋法 - Interpolation Search</a></li>
+</ul><br />Gallop Search<br /><ul>
+<li>先推测出K所在的范围, 然后执行BS</li>
+<li>适用于数据量大的搜索. 通过减小BS的搜索范围, 优化性能.</li>
+</ul><br />跳跃列表 Skip Lists (我觉得最有意思的数据结构)<br /><ul>
+<li>整个表以多层表的形式出现, 每层均包含"极小"和"极大"两个item</li>
+<li>每个item拥有一个随机的height值</li>
+<li>最顶层只包含两个极值, 层数越低, 包含的item越多, 直到底层.</li>	
+<li>Search方式<ul>
+<li>从顶层起</li>
+<li>如果该层中的下一项item大于K, 则落入下一层</li>
+<li>否则继续在该层向后查找</li>
+</ul></li>
+<li><a href="http://blog.gregwym.info/usr/uploads/2011/04/2207809994.png" title="Skip_List.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/2207809994.png" alt="Skip_List.png" width=100% /></a></li>
+</ul></blockquote><h3>针对访问概率进行的优化</h3><blockquote>自排序搜索 Self-Organizing Search<br /><ul>
+<li>如果我们知道某一系列数据中, 每一个item可能被访问的概率</li>
+<li>依照每一项的概率对数据进行排序, 优化高概率item的访问效率</li>
+<li>如果不知道可能的访问概率, 则需要...</li>
+</ul><p>动态排序 Dynamic Ordering<br /><ul>
+<li>方法一: Move-To-Front(MTF)<br />
+<ul>
+<li>将每次搜索到的item移到最前</li>
+<li>近期内再搜索此item的时候, 效率会提高</li>
+</ul></li>
+<li>方法二: Transpose<br />
+<ul>
+<li>将每次搜索到的item与其前一项互换</li>
+<li>多次访问同一item以后, 该item的排序会提前很多, 访问效率会提高</li>
+</ul></li>
+</ul></blockquote><br />更多CS 240总结请看: <a target="_blank" href="http://blog.gregwym.info/tag/cs240/">http://blog.gregwym.info/tag/cs240/</a><br /></p>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html</wfw:commentRss>
+</item>
+<item>
+<title>CS 240复习总结之五: Hashing</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-wu--hashing.html</link>
+<guid>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-wu--hashing.html</guid>
+<pubDate>Thu, 07 Apr 2011 07:11:34 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[Direct Addressingkey和地址直接对应与Counting Sort同理Runtime: Θ(1), Space: Θ(n)浪费空间, 且只能用于intHashingHash ...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<blockquote><h4>Direct Addressing</h4><br /><ul>
+<li>key和地址直接对应</li>
+<li>与Counting Sort同理</li>
+<li>Runtime: Θ(1), Space: Θ(n)</li>
+<li>浪费空间, 且只能用于int</li>
+</ul></blockquote><br /><h3>Hashing</h3><br /><blockquote>Hash Function<br /><ul>
+<li>将key经过function运算以后, 得到对应的hash value</li>
+<li>Hash function的好坏决定于数据的性质, 不同的数据适用不同的function</li>
+<li>好的Hash funtion, 高效, 与数据规律无关联, 依赖于key的所有部分</li>
+</ul><br />
+冲突解决方案(Collision Resolution)<br />Basic concept:<br /><ul>
+<li>Buckets: 多个item共存</li>
+<li>Open Addressing: 一个item对应多个位置</li>
+<li>Load Balance: α = n/M (n: item数量, M: hash table大小)</li>
+</ul></blockquote><br /><blockquote>方案一: Chaining (Buckets)<br /><ul>
+<li>将新的item放入对应位置, 并link到原来位置所存放的item</li>
+<li>缺点: 大量数据会导致大量重复, 效率降低</li>
+</ul><br />方案二: Linear Probing<br /><ul>
+<li>如果要insert的位置非空, 则将item放入下一个位置. 重复这一条直到insert成功/回到原位置(insert失败)</li>
+<li>某个item被delete以后, 该位置须标记为deleted, 不能再使用</li>
+<li>缺点: 大量数据后会有明显的效率降低, deleted以后会有空间浪费, 增加M以后rehash可以解决部分问题, 但cost很高.</li>
+</ul><br />方案三:  Double Hashing<br /><ul>
+<li>在Linear Probing基础上增加一个与h1独立的functions h2.</li>
+<li>如果要insert的位置非空, hash value = [原hash value + h2(k)] % M. 重复这一条直到insert成功/回到原位置(insert失败)</li>
+<li>缺点: 与Linear Probing相同, 只是increment由1变为了h2的结果, 所以降低了第二次insert的失败概率.</li>
+</ul><br />方案四: Cuckoo Hasing<br /><ol>
+<li>有两个相互独立的hash functions, h1和h2</li>
+<li>将item insert到h1(k)中</li>
+<li>如果原来h1(k)的位置并不为空, 将原item重新insert到与h1(k)值不同的hash value中去</li>
+<li>如出现loop的情况, insert失败, rehash</li>
+</ol><br /><ul style="margin-top: -12px;"><li>优点: iterm只能出现在h1(k)或者h2(k)中, search效率高.</li></ul></blockquote><br /><del>继续编辑中...</del><br />谁能告诉我, 咱们学Extendible Hashing了么`? 貌似没有吧...<br /><br />更多CS 240总结请看: <a target="_blank" href="http://blog.gregwym.info/tag/cs240/">http://blog.gregwym.info/tag/cs240/</a></p>
+]]></content:encoded>
+<slash:comments>3</slash:comments>
+<comments>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-wu--hashing.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/cs-240-fu-xi-zong-jie-zhi-wu--hashing.html</wfw:commentRss>
+</item>
+<item>
+<title>CS 240复习总结之四: Dictionaries &amp; Balanced Search Trees</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-si--dictionaries-and-balanced-search-trees.html</link>
+<guid>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-si--dictionaries-and-balanced-search-trees.html</guid>
+<pubDate>Wed, 06 Apr 2011 12:00:49 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[AVL Tree性质:BST基础性质左侧和右侧subtree的height最多差1空白Tree的高度为-1Search, Insert, Delete Runtime均为Θ(log n)AV...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<blockquote>AVL Tree性质:<br /><ul>
+<li>BST基础性质</li>
+<li>左侧和右侧subtree的height最多差1</li>
+<li>空白Tree的高度为-1</li>
+<li>Search, Insert, Delete Runtime均为Θ(log n)</li>
+</ul><br />AVL Insertion:<br /><ol>
+<li>执行标准BST Insertion</li>
+<li>从新insert的leaf开始, 从下往上更新balance factor(左右高度差)</li>
+<li>如发现高度差超过1(即为2), 则执行fix</li>
+</ol><br />AVL Fix: 修复高度差为2的subtree<br /><ul>
+<li>Single rotation: 当height最高的leaf位于最左侧/最右侧<br />
+<ul>
+<li>将subtree的root Z向height较低的方向旋转, 即以height较高的child Y为root</li>
+<li>Y原内侧child, 并入Z内侧</li>
+</ul><br />
+<a href="http://blog.gregwym.info/usr/uploads/2011/04/1588174024.png" title="AVL_single_rotation.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/1588174024.png" alt="AVL_single_rotation.png" width=100% /></a></li>
+<li>Double rotation: 当height最高的leaf位于Tree内侧<br />
+<ul>
+<li>将height较高的root child向外侧旋转, 将Tree变形为Single rotation的初始形式</li>
+<li>执行Single rotation</li>
+</ul><br />
+<a href="http://blog.gregwym.info/usr/uploads/2011/04/2278239341.png" title="AVL_double_rotation.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/2278239341.png" alt="AVL_double_rotation.png" width=100% /></a></li>
+</ul></blockquote><br /><blockquote>2-3 Tree性质:<br /><ul>
+<li>BST基础性质</li>
+<li>每个node包含一个KVP*和两个children, 或者包含两个KVP和三个children.</li>
+<li>所有leaf都在同一层(level)</li>
+</ul><br />
+2-3 Tree Insertion:<br /><ol>
+<li>找到KVP应在的leaf (BST规则)</li>
+<li>如果该leaf已经饱和 (已经包含两个KVP), 则将3个KVP排序a < b < c.</li>
+<li>将a和c分割成两个单独的leaf, 并将b插入到parent中.</li>
+<li>重复第2步直到符合2-3 Tree所有性质</li>
+</ol><br />
+2-3 Tree Deletion: 删除x<br /><ol>
+<li>如果x所在的node有两个KVP, 则直接删除x</li>
+<li>如果同parent下, 与该node相邻的child有两个KVP, 则用node与child之间的parent替代x, 并用中间值替代parent</li>
+<li>否则 (同parent下, node相邻child均只有一个KVP), 将相邻child与parent(中间值)合并. 重复直到Tree符合要求.</li>
+</ol></blockquote><br /><blockquote>B-Tree性质:<br /><ul>
+<li>扩展版的2-3 Tree</li>
+<li>每个node包含最多2d个KVP</li>
+<li>非root的node最少包含d个KVP</li>
+<li>2-3 Tree的d = 1</li>
+</ul><br />
+Insertion和Deletion与2-3 Tree大同小异<br /><br />注: 此B-Tree定义不完全符合11W Slide<br /></blockquote><br />备注: KVP意为Key-Value Pair, 即Key与Value的一对, 为一个KVP.<br /><br />今天先到这里了...明天总结后半部分`= =<br /><br /><br />更多CS 240总结请看: <a target="_blank" href="http://blog.gregwym.info/tag/cs240/">http://blog.gregwym.info/tag/cs240/</a><br /></p>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-si--dictionaries-and-balanced-search-trees.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/cs-240-fu-xi-zong-jie-zhi-si--dictionaries-and-balanced-search-trees.html</wfw:commentRss>
+</item>
+<item>
+<title>CS 240复习总结之三: Sorting and Randomized Algorithms</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-san--sorting-and-randomized-algorithms.html</link>
+<guid>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-san--sorting-and-randomized-algorithms.html</guid>
+<pubDate>Wed, 06 Apr 2011 08:12:26 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[Comparison-based sorting最优Runtime为Ω(n log n)QuickSelect用QuickSort algorithm快速查找第k大的数 (avg rumtime: Θ...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<h2>Comparison-based sorting</h2><p>最优Runtime为Ω(n log n)</p><h3>QuickSelect</h3><p>用QuickSort algorithm快速查找第k大的数 (avg rumtime: Θ(n))</p><h4>组成函数</h4><ul>
+<li>choose-pivot(A) 在数据中选择其中一个作为pivot</li>
+<li>partition(A, p) 使用A[p]作为pivot, 将A中的数据分为 <br />
+<br />
+<ul>
+<li>所有小于等于pivot的数据</li>
+<li>pivot本身</li>
+<li>所有大于pivot的数据</li>
+</ul></li>
+</ul><h4>Implementation</h4><p>下载: <a href="http://blog.gregwym.info/usr/uploads/2011/04/78276328.cc" title="quickselect.cc">quickselect.cc</a></p><pre><code>void swap(int *A, int i, int j){ 
+    int temp; 
+    temp = A[i]; 
+    A[i] = A[j]; 
+    A[j] = temp; 
+    return; 
+}
+</code></pre><p><!--more--></p><ul>
+<li><p>partition(A, p)<br />思路: 逐次将最外侧的一对不符合partition规则的item对调</p><br />
+<br />
+<pre><code> int partition(int *A, int p, int n){ 
+     swap(A, 0, p); 
+     int i = 1, j = n - 1; 
+     while(i &lt;= j){ 
+         while(A[i] &lt;= A[0] &amp;&amp; i &lt; n) i++; 
+         while(A[j] &gt; A[0] &amp;&amp; j &gt; 0) j--; 
+         if(i &lt;= j) swap(A, i, j); 
+     } 
+     swap(A, 0, j); 
+     return j; 
+ } 
+</code></pre></li>
+<li><p>quick-select(A, k)<br />思路: 以partition分组数据以后, 判断第k大的数所在的分组, 然后recall其本身, 达到持续缩小搜索范围的目的</p><br />
+<br />
+<pre><code>int quickSelect(int *A, int k, int n){ 
+    int p = 0; 
+    int i = partition(A, p, n); 
+    if(i == k) return A[i]; 
+    else if(i &gt; k) return quickSelect(A, k, i); 
+    else if(i &lt; k) return quickSelect(A+i+1, k-i-1, n-i-1); 
+    return -1; 
+}
+</code></pre></li>
+<li><p>choose-pivot(A)<br />思路1: 永远取第一个item为pivot<br />思路2: 取从0到n-1之间的随机数为pivot</p></li>
+</ul><h3>QuickSort</h3><p>快速排序(分治法)<br />avg rumtime: Θ(n log n)</p><ul>
+<li>结构与QuickSelect基本相同</li>
+<li><p>区别: 需要对partition分出的两组数据都进行排序</p><br />
+<br />
+<pre><code> void quickSort(int *A, int n){ 
+     if(n &lt;= 1) return; 
+     int p = 0; 
+     int i = partition(A, p, n); 
+     quickSort(A, i); 
+     quickSort(A + i + 1, n - i - 1);
+ } 
+</code></pre></li>
+</ul><h2>Non-comparison-based sorting</h2><p>最优Runtime为O(n)</p><h4>Counting Sort</h4><p>前提: Array A包含n个数据, 数据的最大值小于k</p><p>思路:</p><ul>
+<li>建立一个大小为k的空白Array C, 填零.</li>
+<li>将从0到k, 每一个数字在 A 出现的次数, 填到 C 对应的index中</li>
+<li>从1到k, 将 C 中的数字逐次累加 C[i] = C[i] + C[i - 1]</li>
+<li>则C[i]为任意A[x] == i, 在排序后应该在的index</li>
+</ul><p>Runtime: O(n)<br />Space: Θ(k)</p><p>下载: <a href="http://blog.gregwym.info/usr/uploads/2011/04/1505364388.cc" title="countingsort.cc">countingsort.cc</a></p><pre><code>void countingSort(int *A, int k, int n){ 
+    int i, B[n], C[k]; 
+    for(i = 0; i &lt; n; i++){ 
+        C[A[i]]++; 
+        B[i] = A[i]; 
+    } 
+    for(i = 1; i &lt; k; i++) C[i] = C[i] + C[i-1]; 
+    for(i = n-1; i &gt;= 0; i--){ 
+        C[B[i]]--; 
+        A[C[B[i]]] = B[i]; 
+    } 
+    return; 
+}
+</code></pre><h3>Radix sort</h3><p>前提: Array A包含的数据均可拆分成d个片段x<sub>d-1</sub>x<sub>d-2</sub>… x<sub></sub>, 且任一片段x<sub>i</sub>满足0 &lt;= x<sub>i</sub> &lt; k<br />例如: 十进制数的每一位都是0 &lt;= x<sub>i</sub> &lt; 9的单位数字<br />思路: 以每一个x<sub>i</sub>为基准 (从0到d - 1), 运行counting sort.</p><p>Runtime: Θ(d(n+k))<br />Space: Θ(n+k)</p><p>注: 如果以从d-1到0的顺序执行, 则是以最低位为基准(LSD). 正常是以最高位为基准(MSD).</p><p>更新1: 各种Sorting Algorithm的动画演示<a target="_blank" href="http://jsdo.it/norahiko/oxIy/fullscreen">http://jsdo.it/norahiko/oxIy/fullscreen</a><br />更新2: 修正了partition中的bug</p><p>更多CS 240总结请看: <a target="_blank" href="http://blog.gregwym.info/tag/cs240/">http://blog.gregwym.info/tag/cs240/</a></n></p>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-san--sorting-and-randomized-algorithms.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/cs-240-fu-xi-zong-jie-zhi-san--sorting-and-randomized-algorithms.html</wfw:commentRss>
+</item>
+<item>
+<title>CS 240复习总结之二: Priority Queues </title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-er--priority-queues.html</link>
+<guid>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-er--priority-queues.html</guid>
+<pubDate>Wed, 06 Apr 2011 04:57:39 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[Priority Queue 的基础操作:insert: 在Queue中加入一个带有对应优先级的itemdeleteMax: 移除优先级最高的item (此操作仅适用于maximum-oriented...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>Priority Queue 的基础操作:</p><ul>
+<li>insert: 在Queue中加入一个带有对应优先级的item</li>
+<li>deleteMax: 移除优先级最高的item (此操作仅适用于maximum-oriented priority queue)</li>
+<li>deleteMin: 移除优先级最低的item (此操作仅适用于minimum-oriented priority queue)</li>
+</ul><p>三种Implementation:</p><ol>
+<li>无序array (selection sort) <br />
+<br />
+<ul>
+<li>insert: O(1)</li>
+<li>delete: O(n)</li>
+</ul></li>
+<li>有序array (insertion sort) <br />
+<br />
+<ul>
+<li>insert: O(n)</li>
+<li>delete: O(1)</li>
+</ul></li>
+<li>Heap (一种BST) <br />
+<br />
+<ul>
+<li>insert: O(log n)</li>
+<li>delete: O(log n)</li>
+</ul></li>
+</ol><p>Heap的性质:</p><ol>
+<li>从上到下, 从左到右, 必须在一层(level)填满以后再使用下一层</li>
+<li>parent的优先级必须大于等于(小于等于 for min-heap)其children的优先级</li>
+<li>Heap的高度是Θ(log n)</li>
+</ol><p>Heap Insertion:</p><ul>
+<li>将新item放入第一个空闲的位置 (参考heap的第一条性质)</li>
+<li><p>对其执行bubble-up, 直到符合所有heap性质<br />
+ #bubble-up:</p><br />
+<br />
+<pre><code>while [parent(v) exists and key(parent(v)) &lt; key(v)] do 
+    swap v and parent(v) v &lt;- parent(v)
+</code></pre></li>
+</ul><p>Heap deleteMax/Min:</p><ul>
+<li>用heap中的最后一个item取代root</li>
+<li><p>对其执行bubble-down, 直到符合所有heap性质</p><br />
+<br />
+<h1>bubble-down</h1><br />
+<br />
+<pre><code>while [v is not a leaf] do 
+    u &lt;- child of v with largest key 
+    if key(u) &gt; key(v) then 
+        swap v and u v &lt;- u 
+    else 
+        break
+</code></pre></li>
+</ul><p>Heap array的特点 (当前item的位置为i):</p><ul>
+<li>Left child位于2i+1</li>
+<li>Right child位于2i+2</li>
+<li>Parent位于floor[(i-1)/2]</li>
+</ul><p>建立heap的两种方法:</p><ul>
+<li>以空heap为起始, 逐个item执行insert</li>
+<li>以含有n个item的array为起始, 从index为floor[(n-1)/2]的item开始, 逐个执行bubble-down, 直到index 0</li>
+</ul><p>注: 使用第二种方法建立heap, 然后执行k次deleteMax/Min, 可快速查找array中第k大的iterm. 运行时间为Θ(n + k log n)</p><p>其他方法请参考: <a href="http://blog.gregwym.info/zhao-shu-zu-vector-nei-di-k-da-de-shu.html">找数组/VECTOR内第K大的数</a></p><p>更多CS 240总结请看: <a href="http://blog.gregwym.info/tag/cs240/">http://blog.gregwym.info/tag/cs240/</a></p>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-er--priority-queues.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/cs-240-fu-xi-zong-jie-zhi-er--priority-queues.html</wfw:commentRss>
+</item>
+<item>
+<title>CS 240复习总结之一: Asymptotic Analysis </title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-yi--asymptotic-analysis.html</link>
+<guid>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-yi--asymptotic-analysis.html</guid>
+<pubDate>Wed, 06 Apr 2011 03:59:33 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[Runtime的符号Big-O 表示当c和n0在达到一定大小以后, runtime小于等于某一数级[g(x)]Little-O (与Big-O对应) 表示当c和n0为任意值时, runtime一定...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>Runtime的符号<br /><ul>
+<li>Big-O 表示当c和n0在达到一定大小以后, runtime<strong>小于等于</strong>某一数级[g(x)]</li>
+<li>Little-O (与Big-O对应) 表示当c和n0为任意值时, runtime<strong>一定小于</strong>某一数级[g(x)]</li>
+<li>Ω 表示当c和n0达到一定大小以后, runtime<strong>大于等于</strong>某一数级[g(x)]</li>
+<li>ω (与Ω对应) 表示c和n0为任意值时, runtime<strong>一定大于</strong>某一数级[g(x)]</li>
+<li>Θ 为<strong>同时</strong>满足Big-O和Ω</li>
+</ul><br />
+常见的Runtime数级<br /><ul>
+<li>Logarithmic (log n)</li>
+<li>Linear (n)</li>
+<li>Linearithmic (n log n)</li>
+<li>Quadratic (n^2)</li>
+<li>Cubic (n^3)</li>
+<li>Exponential (2^n)</li>
+</ul><br />
+更多CS 240总结请看: <a target="_blank" href="http://blog.gregwym.info/tag/cs240/">http://blog.gregwym.info/tag/cs240/</a><br /></p>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-yi--asymptotic-analysis.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/cs-240-fu-xi-zong-jie-zhi-yi--asymptotic-analysis.html</wfw:commentRss>
+</item>
+</channel>
+</rss>

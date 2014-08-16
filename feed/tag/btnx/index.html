@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+xmlns:content="http://purl.org/rss/1.0/modules/content/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+xmlns:atom="http://www.w3.org/2005/Atom"
+xmlns:wfw="http://wellformedweb.org/CommentAPI/">
+<channel>
+<title>某储备粮的“学习笔记” - btnx</title>
+<link>http://blog.gregwym.info/tag/btnx/</link>
+<atom:link href="http://blog.gregwym.info/feed/tag/btnx/" rel="self" type="application/rss+xml" />
+<language>zh-CN</language>
+<description></description>
+<lastBuildDate>Thu, 16 Feb 2012 10:26:53 +0800</lastBuildDate>
+<pubDate>Thu, 16 Feb 2012 10:26:53 +0800</pubDate>
+<item>
+<title>在Linux下自定义多按键鼠标的功能</title>
+<link>http://blog.gregwym.info/linux-extra-mouse-button-customize.html</link>
+<guid>http://blog.gregwym.info/linux-extra-mouse-button-customize.html</guid>
+<pubDate>Thu, 16 Feb 2012 10:26:53 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[搭好Ubuntu工作环境以后, 什么都好, 就是接上鼠标以后, 很多键用不了, 比较烦. Ubuntu自带的鼠标设置非常简陋, 罗技也没给Linux做驱动, 只能自己找办法解决.btnx非常好的解决了...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>搭好Ubuntu工作环境以后, 什么都好, 就是接上鼠标以后, 很多键用不了, 比较烦. Ubuntu自带的鼠标设置非常简陋, 罗技也没给Linux做驱动, 只能自己找办法解决.</p><p>btnx非常好的解决了这个问题, 而且还带GUI设置工具. 除了设置里没有Apply这个按钮, 让人有点琢磨不透它到底什么时候保存设置以外, 其他都还不错.<br />调整好设置以后记得点"Restart BTNX"来重启服务.</p><p>记一下安装使用时候碰到的各种问题.</p><ol>
+<li>在第一次配置的时候, 直接把btnx-config给关上了, 然后就怎么也打不开了. 具体提示的错误是什么不记得了.<br />解决方法是删除/etc/btnx/btnx&#95;manager和/etc/btnx&#95;config_Default. (如果我没记错的话...因为我删错了, 才有下文)</li>
+<li>如果你和我一样, 不幸把/etc/btnx/整个文件夹给删了, 你会发现你别管怎么删怎么装, 都没法把那个该死的/etc/btnx/events找回来.<br />解决方法是把btnx和btnx-config complete uninstall了, 然后重装.</li>
+<li><p>在设置好鼠标以后还有点神器的问题, 就是btnx的设置不会屏蔽(override)掉这个按键的默认功能.<br />举个例子, 我把鼠标上原先的"前进/后退"设置成了"Ctrl+TAB/Ctrl+Shift+TAB", 当我在浏览器里按这个按钮的时候, 我不光会切换tab, 还会让页面前进/后退...很恶心是不是?<br />解决方法是, 编辑~/.Xmodmap把这几个按钮屏蔽掉.<br />比如button 8, 9是前进后退, 那就在~/.Xmodmap里写入</p><br />
+<br />
+<pre><code>! Disable buttons 8 and 9
+pointer = 1 2 3 4 5 6 7 0 0
+</code></pre></li>
+</ol><p>参考资料:<br /><a href="http://ubuntuforums.org/showthread.php?t=918714">http://ubuntuforums.org/showthread.php?t=918714</a><br /><a href="http://unix.stackexchange.com/questions/20550/how-to-disable-the-forward-back-buttons-on-my-mouse">http://unix.stackexchange.com/questions/20550/how-to-disable-the-forward-back-buttons-on-my-mouse</a></p>
+]]></content:encoded>
+<slash:comments>1</slash:comments>
+<comments>http://blog.gregwym.info/linux-extra-mouse-button-customize.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/linux-extra-mouse-button-customize.html</wfw:commentRss>
+</item>
+</channel>
+</rss>

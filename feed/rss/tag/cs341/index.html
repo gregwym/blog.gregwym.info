@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/tag/cs341/">
+<title>某储备粮的“学习笔记” - cs341</title>
+<link>http://blog.gregwym.info/tag/cs341/</link>
+<description></description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/cs-341-algorithm-brief-review.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/cs-341-algorithm-brief-review.html">
+<title>CS 341 Algorithm 复习小记</title>
+<link>http://blog.gregwym.info/cs-341-algorithm-brief-review.html</link>
+<dc:date>2011-12-16T00:27:48+08:00</dc:date>
+<description>Master TheoremT(n) = a * T(n / b) + f(n)
+x    = log_b(a)
+T(n) = θ(n^x)          if f(n) = O(n^(x-ε))
+       θ(n^x * lg(n))  if f(n) = θ(n^x)
+       θ(f(n))         if f(n) = Ω(n^(x+ε)) 
+                          and a * f(n/b) &amp;lt;= c * f(n)
+Greedy
+At each step, make the "best" next choice.
+Never backtrack or change past choices.
+Never look ahead to see if this choice has negative consequences.
+Greedy Proof, Type 1
+Describe a greedy local choice strategy
+Setup the configurations of the greedy solution G and the optimal solution O
+Argue that O can become G by replacing each entry in OFor each replacement, show it is possible, because it consist the compatibilty and optimality The last two step involves induction
+
+In basecase, focusing on how the first greedy choice can be used in an optimal solution
+During induction,assume the first k choices in an optimal solution are made by the greedy algorithm, show that the k+1 choice can be made by the greedy algorithm as well
+Greedy Proof, Type 2
+Describe a greedy local choice strategy
+Setup the configurations of the greedy solution G and the optimal solution O
+Find out the difference between O and G
+Try to reorder O to G and consists the optimality
+Dynamic ProgrammingDynamic Programming calculates a solution based on the result of a previous calculation. It saves the previous result so that no duplicate calculation needed. Dynamic Programming Design Recipe
+Find out the subproblem 
+
+
+give a score evaluation function
+give a recursive difinition
+
+State how an array can be used to evaluate the scores 
+
+
+dimension
+evaluation order
+basecase
+final result
+
+How to recover the solution
+GraphRepresentations of Graphs
+Pointers 
+
+
+vertices have pointers to adjacent vertices
+Cannot determine whether an edge exists directly
+
+Adjacency matrix 
+
+
+A matrix M, M[i, j] = 1 iff exists edge from i to j
+waste a lot of space
+
+Adjacency lists 
+
+
+Link-list like representation
+
+继续ing...</description>
+</item>
+</rdf:RDF>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+xmlns:content="http://purl.org/rss/1.0/modules/content/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+xmlns:atom="http://www.w3.org/2005/Atom"
+xmlns:wfw="http://wellformedweb.org/CommentAPI/">
+<channel>
+<title>某储备粮的“学习笔记” - cs341</title>
+<link>http://blog.gregwym.info/tag/cs341/</link>
+<atom:link href="http://blog.gregwym.info/feed/tag/cs341/" rel="self" type="application/rss+xml" />
+<language>zh-CN</language>
+<description></description>
+<lastBuildDate>Fri, 16 Dec 2011 00:27:48 +0800</lastBuildDate>
+<pubDate>Fri, 16 Dec 2011 00:27:48 +0800</pubDate>
+<item>
+<title>CS 341 Algorithm 复习小记</title>
+<link>http://blog.gregwym.info/cs-341-algorithm-brief-review.html</link>
+<guid>http://blog.gregwym.info/cs-341-algorithm-brief-review.html</guid>
+<pubDate>Fri, 16 Dec 2011 00:27:48 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[Master TheoremT(n) = a * T(n / b) + f(n)x    = log_b(a)T(n) = θ(n^x)          if f(n) = O(n^(x-ε))  ...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<h2>Master Theorem</h2><pre><code>T(n) = a * T(n / b) + f(n)
+x    = log_b(a)
+T(n) = θ(n^x)          if f(n) = O(n^(x-ε))
+       θ(n^x * lg(n))  if f(n) = θ(n^x)
+       θ(f(n))         if f(n) = Ω(n^(x+ε)) 
+                          and a * f(n/b) &amp;lt;= c * f(n)
+</code></pre><h2>Greedy</h2><ul>
+<li>At each step, make the "best" next choice.</li>
+<li>Never backtrack or change past choices.</li>
+<li>Never look ahead to see if this choice has negative consequences.</li>
+</ul><p><!--more--></p><h3>Greedy Proof, Type 1</h3><ol>
+<li>Describe a greedy local choice strategy</li>
+<li>Setup the configurations of the greedy solution G and the optimal solution O</li>
+<li>Argue that O can become G by replacing each entry in O<br />For each replacement, show it is possible, because it consist the compatibilty and optimality The last two step involves induction</li>
+</ol><ul>
+<li>In basecase, focusing on how the first greedy choice can be used in an optimal solution</li>
+<li>During induction,<br />assume the first k choices in an optimal solution are made by the greedy algorithm, show that the k+1 choice can be made by the greedy algorithm as well</li>
+</ul><h3>Greedy Proof, Type 2</h3><ol>
+<li>Describe a greedy local choice strategy</li>
+<li>Setup the configurations of the greedy solution G and the optimal solution O</li>
+<li>Find out the difference between O and G</li>
+<li>Try to reorder O to G and consists the optimality</li>
+</ol><h2>Dynamic Programming</h2><p>Dynamic Programming calculates a solution based on the result of a previous calculation. It saves the previous result so that no duplicate calculation needed. Dynamic Programming Design Recipe</p><ol>
+<li>Find out the subproblem <br />
+<br />
+<ul>
+<li>give a score evaluation function</li>
+<li>give a recursive difinition</li>
+</ul></li>
+<li>State how an array can be used to evaluate the scores <br />
+<br />
+<ul>
+<li>dimension</li>
+<li>evaluation order</li>
+<li>basecase</li>
+<li>final result</li>
+</ul></li>
+<li>How to recover the solution</li>
+</ol><h2>Graph</h2><h3>Representations of Graphs</h3><ul>
+<li>Pointers <br />
+<br />
+<ul>
+<li>vertices have pointers to adjacent vertices</li>
+<li>Cannot determine whether an edge exists directly</li>
+</ul></li>
+<li>Adjacency matrix <br />
+<br />
+<ul>
+<li>A matrix M, M[i, j] = 1 iff exists edge from i to j</li>
+<li>waste a lot of space</li>
+</ul></li>
+<li>Adjacency lists <br />
+<br />
+<ul>
+<li>Link-list like representation</li>
+</ul></li>
+</ul><p><hr /></p><p><del>继续ing...</del></p>
+]]></content:encoded>
+<slash:comments>1</slash:comments>
+<comments>http://blog.gregwym.info/cs-341-algorithm-brief-review.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/cs-341-algorithm-brief-review.html</wfw:commentRss>
+</item>
+</channel>
+</rss>

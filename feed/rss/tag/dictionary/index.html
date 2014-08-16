@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/tag/dictionary/">
+<title>某储备粮的“学习笔记” - dictionary</title>
+<link>http://blog.gregwym.info/tag/dictionary/</link>
+<description></description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html">
+<title>CS 240复习总结之六: Dictionary Tricks</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html</link>
+<dc:date>2011-04-08T03:03:14+08:00</dc:date>
+<description>各种Binary Search的变种 (杂种?)插值查找法 Interpolation Search
+
+在已知Array A大小的前提下, 假设A中的数据呈线性排列
+用比例推测所查找值 K, 可能存在的Index I
+I = Ilow + (Iupper - Ilow)(K - Klow) / (Kupper - Klow)
+如果A中的数据分布比较平均, 此法效率比BS高
+否则相反
+更详细的解释, 可参考: 【演算】內插搜尋法 - Interpolation Search
+Gallop Search
+先推测出K所在的范围, 然后执行BS
+适用于数据量大的搜索. 通过减小BS的搜索范围, 优化性能.
+跳跃列表 Skip Lists (我觉得最有意思的数据结构)
+整个表以多层表的形式出现, 每层均包含"极小"和"极大"两个item
+每个item拥有一个随机的height值
+最顶层只包含两个极值, 层数越低, 包含的item越多, 直到底层.	
+Search方式
+从顶层起
+如果该层中的下一项item大于K, 则落入下一层
+否则继续在该层向后查找
+
+
+针对访问概率进行的优化自排序搜索 Self-Organizing Search
+如果我们知道某一系列数据中, 每一个item可能被访问的概率
+依照每一项的概率对数据进行排序, 优化高概率item的访问效率
+如果不知道可能的访问概率, 则需要...
+动态排序 Dynamic Ordering
+方法一: Move-To-Front(MTF)
+
+将每次搜索到的item移到最前
+近期内再搜索此item的时候, 效率会提高
+
+方法二: Transpose
+
+将每次搜索到的item与其前一项互换
+多次访问同一item以后, 该item的排序会提前很多, 访问效率会提高
+
+更多CS 240总结请看: http://blog.gregwym.info/tag/cs240/</description>
+</item>
+</rdf:RDF>

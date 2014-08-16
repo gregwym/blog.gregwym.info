@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /usr/
+Disallow: /install/
+Disallow: /var/
+Disallow: /admin/
+Allow: /
+Sitemap: http://blog.gregwym.info/sitemap.xml

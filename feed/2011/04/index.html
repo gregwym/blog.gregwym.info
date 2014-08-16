@@ -1,0 +1,971 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+xmlns:content="http://purl.org/rss/1.0/modules/content/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+xmlns:atom="http://www.w3.org/2005/Atom"
+xmlns:wfw="http://wellformedweb.org/CommentAPI/">
+<channel>
+<title>某储备粮的“学习笔记” - 2011年4月</title>
+<link>http://blog.gregwym.info/2011/04/</link>
+<atom:link href="http://blog.gregwym.info/feed/2011/04/" rel="self" type="application/rss+xml" />
+<language>zh-CN</language>
+<description>by 咳嗽di小鱼</description>
+<lastBuildDate>Fri, 22 Apr 2011 23:56:29 +0800</lastBuildDate>
+<pubDate>Fri, 22 Apr 2011 23:56:29 +0800</pubDate>
+<item>
+<title>Quickweb OpenVZ安装PPTP VPN实践笔记(不用MPPE)</title>
+<link>http://blog.gregwym.info/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html</link>
+<guid>http://blog.gregwym.info/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html</guid>
+<pubDate>Fri, 22 Apr 2011 23:56:29 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[从回国之前, 一直倒腾到家`可算是把VPN搭好了...OpenVZ的VPS在内核这块实在是缺少自由, 如果是Xen这次就不会这么复杂了.废话少说.基本过程和网上其他的教程都差不多, 主要在于加密和ip...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>从回国之前, 一直倒腾到家`可算是把VPN搭好了...<br />OpenVZ的VPS在内核这块实在是缺少自由, 如果是Xen这次就不会这么复杂了.<br />废话少说.</p><p>基本过程和网上其他的教程都差不多, 主要在于加密和ipforward的配置.</p><ol>
+<li><p>安装ppp和iptables</p><br />
+<br />
+<pre><code>yum install -y ppp iptables
+</code></pre></li>
+<li><p>安装pptpd</p><br />
+<br />
+<pre><code>wget http://poptop.sourceforge.net/yum/stable/packages/pptpd-1.3.4-2.rhel5.i386.rpm 
+rpm -ivh pptpd-1.3.4-2.rhel5.i386.rpm 
+</code></pre></li>
+</ol><p><!--more--></p><ol>
+<li><p>配置/etc/ppp/options.pptpd</p><p>这个是不使用MPPE加密的配置, 适用于母鸡kernel不支持MPPE的童鞋</p><br />
+<br />
+<pre><code>name pptpd 
+# Encryption部分全部注释掉, 不使用加密 
+# 使用chap验证 
++chap 
+#使用Google DNS 
+ms-dns 8.8.8.8 
+ms-dns 8.8.4.4 
+proxyarp 
+lock 
+nobsdcomp 
+novj 
+novjccomp 
+nologfd 
+nodeflate 
+</code></pre><br />
+<br />
+<p>这个是使用MPPE的配置, 如果你的母鸡支持, 推荐用这个</p><br />
+<br />
+<pre><code>name pptpd 
+# 禁用pap, chap, mschap 
+refuse-pap 
+refuse-chap 
+refuse-mschap 
+# 强制mschap-v2和mppe-128 
+require-mschap-v2 
+require-mppe-128 
+#使用Google DNS 
+ms-dns 8.8.8.8 
+ms-dns 8.8.4.4 
+proxyarp 
+lock 
+nobsdcomp 
+novj 
+novjccomp 
+nologfd
+</code></pre></li>
+<li><p>配置/etc/pptpd.conf</p><br />
+<br />
+<pre><code>option /etc/ppp/options.pptpd 
+# 设置ip分配方案 
+localip 172.16.36.1 
+remoteip 172.16.36.2-254 
+</code></pre></li>
+<li><p>配置/etc/ppp/chap-secrets, 设置登录帐号</p><br />
+<br />
+<pre><code># Secrets for authentication using CHAP 
+# client   server   secret   IP_addresses 
+帐号       pptpd    密码      *(表示任意IP都可以连接)
+</code></pre></li>
+<li><p>配置ip转发 /etc/sysctl.conf</p><br />
+<br />
+<pre><code>net.ipv4.ip_forward = 1
+</code></pre><br />
+<br />
+<p>在bash中执行</p><br />
+<br />
+<pre><code>sysctl -p 
+service pptpd restart 
+service iptables restart 
+iptables -t nat -A POSTROUTING -s 172.16.36.0/24 -o venet0 -j MASQUERADE 
+iptables -I FORWARD -p tcp --syn -i ppt+ -j TCPMSS --set-mss 1356 
+service iptables save 
+service iptables restart 
+chkconfig pptpd on 
+chkconfig iptables on
+</code></pre></li>
+</ol><p>这些都配置好了以后, 如果你使用了MPPE, 那就可以尝试连接了.</p><p>如果你没有使用MPPE</p><ul>
+<li>在Windows中设置VPN, 取消include windows logon domain, 选择PPTP连接,<br />Data加密选择Optional, 选择CHAP验证登录</li>
+<li>在Mac/iOS中设置VPN, 将加密设置为"无"即可 这样就可以尝试连接了</li>
+</ul><p>Note: 日志文件在/var/log/messages, 如果log中出现, "This system lacks kernel support for PPP. " 字样, 请发ticket让ISP给你打开PPP支持, 之后就应该可以正常连接了.</p><p><hr /></p><p>参考资料:<br /><a href="http://rashost.com/blog/centos5-pptpd-vpn">CentOS 5 VPS上配置pptpd作为VPN服务器</a><br /><a href="http://good784.blog.163.com/blog/static/327217152007670350514/">不带MPPE的VPN服务器端及客户端的设置笔记</a></p>
+]]></content:encoded>
+<slash:comments>7</slash:comments>
+<comments>http://blog.gregwym.info/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html</wfw:commentRss>
+</item>
+<item>
+<title>Compiler各个步骤的含义</title>
+<link>http://blog.gregwym.info/compiler-ge-ge-bu-zhou-de-han-yi.html</link>
+<guid>http://blog.gregwym.info/compiler-ge-ge-bu-zhou-de-han-yi.html</guid>
+<pubDate>Tue, 19 Apr 2011 06:15:49 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[Step1: String -> Scanning (DFA) -> Tokens Scanner又叫Lexical analyzer或Lexer.其目的在于, 将需要compile的源代码逐字读入c...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<h3>Step1: String -> Scanning (DFA) -> Tokens Scanner又叫Lexical analyzer或Lexer.</h3><p>其目的在于, 将需要compile的源代码逐字读入compiler, 并将每一个符合"词汇命名规则(Lexical Syntax)"的字段转换成token存储.<br />换句话说, 就是一遍读, 一遍看每一个单词的拼写对不对. 对的就转成token, 拼错了就输出error.</p><p>作业中对应: <a href="http://www.student.cs.uwaterloo.ca/~cs241/a6/">A6 P4</a><br />(某些语言的compiler在Scanning之后还包含Preprocessing, 因为不在241讨论范围内, 不做解释)</p><h3>Step2: Tokens -> Parsing(LL/LR) -> Intermediate Format (<a href="http://www.student.cs.uwaterloo.ca/~cs241/wl/wli.html">WLI</a>)</h3><p>Parsing又叫Syntactic Analysis.<br />其目的在于, 将token与token联系在一起, 并将他们的转换成符合一定规范的"中间格式", 一般是某种树状结构, 例如241中定义的<a href="http://www.student.cs.uwaterloo.ca/~cs241/wl/wli.html">WLI</a>.</p><p>在Parsing过程中, 如果遇到不符合某种语言的"语法规则(Grammar)"时, 则输出error. 如果语法正确, 则输出对应格式.<br />简单说, 就是看的说的话是不是人话, 有没有缺个标点少个括号.<br />如果不是人话那就说明你该重新学语法去了.</p><p>作业中对应: <a href="http://www.student.cs.uwaterloo.ca/~cs241/a8/">A8 P4</a></p><p><!--more--></p><h3>Step3: Intermediate Format -> Semantic Analysis(Context-Sensitive Analysis) -></h3><p>Semantic Analysis的目的在于, 检查程序是否存在语义上的冲突. 或者说, 上下文是不是相符.</p><p>比如在C中, 如果没有declare过变量int a;, 则a = 3;就不合法.<br />再比如, 如果a declare为int, 则a = 'b';就不合法, 因为a不能为char.</p><p>作业中对应: <a href="http://www.student.cs.uwaterloo.ca/~cs241/a10/">A9 A10</a><br />(Optimization为代码优化, 241没有涉及, 知道即可)</p><h3>Step4: -> Code Generation -> Code Fragment</h3><p>将Intermediate Format转换为另一种格式, 比如MIPS或者二进制文件, 可与上一步同步进行.</p><p>作业中对应: <a href="http://www.student.cs.uwaterloo.ca/~cs241/a10/">A9 A10</a>, <a href="http://www.student.cs.uwaterloo.ca/~cs241/a3/">A3</a>, <a href="http://www.student.cs.uwaterloo.ca/~cs241/a4/">A4</a></p><h3>Step5: Code Fragements -> Linking -> Executable File(Single File)</h3><p>将多个compile好的多个文件链接在一起, 生成一个可执行的二进制文件(或仅生成合并以后的单个文件, 但文件本身可能无法执行)</p><p>作业中对应: <a href="http://www.student.cs.uwaterloo.ca/~cs241/a5/">A5 P1, P2</a></p><p>附: 09FALL 第二题答案</p><ol>
+<li>Scanning</li>
+<li>Parsing</li>
+<li>Semantic Analysis</li>
+<li>Parsing</li>
+<li>Semantic Analysis</li>
+<li>Linking</li>
+<li>Semantic Analysis</li>
+<li>Parsing</li>
+<li>1A@#SR%$#</li>
+<li>&#43; foo</li>
+<li>x</li>
+</ol>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/compiler-ge-ge-bu-zhou-de-han-yi.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/compiler-ge-ge-bu-zhou-de-han-yi.html</wfw:commentRss>
+</item>
+<item>
+<title>LR(1) Parser Example</title>
+<link>http://blog.gregwym.info/lr-1--parser-example.html</link>
+<guid>http://blog.gregwym.info/lr-1--parser-example.html</guid>
+<pubDate>Tue, 19 Apr 2011 05:24:08 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[Terminal Symbols: 6个BOF, EOF, id, -, (, )Nonterminal Symbols: 3个S, expr, termStart Symbol:SProductio...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>Terminal Symbols: 6个<br /><blockquote>BOF, EOF, id, -, (, )</blockquote><br />Nonterminal Symbols: 3个<br /><blockquote>S, expr, term</blockquote><br />Start Symbol:<br /><blockquote>S</blockquote><br />Production Rules: 5个<br /><blockquote><table width="100%" border="1">
+		<tr>
+			<td>0</td>
+			<td>S BOF expr EOF</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>expr term</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>expr expr - term</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>term id</td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>term ( expr )</td>
+		</tr>
+	</table></blockquote><br /><!--more--></p><p>Total State: 11个 (0 to 11)<br />Total Transitions: 28个<br /><blockquote><table width="100%"  border="1">
+		<tr>
+			<td>State</td>
+			<td>Symbol</td>
+			<td>Action</td>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>BOF</td>
+			<td>shift to state 6</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>(</td>
+			<td>shift to state 3</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>id</td>
+			<td>shift to state 2</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>term</td>
+			<td>shift to state 8</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>(</td>
+			<td>shift to state 3</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>expr</td>
+			<td>shift to state 7</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>id</td>
+			<td>shift to state 2</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>term</td>
+			<td>shift to state 4</td>
+		</tr>
+		<tr>
+			<td>6</td>
+			<td>(</td>
+			<td>shift to state 3</td>
+		</tr>
+		<tr>
+			<td>6</td>
+			<td>expr</td>
+			<td>shift to state 10</td>
+		</tr>
+		<tr>
+			<td>6</td>
+			<td>id</td>
+			<td>shift to state 2</td>
+		</tr>
+		<tr>
+			<td>6</td>
+			<td>term</td>
+			<td>shift to state 4</td>
+		</tr>
+		<tr>
+			<td>7</td>
+			<td>)</td>
+			<td>shift to state 9</td>
+		</tr>
+		<tr>
+			<td>7</td>
+			<td>-</td>
+			<td>shift to state 1</td>
+		</tr>
+		<tr>
+			<td>10</td>
+			<td>-</td>
+			<td>shift to state 1</td>
+		</tr>
+		<tr>
+			<td>10</td>
+			<td>EOF</td>
+			<td>shift to state 5</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>)</td>
+			<td>reduce by rule 3</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>-</td>
+			<td>reduce by rule 3</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>EOF</td>
+			<td>reduce by rule 3</td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>)</td>
+			<td>reduce by rule 1</td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>-</td>
+			<td>reduce by rule 1</td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>EOF</td>
+			<td>reduce by rule 1</td>
+		</tr>
+		<tr>
+			<td>8</td>
+			<td>)</td>
+			<td>reduce by rule 2</td>
+		</tr>
+		<tr>
+			<td>8</td>
+			<td>-</td>
+			<td>reduce by rule 2</td>
+		</tr>
+		<tr>
+			<td>8</td>
+			<td>EOF</td>
+			<td>reduce by rule 2</td>
+		</tr>
+		<tr>
+			<td>9</td>
+			<td>)</td>
+			<td>reduce by rule 4</td>
+		</tr>
+		<tr>
+			<td>9</td>
+			<td>-</td>
+			<td>reduce by rule 4</td>
+		</tr>
+		<tr>
+			<td>9</td>
+			<td>EOF</td>
+			<td>reduce by rule 4</td>
+		</tr>
+	</table></blockquote><br />String to Parse:<blockquote>BOF id - ( id ) - id EOF</blockquote><br /><br />Parse Step:<br />蓝色的行是Shift, 灰色的行是Reduce<br />Reduce的次数取决于Production Rule RHS的长度<br />当前Symbol所对应的State,<br /><table border="1">
+			<tr bgcolor="#F8F8F8">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>State Stack <br />
+(At EOL)</td>
+				<td>Description</td>
+			</tr>
+			<tr bgcolor="#F8F8F8">
+				<td>S0</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0</td>
+				<td>Start</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td>BOF</td>
+				<td>S6</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0 6</td>
+				<td>S0 BOF S6</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td>id</td>
+				<td>S2</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0 6 2</td>
+				<td>S6 id S2</td>
+			</tr>
+			<tr bgcolor="#EEEEEE">
+				<td></td>
+				<td>R3</td>
+				<td>-</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0 6</td>
+				<td>S2 - Reduce by   rule #3 <br />
+(replace id with term)</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td>term</td>
+				<td>S4</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0 6 4</td>
+				<td>S6 term S4</td>
+			</tr>
+			<tr bgcolor="#EEEEEE">
+				<td></td>
+				<td>R1</td>
+				<td>-</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0 6</td>
+				<td>S4 - Reduce by   rule #1 <br />
+(replace term with expr)</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td>expr</td>
+				<td>S10</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0 6 10</td>
+				<td>S6 expr S10</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td>-</td>
+				<td>S1</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0 6 10 1</td>
+				<td>S10 - S1</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>(</td>
+				<td>S3</td>
+				<td></td>
+				<td></td>
+				<td>0 6 10 1 3</td>
+				<td>S1 ( S3</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>id</td>
+				<td>S2</td>
+				<td></td>
+				<td>0 6 10 1 3 2</td>
+				<td>S3 id S2</td>
+			</tr>
+			<tr bgcolor="#EEEEEE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>R3</td>
+				<td>)</td>
+				<td></td>
+				<td>0 6 10 1 3</td>
+				<td>S2 ) Reduce by   rule #3 <br />
+(replace id with term)</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>term</td>
+				<td>S4</td>
+				<td></td>
+				<td>0 6 10 1 3 4</td>
+				<td>S3 term S4</td>
+			</tr>
+			<tr bgcolor="#EEEEEE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>R1</td>
+				<td>)</td>
+				<td></td>
+				<td>0 6 10 1 3</td>
+				<td>S4 ) Reduce by   rule #1 <br />
+(replace term with expr)</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>expr</td>
+				<td>S7</td>
+				<td></td>
+				<td>0 6 10 1 3 7</td>
+				<td>S3 expr S7</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>)</td>
+				<td>S9</td>
+				<td>0 6 10 1 3 7 9</td>
+				<td>S7 ) S9</td>
+			</tr>
+			<tr bgcolor="#EEEEEE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>R4</td>
+				<td>R4</td>
+				<td>R4</td>
+				<td>-</td>
+				<td>0 6 10 1</td>
+				<td>S9 - Reduce by   rule #4 <br />
+(repace &quot;( expr )&quot; with term)</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>term</td>
+				<td>S8</td>
+				<td></td>
+				<td></td>
+				<td>0 6 10 1 8</td>
+				<td>S1 term S8</td>
+			</tr>
+			<tr bgcolor="#EEEEEE">
+				<td></td>
+				<td>R2</td>
+				<td>R2</td>
+				<td>R2</td>
+				<td>-</td>
+				<td></td>
+				<td></td>
+				<td>0 6</td>
+				<td>S8 - Reduce by   rule #2 <br />
+(replace &quot;expr - term&quot; with expr)</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td>expr</td>
+				<td>S10</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0 6 10</td>
+				<td>S6 expr S10</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td>-</td>
+				<td>S1</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0 6 10 1</td>
+				<td>S10 - S1</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>id</td>
+				<td>S2</td>
+				<td></td>
+				<td></td>
+				<td>0 6 10 1 2</td>
+				<td>S1 id S2</td>
+			</tr>
+			<tr bgcolor="#EEEEEE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>R3</td>
+				<td>EOF</td>
+				<td></td>
+				<td></td>
+				<td>0 6 10 1</td>
+				<td>S2 EOF Reduce by rule #3 <br />
+(replace id with term)</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>term</td>
+				<td>S8</td>
+				<td></td>
+				<td></td>
+				<td>0 6 10 1 8</td>
+				<td>S1 term S8</td>
+			</tr>
+			<tr bgcolor="#EEEEEE">
+				<td></td>
+				<td>R2</td>
+				<td>R2</td>
+				<td>R2</td>
+				<td>EOF</td>
+				<td></td>
+				<td></td>
+				<td>0 6</td>
+				<td>S8 EOF Reduce by rule #2 <br />
+(replace &quot;expr - term&quot; with expr)</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td>expr</td>
+				<td>S10</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0 6 10</td>
+				<td>S6 expr S10</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td>EOF</td>
+				<td>S5</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>Final S5</td>
+				<td>S10 EOF S5</td>
+			</tr>
+		</table><br />
+</blockquote><br />原题来源: <a target="_blank" href="http://www.student.cs.uwaterloo.ca/~cs241/parsing/lr1.html">http://www.student.cs.uwaterloo.ca/~cs241/parsing/lr1.html</a><br /></p>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/lr-1--parser-example.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/lr-1--parser-example.html</wfw:commentRss>
+</item>
+<item>
+<title>CS 240复习总结之九: Compression</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-jiu--compression.html</link>
+<guid>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-jiu--compression.html</guid>
+<pubDate>Tue, 12 Apr 2011 07:03:43 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[概念就不说了, 啥压缩比啊, logical/Physical compression, Lossy/Lossless的.Run-Length Encoding (RLE)思路: 将连续的0或1用位数...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>概念就不说了, 啥压缩比啊, logical/Physical compression, Lossy/Lossless的.<br /><br /><h3>Run-Length Encoding (RLE)</h3>思路: 将连续的0或1用位数表示, 缩减重复段所占的位置<br /><ul>
+<li>第一位表示由0或者1开头</li>
+<li>之后用prefix-free integer encoding表示每一个Run的长度<ul>
+<li>后x位表示这个run的binary长度</li>
+<li>前x-1位填零, 为unary表示后x位的长度减一</li>
+</ul></li>
+</ul><br /><br /><h3>Huffman Coding</h3><br />
+思路: 用特殊的binary编码表, 省略ASCII/UTF-8编码中无用字符所占用的位置<br /><ul>
+<li>用binary trie表示字典中的所有字符</li>
+<li>将文本依照trie转成binary</li>
+</ul><br />
+如何建立压缩比最好的trie<br /><ul>
+<li>将每个字符存入独立的trie中</li>
+<li>确定每个字符的出现次数(频率), 一个trie的比重(weight)即为trie中字符的频率和</li>
+<li>将weight最小的两个trie合并成一个新trie</li>
+<li>重复上一步直到只剩下一个trie</li>
+</ul><br /><!--more--></p><h3>MTF</h3><br /><ul>
+<li>用字典中, 字符的index表示字符</li>
+<li>使用动态字典, 将出现过的字符移到字典开头, 以减小下次出现时该字符的index值</li>
+<li>MTF本身不能达到压缩的目的, 需配合prefix-free integer encoding或者huffman</li>
+</ul><br /><br /><h3>LZW</h3><br />
+思路: 给出现过的字符组assign编码, 在重复出现时以一个编码代表整个字符组<br /><ul>
+<li>字典编码使用固定长度k, 字典总共有2<sup>k</sup>个entry</li>
+<li>字典由所有单字符开头, 剩余entry留空</li>
+<li>从第二个encode的字符[组]开始, 将其首字符与上一个encode的字符[组], 组成一个新的字符组, 并存入字典中</li>
+<li>当这个字符组合再次出现的时候, 即可用一个编码代表整个字符组</li>
+</ul><br /><br /><h3>BWT</h3><br />
+思路: 不知道!!!!!!! 他tm就是work了`!!!不知道为什么!!!!<br />Encode方法:<br /><ul>
+<li>将整个string S写成各种cyclic shift, 用$表示string结尾</li>
+<li>比如abcd$可以写成abcd$, bcd$a, cd$ab, d$abc, $abcd</li>
+<li>将所有cyclic shift排序</li>
+<li>将排序后的所有cyclic shift的最后一位按顺序组合成新的string, 既是Encoded的string C</li>
+</ul><br />
+Decode方法:<br /><ul>
+<li>给Encoded的string C的每一个字符一个序号, 从0到n-1</li>
+<li>将字符和序号一起排序. 排序后的序号提取为Array N</li>
+<li>for(i = N[N[0]], i != N[0], i = N[i]) print(C[i]);</li>
+</ul><br />
+BWT本身不进行压缩, 而是将string转化成更容易被MTF压缩的Encoded string.<br />BWT以后, 执行MTF即可达到极佳的英文字符压缩比.<br /><br />更多CS 240总结请看: <a target="_blank" href="http://blog.gregwym.info/tag/cs240/">http://blog.gregwym.info/tag/cs240/</a><br /></p>
+]]></content:encoded>
+<slash:comments>30</slash:comments>
+<comments>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/cs-240-fu-xi-zong-jie-zhi-jiu--compression.html</wfw:commentRss>
+</item>
+<item>
+<title>CS 240复习总结之八: Tries &amp; String Matching</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-ba--tries-and-string-matching.html</link>
+<guid>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-ba--tries-and-string-matching.html</guid>
+<pubDate>Sat, 09 Apr 2011 06:12:41 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[Tries单词查找树 Tries (Radix Tree):    左0右1  item只存在leaf上  Prefix-free: 任意一个key不能有其他key是他的前缀(比如: 1101和110...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<h3>Tries</h3><blockquote><h4>单词查找树 Tries (Radix Tree):</h4><ul>
+  <li><a href="http://blog.gregwym.info/usr/uploads/2011/04/3261964289.png" title="tries.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/3261964289.png" alt="tries.png" width=100% /></a></li>
+  <li>左0右1</li>
+  <li>item只存在leaf上</li>
+  <li>Prefix-free: 任意一个key不能有其他key是他的前缀(比如: 1101和11011不能共存)</li>
+  <li>Search: 逐位执行BS</li>
+  <li>Insert: 逐位执行BS</li>
+  <li>如果找到某leaf与insert的item不等, insert fail. (现存item是新item的prefix)</li>
+  <li>如果在某个node搜索结束, insert fail. (新item是其他key的prefix)</li>
+  <li><p>如果无路可走了, 开路出来.</p></li>
+  <li><p>Delete: Search到对应item以后, 删除这个leaf以及其他无用的node.</p></li>
+  </ul><h4>Compressed Tries (Patricia Tries):</h4><ul>
+  <li><a href="http://blog.gregwym.info/usr/uploads/2011/04/852552282.png" title="compressed_trie.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/852552282.png" alt="compressed_trie.png" width=100% /></a></li>
+  <li>相比普通Tries, compressed tries去除了额外的node(只有一个child的node). 其他基本相同.</li>
+  <li><p>每个node中增加了下一层Search中, 需要检测的位数</p></li>
+  </ul><h4>Multiway Tries:</h4><ul>
+  <li><a href="http://blog.gregwym.info/usr/uploads/2011/04/11477952.png" title="multiway_tries.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/11477952.png" alt="multiway_tries.png" width=60% /></a></li>
+  <li>以特定alphabet集合为基础, 建立的Tries</li>
+  <li>通过$ sigh以允许prefix存在</li>
+  <li>不是Binary Tree</li>
+  <li>同样可以compress, 与Compressed Tries方法相同</li>
+  </ul></blockquote><h3>String Matching 要match的string为T, pattern为P</h3><blockquote><h4>Brute-force Algorithm</h4><ol>
+  <li>从前往后依次比对P的首字母</li>
+  <li>如发现与首字母匹配, 则继续比对剩下的字符直到P结尾</li>
+  <li>如P未结尾时出现不匹配, 则回到与首字母匹配位置的<strong>下一个</strong>, 继续比对首字母</li>
+  <li><p>如T结尾, 则无匹配</p></li>
+  </ol><h4>Boyer-Moore Algorithm</h4><ol>
+  <li>将T和P右对齐</li>
+  <li>从P的结尾开始, 依次向前与T比对</li>
+  <li>如遇到不匹配, 检查T该位置的字符是否在P中出现过 <br />
+  <br />
+  <ul>
+  <li>如出现过, 则将该字符在P中最后出现的位置, 与T对齐</li>
+  <li>如没出现过, 则讲P向后shift一个P的长度</li>
+  <li>重复第二步</li>
+  </ul></li>
+  <li><p>如T结尾, 则无匹配</p></li>
+  </ol><h4>KMP Algorithm</h4><ol>
+  <li>建立KMP Failure Array 位于j点的F(j)值等于P[1..j]的结尾与P的开头所重叠的字符位数 <a href="http://blog.gregwym.info/usr/uploads/2011/04/910986324.png" title="KMP.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/910986324.png" alt="KMP.png" width=60% /></a></li>
+  <li>将T和P左对齐</li>
+  <li>从P的开头开始, 依次向后与T比对</li>
+  <li>如遇到P[i]不匹配, P向后shift[i - F(i-1)]位, 且 i 值assign为F(i-1)</li>
+  <li><p>如T结尾, 则无匹配</p></li>
+  </ol><h4>Suffix Tree (Trie) 与前几个Algorithm相反, 此Algorithm是为了在同一个T中寻找不同P而建立的.</h4><p><br />Post-condition: T长度为n, i值为从0到n-1<br />1.  将所有T[i..n]依次insert进Compressed trie<br />
+  2.  因为<a target="_blank" href="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-ba--tries-and-string-matching.html">Compressed trie的性质 (prefix-free)</a>, 如果某一个T[i..n]是已有node的prefix, 则不会被insert<br />
+  3.  每个node和leaf中, 保存对应的i和n值<br />
+  4.  在Compressed trie中搜索, 将P与每个node进行比对. (长度以P为准)<br />
+  5.  如果遇到node长度小于P长度, 则无匹配.</p></blockquote><p>= =&#96;最后一个Module后天再说...每天都看Algorithm会死人的&#96;明天收拾251</p><p>更多CS 240总结请看: <a target="_blank" href="http://blog.gregwym.info/tag/cs240/">http://blog.gregwym.info/tag/cs240/</a></p>
+]]></content:encoded>
+<slash:comments>2</slash:comments>
+<comments>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-ba--tries-and-string-matching.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/cs-240-fu-xi-zong-jie-zhi-ba--tries-and-string-matching.html</wfw:commentRss>
+</item>
+<item>
+<title>iPad 2 白色高清无码openbox`</title>
+<link>http://blog.gregwym.info/ipad-2-bai-se-kai-xiang-tu.html</link>
+<guid>http://blog.gregwym.info/ipad-2-bai-se-kai-xiang-tu.html</guid>
+<pubDate>Sat, 09 Apr 2011 02:01:16 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[#post-51 img {margin: 10px;}Fedex, 明明昨天还没到北美大陆呢, 今天早上就到家门口了...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p><style type="text/css">
+#post-51 img {
+margin: 10px;
+}
+</style><a href="http://blog.gregwym.info/usr/uploads/2011/04/265457699.jpg" title="IMG_0366.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/265457699.jpg" alt="IMG_0366.JPG" width=100% /></a><br />Fedex, 明明昨天还没到北美大陆呢, 今天早上就到家门口了...<br /><!--more--><br />
+<a href="http://blog.gregwym.info/usr/uploads/2011/04/169193079.jpg" title="IMG_0367.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/169193079.jpg" alt="IMG_0367.JPG" width=100% /></a><br />包装一向如此`<br /><a href="http://blog.gregwym.info/usr/uploads/2011/04/502680102.jpg" title="IMG_0368.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/502680102.jpg" alt="IMG_0368.JPG" width=100% /></a><br />侧影`<br /><a href="http://blog.gregwym.info/usr/uploads/2011/04/1052980050.jpg" title="IMG_0369.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/1052980050.jpg" alt="IMG_0369.JPG" width=100% /></a><br />正面`<br /><a href="http://blog.gregwym.info/usr/uploads/2011/04/3504025768.jpg" title="IMG_0370.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/3504025768.jpg" alt="IMG_0370.JPG" width=100% /></a><br />脸好大`<br /><a href="http://blog.gregwym.info/usr/uploads/2011/04/2141410550.jpg" title="IMG_0371.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/2141410550.jpg" alt="IMG_0371.JPG" width=100% /></a><br />确实挺薄的<br /><a href="http://blog.gregwym.info/usr/uploads/2011/04/2938073213.jpg" title="IMG_0372.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/2938073213.jpg" alt="IMG_0372.JPG" width=100% /></a><br />比一下, $2<br /><a href="http://blog.gregwym.info/usr/uploads/2011/04/2771863772.jpg" title="IMG_0373.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/2771863772.jpg" alt="IMG_0373.JPG" width=100% /></a><br />忘记转了...<br /><a href="http://blog.gregwym.info/usr/uploads/2011/04/266336125.jpg" title="IMG_0374.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/266336125.jpg" alt="IMG_0374.JPG" width=100% /></a><br />先不接iTunes了`晚点再折腾<br /><a href="http://blog.gregwym.info/usr/uploads/2011/04/2750229566.jpg" title="IMG_0375.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/2750229566.jpg" alt="IMG_0375.JPG" width=100% /></a><br />With SmartCover<br /><a href="http://blog.gregwym.info/usr/uploads/2011/04/1623365913.jpg" title="IMG_0376.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/1623365913.jpg" alt="IMG_0376.JPG" width=100% /></a><br />SmartCover的包装很好玩, 后边有个扣子似的东西扣住的<br /><a href="http://blog.gregwym.info/usr/uploads/2011/04/2142399946.jpg" title="IMG_0377.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/2142399946.jpg" alt="IMG_0377.JPG" width=100% /></a><br />我又忘记转了= =`<br /><a href="http://blog.gregwym.info/usr/uploads/2011/04/3846820711.jpg" title="IMG_0378.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/3846820711.jpg" alt="IMG_0378.JPG" width=100% /></a><br />贴上SmartCover<br /><a href="http://blog.gregwym.info/usr/uploads/2011/04/2547865426.jpg" title="IMG_0379.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/2547865426.jpg" alt="IMG_0379.JPG" width=100% /></a><br />半遮面`<br /><a href="http://blog.gregwym.info/usr/uploads/2011/04/4204940659.jpg" title="IMG_0380.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/4204940659.jpg" alt="IMG_0380.JPG" width=100% /></a><br />磁铁果然给力...能拎着晃来晃去`= =(Pia!)<br /><a href="http://blog.gregwym.info/usr/uploads/2011/04/3186166415.jpg" title="IMG_0381.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/3186166415.jpg" alt="IMG_0381.JPG" width=100% /></a><br />Lie on SmartCover`<br /><a href="http://blog.gregwym.info/usr/uploads/2011/04/690630213.jpg" title="IMG_0382.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/690630213.jpg" alt="IMG_0382.JPG" width=100% /></a><br />侧面<br /><a href="http://blog.gregwym.info/usr/uploads/2011/04/3769666949.jpg" title="IMG_0383.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/3769666949.jpg" alt="IMG_0383.JPG" width=100% /></a><br />
+Stand on SmartCover`<br />
+<a href="http://blog.gregwym.info/usr/uploads/2011/04/492777819.jpg" title="IMG_0384.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/492777819.jpg" alt="IMG_0384.JPG" width=100% /></a><br />
+Stand的侧面`很稳<br />
+<a href="http://blog.gregwym.info/usr/uploads/2011/04/619416172.jpg" title="IMG_0385.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/619416172.jpg" alt="IMG_0385.JPG" width=100% /></a><br />Apple一向这么抠门`<br /></p>
+]]></content:encoded>
+<slash:comments>17</slash:comments>
+<comments>http://blog.gregwym.info/ipad-2-bai-se-kai-xiang-tu.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/ipad-2-bai-se-kai-xiang-tu.html</wfw:commentRss>
+</item>
+<item>
+<title>CS 240复习总结之七: Range Search Query</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-qi--range-search-query.html</link>
+<guid>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-qi--range-search-query.html</guid>
+<pubDate>Fri, 08 Apr 2011 12:06:40 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[在我总结这个Module之前允许我吐槽一下...`Assignment 5, 泥玛那个是什么脑残傻缺的ADT啊`! 放着Slide里这么好的三种ADT你不用啊`!!! 你跑去弄什么x-min-heap...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>在我总结这个Module之前允许我吐槽一下...`<br /><blockquote><em>Assignment 5, 泥玛那个是什么脑残傻缺的ADT啊`! 放着Slide里这么好的三种ADT你不用啊`!!! 你跑去弄什么x-min-heap外加y-BST, 还弄个好听的名字叫Heap-tree`!!! 泥玛就是个残废啊`有木有有木有~!!! 不光残废啊, 是连TA自己都搞不懂到底该怎么用啊`!!! 连"You can slightly break the heap proerty"都说出来了...这种东西随便写写就让他过去吧`!!!!! 以后做工程真的用, 程序怎么死的都不知道啊`!!!</em></blockquote><br />
+吐槽完毕= =`回归正题<br /><blockquote>我们日常生活中的很多数据并不是一对一的KVP (不懂KVP的请去看, <a target="_blank" href="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-si--dictionaries-and-balanced-search-trees.html">总结四 - BST篇</a>).<br />拿Slide里的例子来说, 买一台电脑, 不光要看它的CPU是什么型号, 还要看内存多大, 硬盘多大, 显卡怎么样, 价钱多少, etc. 这样的数据都是一个key对多个value.<br /><br />这种情况下, 如果我需要找一台CPU 2.2GHz以上+内存4G-8G的电脑, 就需要从我的data中进行Range Search Query, 而且是2D的Range Search. 如果我在这个条件上再+要至少3T硬盘存xx...那就是3D的Range Search了.<br /></blockquote><br />我们之前学习的Sort也好, Tree也好, 都是针对1D数据的排序和搜索, 碰到2D和3D就都傻了.<br />以下三个ADT就能很好的解决这个问题.<br /><br /><h3>Quadtree</h3><br /><ol>
+<li>将所有数据放在一个平面空间里 (咱们想象力能及的只有2D和3D空间, 这里以2D举例)</li>
+<li>将整个平面以对边中点的连线为基准, 切两刀分成四份 (3D空间的话, 需要多切一刀...)</li>
+<li>针对每一个切出来的平面重复上一步, 直到这个平面内只有一个item为止</li>
+</ol><br />
+<a href="http://blog.gregwym.info/usr/uploads/2011/04/927667422.png" title="Quadtree.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/927667422.png" alt="Quadtree.png" width=100% /></a><br />也就是说, Quadtree每个node最多有4个child, 如果以整个平面的中心为坐标中点的话, 这4个child代表每一个象限内的点的集合, 以此类推. <strong>所有item都只存在于leaf中</strong><br /><ul>
+<li>Search和BST一样, 不解释</li>
+<li>Insert就一个规则, 只要不是单身汉, 别管他3p还是5p, 都要给他们拆散! 直到新item有单间为止</li>
+<li>Delete就是insert相反, 先把item赶走, 然后把单间拆掉</li>
+<li>优点: 简单, 拆两半两半两半再两半就ok了; 对higher dimensions也很容易implementl;</li>
+<li>缺点: 占用空间大; 如果数据分布不平均, Tree就会unbalanced, height就会变得很恐怖;</li>
+</ul><br /><h3>Kd-tree</h3><br /><ol>
+<li>将item以x-coordinate排序, 画一条过median点的纵线(vertical) (同样以2D举例)</li>
+<li>对第1步切分出来的两个平面, 分别以y-coordinate排序, 然后过median画一条横线(horizontal)</li>
+<li>对第2步切分出来的平面(们)...重复第一步</li>
+<li>如果某一步切分出的某个平面内只有一个item, 则停止.</li>
+</ol><br />
+<a href="http://blog.gregwym.info/usr/uploads/2011/04/1772279057.png" title="kd-tree.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/1772279057.png" alt="kd-tree.png" width=100% /></a><br /><ul>
+<li>此法解决了Quadtree会unbalanced的问题, 其他一样.</li>
+<li>与Quadtree相同, <strong>所有item都只存在于leaf中</strong></li>
+</ul><br /><h3>Range Tree</h3><br /><ol>
+<li>以x-coordinate为基准建立balanced BST T (同样以2D举例)</li>
+<li>针对T中的每一个node v<sub>i</sub>, 用v<sub>i</sub>及其所有children建立以y-coordinate为基准的T<sub>assoc</sub>(v<sub>i</sub>)</li>
+<li>将v<sub>i</sub>链接到T<sub>assoc</sub>(v<sub>i</sub>)</li>
+</ol><br />
+<a href="http://blog.gregwym.info/usr/uploads/2011/04/1264267599.png" title="Range_trees.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/1264267599.png" alt="Range_trees.png" width=70% /></a><br /><ul>
+<li>也就是说, Range Tree第一层的每一个subtree背后, 都有一个以y-coordinate排序的另一个BST</li>
+<li>如果是higher dimensions的话, 则要多几层associated BST嵌套</li>
+<li>Search<br />
+<ul>
+<li>用x-coordinate进行BST Search</li>
+<li>对所有inside node的顶部(root of the subtree)的T<sub>assoc</sub>, 执行y-coordinate的BST Search</li>
+<li>对所有不确定的边缘node (卡在指定range的边上), 逐一进行单独判断</li>
+</ul></li>
+<li>Insert<br />
+<ul>
+<li>依照x-coordinate进行BST insertion</li>
+<li>从最终insert的位置, travel回root. 并将item insert到途经的所有node的T<sub>assoc</sub>中</li>
+</ul></li>
+<li>Delete和Insert相反</li>
+<li>缺点: balance难度较大.</li> 
+</ul><br />更新1: 修正了Range Tree的错误解释<br /><br />更多CS 240总结请看: <a target="_blank" href="http://blog.gregwym.info/tag/cs240/">http://blog.gregwym.info/tag/cs240/</a><br /></p>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-qi--range-search-query.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/cs-240-fu-xi-zong-jie-zhi-qi--range-search-query.html</wfw:commentRss>
+</item>
+<item>
+<title>CS 240复习总结之六: Dictionary Tricks</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html</link>
+<guid>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html</guid>
+<pubDate>Fri, 08 Apr 2011 03:03:14 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[各种Binary Search的变种 (杂种?)插值查找法 Interpolation Search在已知Array A大小的前提下, 假设A中的数据呈线性排列用比例推测所查找值 K, 可能存在...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<h3>各种Binary Search的变种 <del>(杂种?)</del></h3><br /><blockquote>插值查找法 Interpolation Search<br /><ul>
+<li><a href="http://blog.gregwym.info/usr/uploads/2011/04/3697520527.jpg" title="Interpolation_Search.jpg"><img src="http://blog.gregwym.info/usr/uploads/2011/04/3697520527.jpg" alt="Interpolation_Search.jpg" width="70%" /></a></li>
+<li>在已知Array A大小的前提下, 假设A中的数据呈线性排列</li>
+<li>用比例推测所查找值 K, 可能存在的Index I<br />
+I = I<sub>low</sub> + (I<sub>upper</sub> - I<sub>low</sub>)(K - K<sub>low</sub>) / (K<sub>upper</sub> - K<sub>low</sub>)</li>
+<li>如果A中的数据分布比较平均, 此法效率比BS高</li>
+<li>否则相反</li>
+<li>更详细的解释, 可参考: <a target="_blank" href="http://program-lover.blogspot.com/2008/12/interpolation-search.html">【演算】內插搜尋法 - Interpolation Search</a></li>
+</ul><br />Gallop Search<br /><ul>
+<li>先推测出K所在的范围, 然后执行BS</li>
+<li>适用于数据量大的搜索. 通过减小BS的搜索范围, 优化性能.</li>
+</ul><br />跳跃列表 Skip Lists (我觉得最有意思的数据结构)<br /><ul>
+<li>整个表以多层表的形式出现, 每层均包含"极小"和"极大"两个item</li>
+<li>每个item拥有一个随机的height值</li>
+<li>最顶层只包含两个极值, 层数越低, 包含的item越多, 直到底层.</li>	
+<li>Search方式<ul>
+<li>从顶层起</li>
+<li>如果该层中的下一项item大于K, 则落入下一层</li>
+<li>否则继续在该层向后查找</li>
+</ul></li>
+<li><a href="http://blog.gregwym.info/usr/uploads/2011/04/2207809994.png" title="Skip_List.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/2207809994.png" alt="Skip_List.png" width=100% /></a></li>
+</ul></blockquote><h3>针对访问概率进行的优化</h3><blockquote>自排序搜索 Self-Organizing Search<br /><ul>
+<li>如果我们知道某一系列数据中, 每一个item可能被访问的概率</li>
+<li>依照每一项的概率对数据进行排序, 优化高概率item的访问效率</li>
+<li>如果不知道可能的访问概率, 则需要...</li>
+</ul><p>动态排序 Dynamic Ordering<br /><ul>
+<li>方法一: Move-To-Front(MTF)<br />
+<ul>
+<li>将每次搜索到的item移到最前</li>
+<li>近期内再搜索此item的时候, 效率会提高</li>
+</ul></li>
+<li>方法二: Transpose<br />
+<ul>
+<li>将每次搜索到的item与其前一项互换</li>
+<li>多次访问同一item以后, 该item的排序会提前很多, 访问效率会提高</li>
+</ul></li>
+</ul></blockquote><br />更多CS 240总结请看: <a target="_blank" href="http://blog.gregwym.info/tag/cs240/">http://blog.gregwym.info/tag/cs240/</a><br /></p>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html</wfw:commentRss>
+</item>
+<item>
+<title>CS 240复习总结之五: Hashing</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-wu--hashing.html</link>
+<guid>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-wu--hashing.html</guid>
+<pubDate>Thu, 07 Apr 2011 07:11:34 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[Direct Addressingkey和地址直接对应与Counting Sort同理Runtime: Θ(1), Space: Θ(n)浪费空间, 且只能用于intHashingHash ...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<blockquote><h4>Direct Addressing</h4><br /><ul>
+<li>key和地址直接对应</li>
+<li>与Counting Sort同理</li>
+<li>Runtime: Θ(1), Space: Θ(n)</li>
+<li>浪费空间, 且只能用于int</li>
+</ul></blockquote><br /><h3>Hashing</h3><br /><blockquote>Hash Function<br /><ul>
+<li>将key经过function运算以后, 得到对应的hash value</li>
+<li>Hash function的好坏决定于数据的性质, 不同的数据适用不同的function</li>
+<li>好的Hash funtion, 高效, 与数据规律无关联, 依赖于key的所有部分</li>
+</ul><br />
+冲突解决方案(Collision Resolution)<br />Basic concept:<br /><ul>
+<li>Buckets: 多个item共存</li>
+<li>Open Addressing: 一个item对应多个位置</li>
+<li>Load Balance: α = n/M (n: item数量, M: hash table大小)</li>
+</ul></blockquote><br /><blockquote>方案一: Chaining (Buckets)<br /><ul>
+<li>将新的item放入对应位置, 并link到原来位置所存放的item</li>
+<li>缺点: 大量数据会导致大量重复, 效率降低</li>
+</ul><br />方案二: Linear Probing<br /><ul>
+<li>如果要insert的位置非空, 则将item放入下一个位置. 重复这一条直到insert成功/回到原位置(insert失败)</li>
+<li>某个item被delete以后, 该位置须标记为deleted, 不能再使用</li>
+<li>缺点: 大量数据后会有明显的效率降低, deleted以后会有空间浪费, 增加M以后rehash可以解决部分问题, 但cost很高.</li>
+</ul><br />方案三:  Double Hashing<br /><ul>
+<li>在Linear Probing基础上增加一个与h1独立的functions h2.</li>
+<li>如果要insert的位置非空, hash value = [原hash value + h2(k)] % M. 重复这一条直到insert成功/回到原位置(insert失败)</li>
+<li>缺点: 与Linear Probing相同, 只是increment由1变为了h2的结果, 所以降低了第二次insert的失败概率.</li>
+</ul><br />方案四: Cuckoo Hasing<br /><ol>
+<li>有两个相互独立的hash functions, h1和h2</li>
+<li>将item insert到h1(k)中</li>
+<li>如果原来h1(k)的位置并不为空, 将原item重新insert到与h1(k)值不同的hash value中去</li>
+<li>如出现loop的情况, insert失败, rehash</li>
+</ol><br /><ul style="margin-top: -12px;"><li>优点: iterm只能出现在h1(k)或者h2(k)中, search效率高.</li></ul></blockquote><br /><del>继续编辑中...</del><br />谁能告诉我, 咱们学Extendible Hashing了么`? 貌似没有吧...<br /><br />更多CS 240总结请看: <a target="_blank" href="http://blog.gregwym.info/tag/cs240/">http://blog.gregwym.info/tag/cs240/</a></p>
+]]></content:encoded>
+<slash:comments>3</slash:comments>
+<comments>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-wu--hashing.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/cs-240-fu-xi-zong-jie-zhi-wu--hashing.html</wfw:commentRss>
+</item>
+<item>
+<title>CS 240复习总结之四: Dictionaries &amp; Balanced Search Trees</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-si--dictionaries-and-balanced-search-trees.html</link>
+<guid>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-si--dictionaries-and-balanced-search-trees.html</guid>
+<pubDate>Wed, 06 Apr 2011 12:00:49 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[AVL Tree性质:BST基础性质左侧和右侧subtree的height最多差1空白Tree的高度为-1Search, Insert, Delete Runtime均为Θ(log n)AV...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<blockquote>AVL Tree性质:<br /><ul>
+<li>BST基础性质</li>
+<li>左侧和右侧subtree的height最多差1</li>
+<li>空白Tree的高度为-1</li>
+<li>Search, Insert, Delete Runtime均为Θ(log n)</li>
+</ul><br />AVL Insertion:<br /><ol>
+<li>执行标准BST Insertion</li>
+<li>从新insert的leaf开始, 从下往上更新balance factor(左右高度差)</li>
+<li>如发现高度差超过1(即为2), 则执行fix</li>
+</ol><br />AVL Fix: 修复高度差为2的subtree<br /><ul>
+<li>Single rotation: 当height最高的leaf位于最左侧/最右侧<br />
+<ul>
+<li>将subtree的root Z向height较低的方向旋转, 即以height较高的child Y为root</li>
+<li>Y原内侧child, 并入Z内侧</li>
+</ul><br />
+<a href="http://blog.gregwym.info/usr/uploads/2011/04/1588174024.png" title="AVL_single_rotation.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/1588174024.png" alt="AVL_single_rotation.png" width=100% /></a></li>
+<li>Double rotation: 当height最高的leaf位于Tree内侧<br />
+<ul>
+<li>将height较高的root child向外侧旋转, 将Tree变形为Single rotation的初始形式</li>
+<li>执行Single rotation</li>
+</ul><br />
+<a href="http://blog.gregwym.info/usr/uploads/2011/04/2278239341.png" title="AVL_double_rotation.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/2278239341.png" alt="AVL_double_rotation.png" width=100% /></a></li>
+</ul></blockquote><br /><blockquote>2-3 Tree性质:<br /><ul>
+<li>BST基础性质</li>
+<li>每个node包含一个KVP*和两个children, 或者包含两个KVP和三个children.</li>
+<li>所有leaf都在同一层(level)</li>
+</ul><br />
+2-3 Tree Insertion:<br /><ol>
+<li>找到KVP应在的leaf (BST规则)</li>
+<li>如果该leaf已经饱和 (已经包含两个KVP), 则将3个KVP排序a < b < c.</li>
+<li>将a和c分割成两个单独的leaf, 并将b插入到parent中.</li>
+<li>重复第2步直到符合2-3 Tree所有性质</li>
+</ol><br />
+2-3 Tree Deletion: 删除x<br /><ol>
+<li>如果x所在的node有两个KVP, 则直接删除x</li>
+<li>如果同parent下, 与该node相邻的child有两个KVP, 则用node与child之间的parent替代x, 并用中间值替代parent</li>
+<li>否则 (同parent下, node相邻child均只有一个KVP), 将相邻child与parent(中间值)合并. 重复直到Tree符合要求.</li>
+</ol></blockquote><br /><blockquote>B-Tree性质:<br /><ul>
+<li>扩展版的2-3 Tree</li>
+<li>每个node包含最多2d个KVP</li>
+<li>非root的node最少包含d个KVP</li>
+<li>2-3 Tree的d = 1</li>
+</ul><br />
+Insertion和Deletion与2-3 Tree大同小异<br /><br />注: 此B-Tree定义不完全符合11W Slide<br /></blockquote><br />备注: KVP意为Key-Value Pair, 即Key与Value的一对, 为一个KVP.<br /><br />今天先到这里了...明天总结后半部分`= =<br /><br /><br />更多CS 240总结请看: <a target="_blank" href="http://blog.gregwym.info/tag/cs240/">http://blog.gregwym.info/tag/cs240/</a><br /></p>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-si--dictionaries-and-balanced-search-trees.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/cs-240-fu-xi-zong-jie-zhi-si--dictionaries-and-balanced-search-trees.html</wfw:commentRss>
+</item>
+</channel>
+</rss>

@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>MacBook更换硬盘记 (完美迁移Lion隐藏恢复分区) - 某储备粮的“学习笔记”</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 使用url函数转换相关路径 -->
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/style.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/prettify.css" />
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="http://blog.gregwym.info/images/favicon.ico">
+<link rel="apple-touch-icon" href="http://blog.gregwym.info/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="http://blog.gregwym.info/images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="http://blog.gregwym.info/images/apple-touch-icon-114x114.png">
+
+<!-- 通过自有函数输出HTML头部信息 -->
+<meta name="description" content="前段时间收了个二手的MacBook, 升级到8G内存以后, 所有东西都很给力, 但原来的硬盘只有160G. 从同学那拿了个500G的硬盘, 准备换上.主分区的迁移很容易, Mac OS X的磁盘工具是..." />
+<meta name="keywords" content="apple,mac,recovery,lion" />
+<meta name="generator" content="Typecho 0.9/13.12.12" />
+<meta name="template" content="trapecho" />
+<link rel="pingback" href="action/xmlrpc.html" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="action/xmlrpc%3Frsd.html" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="action/xmlrpc%3Fwlw.html" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="feed/macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html" />
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="feed/rss/macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html" />
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="feed/atom/macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html" />
+<script type="text/javascript">
+//<![CDATA[
+var TypechoComment = {
+    dom : function (id) {
+        return document.getElementById(id);
+    },
+    
+    create : function (tag, attr) {
+        var el = document.createElement(tag);
+        
+        for (var key in attr) {
+            el.setAttribute(key, attr[key]);
+        }
+        
+        return el;
+    },
+
+    reply : function (cid, coid) {
+        var comment = this.dom(cid), parent = comment.parentNode,
+            response = this.dom('respond-post-79'), input = this.dom('comment-parent'),
+            form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+            textarea = response.getElementsByTagName('textarea')[0];
+
+        if (null == input) {
+            input = this.create('input', {
+                'type' : 'hidden',
+                'name' : 'parent',
+                'id'   : 'comment-parent'
+            });
+
+            form.appendChild(input);
+        }
+        
+        input.setAttribute('value', coid);
+
+        if (null == this.dom('comment-form-place-holder')) {
+            var holder = this.create('div', {
+                'id' : 'comment-form-place-holder'
+            });
+            
+            response.parentNode.insertBefore(holder, response);
+        }
+
+        comment.appendChild(response);
+        this.dom('cancel-comment-reply-link').style.display = '';
+        
+        if (null != textarea && 'text' == textarea.name) {
+            textarea.focus();
+        }
+        
+        return false;
+    },
+
+    cancelReply : function () {
+        var response = this.dom('respond-post-79'),
+        holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+        if (null != input) {
+            input.parentNode.removeChild(input);
+        }
+
+        if (null == holder) {
+            return true;
+        }
+
+        this.dom('cancel-comment-reply-link').style.display = 'none';
+        holder.parentNode.insertBefore(response, holder);
+        return false;
+    }
+}
+//]]>
+</script></head>
+
+<body onload="prettyPrint()">
+
+<div class="container">
+
+<header class="jumbotron" id="overview">
+        <h1>某储备粮的“学习笔记” </h1>
+    <p class="lead">by 咳嗽di小鱼</p>
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                
+                <a class="brand" href="index.html">
+                    Trapecho
+                </a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="index.html">Home</a></li>
+                        <li class="divider-vertical"></li>
+                                                                        <li><a href="category/sum-up/index.html" title="Sum Up">Sum Up</a></li>
+                                                <li><a href="category/code-dump/index.html" title="Code Dump">Code Dump</a></li>
+                                                <li><a href="category/network/index.html" title="Network">Network</a></li>
+                                                <li><a href="category/jotting/index.html" title="Jotting">Jotting</a></li>
+                                                <li><a href="category/Portfolio/index.html" title="Portfolio">Portfolio</a></li>
+                                                <li class="divider-vertical"></li>
+                                                                        <li><a href="linked-in.html" title="Linked In">Linked In</a></li>
+                                                <li><a href="guess-book.html" title="Guest Book">Guest Book</a></li>
+                                                <li><a href="about.html" title="About">About</a></li>
+                                                <li><a href="rss.html" title="RSS">RSS</a></li>
+                                            </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="content">
+
+
+<div class="row">
+    <div class="span9" id="content">
+        <div class="post">
+            <div class="page-header">
+                <h1>
+                    MacBook更换硬盘记 (完美迁移Lion隐藏恢复分区)                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: December 3, 2011</span>
+                    <span>Category: <a href="category/jotting/index.html">Jotting</a></span>
+                </h6>
+            </div>
+            <div class="entry-content"><p>前段时间收了个二手的MacBook, 升级到8G内存以后, 所有东西都很给力, 但原来的硬盘只有160G. 从同学那拿了个500G的硬盘, 准备换上.</p><p>主分区的迁移很容易, Mac OS X的磁盘工具是神器, 主分区直接恢复到新硬盘的对应分区即可. 但原机主已经装好了Lion(不知道是不是正版), Lion中增加了一个隐藏分区, 可以在系统崩溃的时候作为恢复分区. 所以希望能把隐藏分区完美移植到新硬盘上, 又保留原先Mac分区的数据, 只是扩大容量.</p><p>搜索了很多地方, 国内的各大论坛貌似都没有人研究过移植Lion恢复分区的问题, 最后还是在一个英文博客上找到了可行的方法. 翻译整理一下记录在这里, 方便碰到类似问题的朋友. 因为我自己操作的时候并没有截图, 所以直接使用原英文博客上的数据了.</p><p><!--more--></p><h3>Step1: 准备范本</h3><p>在移植隐藏分区之前, 首先需要一个隐藏分区的范本.<br />个人认为, 应该尽量避免把正在运行的系统作为复制的范本<br />我的做法是, 在换硬盘之前, 先使用"Lion 恢复磁盘助理"制作一个可以boot的恢复U盘. 从U盘boot后, 把原硬盘的恢复分区作为范本. 这样也保证了原汁原味.<br />Lion 恢复磁盘助理下载地址: <a href="http://support.apple.com/kb/DL1433?viewlocale=zh_CN">http://support.apple.com/kb/DL1433?viewlocale=zh_CN</a></p><h3>Step2: 从U盘启动</h3><p>将制作好的U盘插入电脑, 开机时按住Option选择U盘启动, 从U盘boot进入到Lion的恢复系统中.<br />将两块硬盘的其中一块放到USB硬盘盒中并接入电脑.</p><h3>Step3: 格式化新硬盘</h3><p>先进入"磁盘工具"把新硬盘整个都抹成"Mac OS扩展 (日志式)"<br />然后退出"磁盘工具"</p><h3>Step4: 收集信息</h3><p>点击"实用程序"->"终端" 进入Terminal<br />输入diskutil list, 列出系统中所有的磁盘和分区, 找出原盘和新盘的代码, 还有分区的编号.<br />例如:</p><pre><code>/dev/disk0
+   #:                       TYPE NAME              SIZE      IDENTIFIER
+   0:      GUID_partition_scheme                  *128.0 GB  disk0
+   1:                        EFI                   209.7 MB  disk0s1
+   2:                  Apple_HFS Macintosh HD      127.7 GB  disk0s2
+/dev/disk1
+   #:                       TYPE NAME              SIZE      IDENTIFIER
+   0:      GUID_partition_scheme                  *32.3 GB   disk1
+   1:                        EFI                   209.7 MB  disk1s1
+   2:                  Apple_HFS OSX               31.4 GB   disk1s2
+   3:                 Apple_Boot Recovery HD       650.0 MB  disk1s3
+</code></pre><p>其中, 记录下列信息</p><ul>
+<li>/dev/disk0是我们要操作的新硬盘, #2分区是主分区</li>
+<li>/dev/disk1是我们要作为范本的老硬盘 or U盘, #3分区是Lion恢复分区</li>
+</ul><h3>Step5: 继续收集信息</h3><p>输入diskutil info /dev/disk0s2 (新硬盘的第二个分区)</p><pre><code>Device Identifier:        disk0s2
+    Device Node:              /dev/disk0s2
+    Part of Whole:            disk0
+    Device / Media Name:      Macintosh HD
+    ...
+    Total Size:               127.7 GB (127691702272 Bytes) (exactly 249397856 512-Byte-Blocks)
+    ...
+</code></pre><p>重点在于127691702272 Bytes, 你的硬盘不一定是这个大小, 记录下来</p><p>再输入diskutil info /dev/disk1s3</p><pre><code>Device Identifier:        disk1s3
+    Device Node:              /dev/disk1s3
+    Part of Whole:            disk1
+    Device / Media Name:      Recovery HD
+    ...
+    Total Size:               650.0 MB (650002432 Bytes) (exactly 1269536 512-Byte-Blocks)
+    ...
+</code></pre><p>重点是650002432 Bytes, 你的盘可能稍微有点不一样, 记录下来.</p><p>这样我们就收集齐了移植恢复分区的所有数据.</p><h3>Step6: 调整分区大小并创建新分区</h3><p>原来的隐藏分区是650MB, 但保险起见, 防止复制分区时少copy任意数据, 我们给隐藏分区分配700MB.<br />所以主分区的新大小为 127691702272 - 700 * 1000 * 1000 = 126991702272 Bytes (请根据你实际大小进行计算)<br />调整主分区的同时, 创建新分区. 注意输入正确的分区名称和大小!!!</p><pre><code>-bash-3.2# diskutil resizeVolume /dev/disk0s2 126991702272B  jhfs+ "Recovery HD" 650002432B
+Started partitioning on disk0s2 Macintosh HD
+Verifying the disk
+Checking file system
+Performing live verification
+Checking Journaled HFS Plus volume
+Checking extents overflow file
+Checking catalog file
+Checking multi-linked files
+Checking catalog hierarchy
+Checking extended attributes file
+Checking volume bitmap
+Checking volume information
+The volume Macintosh HD appears to be OK
+Resizing
+Waiting for the disks to reappear
+Formatting disk0s3 as Mac OS Extended (Journaled) with name Recovery HD
+Initialized /dev/rdisk0s3 as a 621 MB HFS Plus volume with a 8192k journal
+Mounting disk
+Finished partitioning on disk0s2 Macintosh HD
+/dev/disk0
+   #:                       TYPE NAME             SIZE      IDENTIFIER
+   0:      GUID_partition_scheme                 *128.0 GB  disk0
+   1:                        EFI                  209.7 MB  disk0s1
+   2:                  Apple_HFS Macintosh HD     127.0 GB  disk0s2
+   3:                  Apple_HFS Recovery HD      651.1 MB  disk0s3
+</code></pre><p>新建的分区大小比我们给的数大了些, 重新resize.</p><pre><code>-bash-3.2# diskutil resizeVolume disk0s3 650002432B
+ Started partitioning on disk0s3 Recovery HD
+ Verifying the disk
+ Checking file system
+ Checking Journaled HFS Plus volume
+ Checking extents overflow file
+ Checking catalog file
+ Checking multi-linked files
+ Checking catalog hierarchy
+ Checking extended attributes file
+ Checking volume bitmap
+ Checking volume information
+ The volume Recovery HD appears to be OK
+ Resizing
+ Finished partitioning on disk0s3 Recovery HD
+ /dev/disk0
+    #:                       TYPE NAME             SIZE      IDENTIFIER
+    0:      GUID_partition_scheme                 *128.0 GB  disk0
+    1:                        EFI                  209.7 MB  disk0s1
+    2:                  Apple_HFS Macintosh HD     127.0 GB  disk0s2
+    3:                  Apple_HFS Recovery HD      650.0 MB  disk0s3
+</code></pre><p>这样就对了. 注: 这一步很重要, 如果隐藏分区大小不对, 最后会失败的!</p><h3>Step7: 复制隐藏分区数据</h3><p>将新创建的分区卸载(unmount).<br />然后用dd复制隐藏分区文件, 如下</p><pre><code>-bash-3.2# dd if=/dev/disk1s3 of=/dev/disk0s3
+    1269536+0 records in
+    1269536+0 records out
+    650002432 bytes transferred in 185.538679 secs (3503326 bytes/sec)
+</code></pre><p>dd会把原盘的隐藏分区里的内容, 一字不差的复制到新分区中, 不该失败.</p><h3>Step8: 修改隐藏分区的类型</h3><pre><code>-bash-3.2# asr adjust --target /dev/disk0s3 -settype "Apple_Boot"
+    Fsck /dev/disk0s3 ....10....20....30....40....50....60....70....80....90....100
+  Adjust completed successfully
+</code></pre><p>运行完以后检查一下结果,</p><pre><code>-bash-3.2# diskutil list
+ /dev/disk0
+    #:                       TYPE NAME             SIZE      IDENTIFIER
+    0:      GUID_partition_scheme                 *128.0 GB  disk0
+    1:                        EFI                  209.7 MB  disk0s1
+    2:                  Apple_HFS Macintosh HD     127.0 GB  disk0s2
+    3:                 Apple_Boot Recovery HD      650.0 MB  disk0s3
+ /dev/disk1
+    #:                       TYPE NAME             SIZE      IDENTIFIER
+    0:      GUID_partition_scheme                 *32.3 GB   disk1
+    1:                        EFI                  209.7 MB  disk1s1
+    2:                  Apple_HFS OSX              31.4 GB   disk1s2
+    3:                 Apple_Boot Recovery HD      650.0 MB  disk1s3
+</code></pre><p>新硬盘上的Recovery HD现在应该已经是Apple_Boot类型了.</p><p>之后通过"磁盘工具"将老硬盘的Mac分区恢复到新硬盘的Mac分区, 然后在开机时就可以通过按住option键boot进新硬盘中的系统和恢复分区了.<br />进入系统后注意设置启动磁盘, 不然再次重启时候还需要按option键.</p><p>完毕</p><p><hr /></p><p>参考源:<br /><a href="http://www.dmitry-dulepov.com/2011/09/mac-recovery-partion-revisited.html">http://www.dmitry-dulepov.com/2011/09/mac-recovery-partion-revisited.html</a></p></div>
+            <div class="entry-tags">
+                Labels: 
+                <span class="label label-info">
+                    <a href="tag/apple/index.html">apple</a></span> <span class="label label-info"><a href="tag/mac/index.html">mac</a></span> <span class="label label-info"><a href="tag/recovery/index.html">recovery</a></span> <span class="label label-info"><a href="tag/lion/index.html">lion</a>                </span>
+            </div>
+        </div>
+        <hr class="soften" />
+        <div id="comments">
+                                    <h3>18 comments &raquo;</h3>
+            
+            <ol class="comment-list"><li id="comment-494" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/17948ba5d78626f5d9eb0ff010e8df92?s=32&amp;r=X&amp;d=" alt="CzBiX" width="32" height="32" />        <cite class="fn"><a href="http://czbix.tk" rel="external nofollow">CzBiX</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html#comment-494">December 3rd, 2011 at 04:53 am</a>
+            </div>
+    <div class="comment-content">
+    <p>验证码不用这么复杂吧...<br>
+有时候最后一个字符还只能看一半</p>    </div>
+    <div class="comment-reply">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html%3FreplyTo=494.html#respond-post-79" rel="nofollow" onclick="return TypechoComment.reply('comment-494', 494);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-495" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html#comment-495">December 3rd, 2011 at 01:01 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>哈哈`用的一个插件...<br>
+不过就这样, 还是有时候有垃圾留言进来呢`</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-498" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/17948ba5d78626f5d9eb0ff010e8df92?s=32&amp;r=X&amp;d=" alt="CzBiX" width="32" height="32" />        <cite class="fn"><a href="http://czbix.tk" rel="external nofollow">CzBiX</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html#comment-498">December 3rd, 2011 at 11:27 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>去PHP文件里修改一下参数嘛.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-499" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html#comment-499">December 3rd, 2011 at 11:39 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>嗯`闲点时候把博客大规模调整一下</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-496" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/43110ce9dd31ef52b54e761f1110fb50?s=32&amp;r=X&amp;d=" alt="杰森葱" width="32" height="32" />        <cite class="fn">杰森葱</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html#comment-496">December 3rd, 2011 at 02:43 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>原来160GB的是SSD吗。换上的500GB的…应该不是SSD吧(⊙＿⊙)</p>    </div>
+    <div class="comment-reply">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html%3FreplyTo=496.html#respond-post-79" rel="nofollow" onclick="return TypechoComment.reply('comment-496', 496);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-497" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html#comment-497">December 3rd, 2011 at 03:53 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>0 0`肯定不是SSD啊...160G的SSD现在就要200-300块吧</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-504" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/1c19f823fbefb329f47838bf2615e78f?s=32&amp;r=X&amp;d=" alt="joey" width="32" height="32" />        <cite class="fn">joey</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html#comment-504">December 23rd, 2011 at 10:10 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>多谢，正好需要这个。</p>    </div>
+    <div class="comment-reply">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html%3FreplyTo=504.html#respond-post-79" rel="nofollow" onclick="return TypechoComment.reply('comment-504', 504);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-505" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html#comment-505">January 4th, 2012 at 03:57 am</a>
+            </div>
+    <div class="comment-content">
+    <p>哈哈`能用上就太好了...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-507" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/1c19f823fbefb329f47838bf2615e78f?s=32&amp;r=X&amp;d=" alt="joey" width="32" height="32" />        <cite class="fn">joey</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html#comment-507">January 27th, 2012 at 10:53 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>趁过年把硬盘按照此文方法换好了，现在正在用。特来再次感谢，新年快乐，恭喜发财。哈哈</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-508" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html#comment-508">January 29th, 2012 at 03:14 am</a>
+            </div>
+    <div class="comment-content">
+    <p>哈哈`过年好...不客气</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-509" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/e74f3a6f6461866c3ef30bf02be813e1?s=32&amp;r=X&amp;d=" alt="alexander" width="32" height="32" />        <cite class="fn">alexander</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html#comment-509">February 5th, 2012 at 01:19 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>謝謝你的文章，我才搞定 Recovery HD</p>    </div>
+    <div class="comment-reply">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html%3FreplyTo=509.html#respond-post-79" rel="nofollow" onclick="return TypechoComment.reply('comment-509', 509);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-510" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html#comment-510">February 6th, 2012 at 10:39 am</a>
+            </div>
+    <div class="comment-content">
+    <p>哈哈`不客气...有帮助就好</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-511" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/d2ad946411bb7848e873d0c3588bfe45?s=32&amp;r=X&amp;d=" alt="gongyi" width="32" height="32" />        <cite class="fn"><a href="http://gongyi.info/" rel="external nofollow">gongyi</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html#comment-511">February 12th, 2012 at 04:59 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>mac木用过的路过，换本本的时候打算去买thinkpad算了</p>    </div>
+    <div class="comment-reply">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html%3FreplyTo=511.html#respond-post-79" rel="nofollow" onclick="return TypechoComment.reply('comment-511', 511);">回复</a>    </div>
+    </li>
+<li id="comment-565" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/2711c64b4f9e3e4051c66c41fc49682a?s=32&amp;r=X&amp;d=" alt="王小痴" width="32" height="32" />        <cite class="fn">王小痴</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html#comment-565">April 2nd, 2012 at 11:32 am</a>
+            </div>
+    <div class="comment-content">
+    <p>请问如何unmount磁盘分区呢？</p>    </div>
+    <div class="comment-reply">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html%3FreplyTo=565.html#respond-post-79" rel="nofollow" onclick="return TypechoComment.reply('comment-565', 565);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-566" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html#comment-566">April 2nd, 2012 at 11:34 am</a>
+            </div>
+    <div class="comment-content">
+    <p>磁盘工具里, 选中一个分区, 点击"卸载"</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-567" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/2711c64b4f9e3e4051c66c41fc49682a?s=32&amp;r=X&amp;d=" alt="王小痴" width="32" height="32" />        <cite class="fn">王小痴</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html#comment-567">April 2nd, 2012 at 11:35 am</a>
+            </div>
+    <div class="comment-content">
+    <p>找了好久没找到方法啊。</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-568" class="comment-body comment-child comment-level-odd comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/2711c64b4f9e3e4051c66c41fc49682a?s=32&amp;r=X&amp;d=" alt="王小痴" width="32" height="32" />        <cite class="fn">王小痴</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html#comment-568">April 2nd, 2012 at 11:36 am</a>
+            </div>
+    <div class="comment-content">
+    <p>谢谢啦。我还傻傻的在研究unmount命令。哈哈</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-569" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/2711c64b4f9e3e4051c66c41fc49682a?s=32&amp;r=X&amp;d=" alt="王小痴" width="32" height="32" />        <cite class="fn">王小痴</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html#comment-569">April 2nd, 2012 at 11:36 am</a>
+            </div>
+    <div class="comment-content">
+    <p>谢谢啦。我还傻傻的在研究unmount命令。哈哈</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+</ol>            
+            <div class="pagination">
+                            </div>
+            
+                        
+                        <div id="respond-post-79" class="respond">
+            
+            <div class="cancel-comment-reply">
+            <a id="cancel-comment-reply-link" href="macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html#respond-post-79" rel="nofollow" onclick="return TypechoComment.cancelReply();">取消回复</a>            </div>
+            
+            <form class="form-horizontal" method="post" action="http://blog.gregwym.info/macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html/comment?parent=511" id="comment_form">
+                <fieldset>
+                    <legend>Add new comment &raquo;</legend>
+                                        <div class="control-group">
+                        <label class="control-label" for="author">Nick name</label>
+                        <div class="controls">
+                            <input type="text" name="author" id="author" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="mail">E-mail<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" name="mail" id="mail" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Web</label>
+                        <div class="controls">
+                            <input type="text" name="url" id="url" class="input-large" value="" />
+                        </div>
+                    </div>
+                                        <div class="control-group">
+                        <label class="control-label" for="url">Comment</label>
+                        <div class="controls">
+                            <textarea class="input-xlarge" name="text" rows="3"></textarea>
+                            <p class="help-block">Enter your comment here...</p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Captcha</label>
+                        <div class="controls">
+                            <img src="action/captcha" alt="captcha" onclick="this.src = this.src + '?' + Math.random()" style="cursor: pointer" title="点击图片刷新验证码" /><br /><input type="text" class="captcha" name="captcha_code" /> <strong>请输入验证码</strong>							                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Submit comment</button>
+                    </div>
+                </fieldset>
+            </form>
+            </div>
+            
+
+        </div>    </div><!-- end #content-->
+    <div class="span3" id="sidebar">
+    <div class="widget_search">
+        <form method="post" id="searchform" class="form-search">
+            <input type="text" class="span2" name="s" id="s" />
+            <button type="submit" class="btn" id="searchsubmit">Search</button>
+        </form>
+    </div>
+    
+        
+                    <div class="widget">
+            <h3>Related Posts</h3>
+                        <ul>
+                            <li><a href="ipad-2-bai-se-kai-xiang-tu.html" title="iPad 2 白色高清无码openbox`">iPad 2 白色高清无码openbox`</a></li>
+                        </ul>
+        </div>
+            
+    
+        <div class="widget">
+        <h3>Recent Comments</h3>
+        <ul>
+                                    <li><a href="github-you-should-have-told-me-earlier.html#comment-952">payday loans</a>: wfxqtdq</li>
+                        <li><a href="Trapecho-boostrap-based-typecho-theme.html#comment-936">地铁线路图网</a>: 我也在用typecho，小巧玲珑，稍微改了以下默认模板，站现在简洁速度也不错，点击我的昵称可以访问。</li>
+                        <li><a href="about.html#comment-930">ramble</a>: 博客 ，请问如何显示显示文章前3段的摘要  不打乱格式</li>
+                        <li><a href="about.html#comment-874">清源</a>: 看来暂时只能看着用了，google的高亮的比较不明显。</li>
+                        <li><a href="about.html#comment-870">清源</a>: 大哥呀，主题这几天我看着感觉用中文书写标题字体太大了，正文的字体也太小了，估计还是适合用英文，不知道...</li>
+                    </ul>
+    </div>
+        
+        <div class="widget">
+    		<h3>Labels</h3>
+        <ul>
+                                    <a href="tag/algorithm/index.html" class="size-20">algorithm</a>
+                        <a href="tag/review/index.html" class="size-20">review</a>
+                        <a href="tag/cs240/index.html" class="size-10">cs240</a>
+                        <a href="tag/server/index.html" class="size-10">server</a>
+                        <a href="tag/VPS/index.html" class="size-10">VPS</a>
+                        <a href="tag/code/index.html" class="size-5">code</a>
+                        <a href="tag/database/index.html" class="size-5">database</a>
+                        <a href="tag/cs348/index.html" class="size-5">cs348</a>
+                        <a href="tag/typecho/index.html" class="size-5">typecho</a>
+                        <a href="tag/nginx/index.html" class="size-5">nginx</a>
+                        <a href="tag/search/index.html" class="size-5">search</a>
+                        <a href="tag/GUI/index.html" class="size-5">GUI</a>
+                        <a href="tag/linux/index.html" class="size-5">linux</a>
+                        <a href="tag/java/index.html" class="size-5">java</a>
+                        <a href="tag/DNS/index.html" class="size-5">DNS</a>
+                        <a href="tag/blog/index.html" class="size-5">blog</a>
+                        <a href="tag/apple/index.html" class="size-5">apple</a>
+                        <a href="tag/cs241/index.html" class="size-5">cs241</a>
+                        <a href="tag/compiler/index.html" class="size-5">compiler</a>
+                        <a href="tag/sql/index.html" class="size-5">sql</a>
+                    </ul>
+		</div>
+    
+    
+        <div class="widget">
+        <h3>Archives</h3>
+        <ul>
+            <li><a href="2013/09/index.html">September 2013</a></li>
+<li><a href="2012/12/index.html">December 2012</a></li>
+<li><a href="2012/11/index.html">November 2012</a></li>
+<li><a href="2012/08/index.html">August 2012</a></li>
+<li><a href="2012/06/index.html">June 2012</a></li>
+<li><a href="2012/04/index.html">April 2012</a></li>
+<li><a href="2012/03/index.html">March 2012</a></li>
+<li><a href="2012/02/index.html">February 2012</a></li>
+<li><a href="2011/12/index.html">December 2011</a></li>
+<li><a href="2011/11/index.html">November 2011</a></li>
+<li><a href="2011/10/index.html">October 2011</a></li>
+<li><a href="2011/06/index.html">June 2011</a></li>
+<li><a href="2011/05/index.html">May 2011</a></li>
+<li><a href="2011/04/index.html">April 2011</a></li>
+<li><a href="2011/03/index.html">March 2011</a></li>
+        </ul>
+    </div>
+    
+    
+        <div class="widget">
+        <h3>Others</h3>
+        <ul>
+                        <li class="last"><a href="http://blog.gregwym.info/admin/login.php">Login</a></li>
+                        <li><a href="http://validator.w3.org/check/referer">Valid XHTML</a></li>
+        </ul>
+    </div>
+    
+    </div><!-- end #sidebar -->
+    
+</div>
+<footer>
+    <p>
+        Powered by <a href="http://typecho.org/">Typecho</a>. 
+        <a href="http://dolast.com/pages/trapecho">Trapecho</a> theme by <a href="index.html">咳嗽di小鱼</a>. 
+        Hosting on <a href="https://www.digitalocean.com/?refcode=b846692d6a3a">Digital Ocean</a>
+    </p>
+</footer><!-- end #footer -->
+
+</div>
+</div>
+
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/jquery-1.7.1.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/bootstrap.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/prettify.js"></script>
+<script type="text/javascript">
+    // fix navbar on scroll
+    var $win = $(window)
+      , $nav = $('.navbar')
+      , navTop = $('.navbar').length && $('.navbar').offset().top - 10
+      , isFixed = 0
+
+    processScroll()
+
+    $win.on('scroll', processScroll)
+
+    function processScroll() {
+      var i, scrollTop = $win.scrollTop()
+      if (scrollTop >= navTop && !isFixed) {
+        isFixed = 1
+        $nav.addClass('navbar-fixed-top')
+      } else if (scrollTop <= navTop && isFixed) {
+        isFixed = 0
+        $nav.removeClass('navbar-fixed-top')
+      }
+    }
+    
+    $('.page-navigator li:not(:has(a))').html('<a>...</a>');
+    $('.page-navigator .current').addClass('active');
+    
+        $('pre').addClass('prettyprint linenums');
+        $('.entry-content a').attr('target','_blank');
+</script>
+</body>
+</html>
+

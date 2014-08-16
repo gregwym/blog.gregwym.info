@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/tag/typecho/">
+<title>某储备粮的“学习笔记” - typecho</title>
+<link>http://blog.gregwym.info/tag/typecho/</link>
+<description></description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/typecho-markdown-editor.html"/>
+<rdf:li resource="http://blog.gregwym.info/Trapecho-boostrap-based-typecho-theme.html"/>
+<rdf:li resource="http://blog.gregwym.info/shuo-shuo-typecho%60.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/typecho-markdown-editor.html">
+<title>Typecho用Markdown编辑器</title>
+<link>http://blog.gregwym.info/typecho-markdown-editor.html</link>
+<dc:date>2012-03-18T23:08:18+08:00</dc:date>
+<description>在网上找了下Typecho的Markdown插件, 有两个版本, 主要区别如下
+明城制作的Markdown插件 
+
+
+浏览时转换Markdown=>HTML
+数据库保存Markdown文本
+
+ichuan制作的Markdown4TE 
+
+
+保存文章时转换Markdown=>HTML
+数据库保存HTML文本
+
+这两种实现都各有利弊, 我个人倾向于ichuan的做法.原因无外乎, 能保持Typecho文章数据的一致性, 以前存HTML现在还是存HTML, 只是编辑的方式变了.但ichuan的插件在用的时候不是那么顺利. 因为js放置的位置好像有些问题, 编辑器和预览99%的时候加载失败(Chrome 17). 预览界面的CSS定义也有些问题.于是自己动手丰衣足食, 把成果po出来给和我碰到同样问题的朋友们.
+保留了原插件的保存和读取部分
+重新构造了编辑器部分 
+
+
+使用了和Stack Oveflow一样的最新PageDown编辑器
+编辑器带实时效果预览
+完整定义了各种格式的预览效果
+
+Mar 19/2012 v0.2.1
+修复了无法插入附件的BUG
+下载https://github.com/gregwym/Markdown4TE/zipball/masterGithubhttps://github.com/gregwym/Markdown4TE有图有真相效果展示部分H1H2H3strong textemphasized textstrong &amp; emphasized textenter link description hereBlockquoteenter code here
+
+List item
+
+
+List item
+
+</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/Trapecho-boostrap-based-typecho-theme.html">
+<title>Trapecho - 基于Bootstrap的Typecho主题</title>
+<link>http://blog.gregwym.info/Trapecho-boostrap-based-typecho-theme.html</link>
+<dc:date>2012-03-17T23:00:44+08:00</dc:date>
+<description>之前的浮云主题也用了快一年了, 有些腻味.主题本身也有很多问题, 比如代码质量不是很好, 主题的CSS对博客文章的Typography没有很规范的支持, 浮云比较吃CPU...一直想换主题却没有找到好的. 最近对Bootstrap很是痴迷, 又有了点空闲, 就顺手仿着Bootstrap官网风格做了一个Typecho的主题.自己觉得效果还不错, po出来给喜欢的朋友.设计风格
+黑白灰
+简洁明了
+特色功能
+自动吸附顶端的导航栏
+在各种设备上自适应显示 (如: iPhone/iPad)
+侧栏的新浪微博展示插件
+集成Google Code Prettify
+应用的技术
+Bootstrap + jQuery
+HTML5 + CSS3
+Responsive CSS
+下载下载我放在doLast.com上了, 点Download即可http://dolast.com/pages/trapechohttps://github.com/gregwym/Trapecho/zipball/master功能详解新浪微博
+在/admin/options-theme.php主题设置页中填入新浪微博的UID, 侧栏中就会显示新浪微博的插件.
+在设置中删除UID号码并保存, 即可关闭插件
+根据分辨率自适应布局
+如果您在看我的博客, 现在把浏览器缩小就能看出效果.
+在iPhone/iPad等移动设备上也能有很好的博客阅读体验
+支持iOS的阅读器模式
+侧栏可选项
+显示最新文章
+显示相关文章
+显示最近回复
+显示标签
+显示分类
+显示归档
+显示友情链接(需要友情链接插件)
+显示其它杂项
+Google Code Prettify
+为了统一主题风格, 也特别定义了代码的高亮方式, 如果有朋友不喜欢, 从footer.php最后删除和pre有关的几行JavaScript即可.
+使用很简单, 展示大段的代码, 使用&lt;pre&gt;将代码括住, 就会自动高亮, 语言类型自动识别.
+
+&lt;pre&gt;
+    &lt;!--你的代码放在中间--&gt;
+&lt;/pre&gt;
+
+比如,
+
+int main(){
+    cout &lt;&lt; "Welcome to Trapecho" &lt;&lt; endl;
+    return 0;
+}
+
+更多使用方法请参考, google-code-prettify README
+</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/shuo-shuo-typecho%60.html">
+<title>说说Typecho`</title>
+<link>http://blog.gregwym.info/shuo-shuo-typecho%60.html</link>
+<dc:date>2011-04-04T12:16:33+08:00</dc:date>
+<description>弄完最后的物理作业本想接着把STAT也搞定`可看看有8页之多...还是先睡一觉再说吧, 这两天时差又乱套了, 要调回来.距离12点还有点时间, 换换脑子随便写点东西...高中的时候就折腾过WordPress, 借朋友的空间搭了个小博`写了两句就没兴致继续下去了. 大部分时间都花在了研究各种插件上边. 但不知道为什么, WordPress一直就没有让我有强烈的归属感. 虽然它插件很多, 主题很多, 能高度定制化...可都少了点什么.啊`是他太乱了...添加了各种杂七杂八的插件以后, 单侧栏恐怕都塞不下了, 再配上本就没什么几篇的博文列表, 整个页面显得臃肿杂乱`主次颠倒, 自然也就没有了继续下去的动力.虽然这算是我自己的客观因素...但WordPress越长越肥, 功能繁多却不实用的现状是毋庸置疑的.不记得到底是先注意到Typecho, 还是先动了玩VPS的主意, 反正这俩分不开. 在某博看到Typecho的介绍和他简洁的风格时就决定了我肯定要抛弃WordPress了.他实在太简单了...
+安装只要填写管理员, 站点信息和数据库配置就万事大吉, 一步到位.
+一个博客需要的东西, 五脏俱全. 在添加了代码加亮, 博客友联等几个常用插件之后, 可以直接开拔.
+后台就是简简单单的内容+评论管理, 和外观设定.
+主题导入后, 自己调整些零碎也很得心应手.
+数据库一共只有6张表.
+主题文件只分, 头&#96;脚&#96;内容&#96;评论&#96;侧栏`列表...外加一张style-sheet. 从头到脚透露这简单的概念.
+按Typecho官方说法, 一个完全重写的全新后台系统正在开发中, 实在是非常期待.有想法要好好学习下Typecho的源码, 不过还是先考完试再说吧.附个在别处看到的相关短文, 深以为然:为什么放弃Wordpress使用Typecho?时间差不多了...睡觉睡觉`</description>
+</item>
+</rdf:RDF>

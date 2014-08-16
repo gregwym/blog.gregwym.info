@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+xmlns:content="http://purl.org/rss/1.0/modules/content/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+xmlns:atom="http://www.w3.org/2005/Atom"
+xmlns:wfw="http://wellformedweb.org/CommentAPI/">
+<channel>
+<title>某储备粮的“学习笔记” - 2011年10月</title>
+<link>http://blog.gregwym.info/2011/10/</link>
+<atom:link href="http://blog.gregwym.info/feed/2011/10/" rel="self" type="application/rss+xml" />
+<language>zh-CN</language>
+<description>by 咳嗽di小鱼</description>
+<lastBuildDate>Mon, 31 Oct 2011 12:38:37 +0800</lastBuildDate>
+<pubDate>Mon, 31 Oct 2011 12:38:37 +0800</pubDate>
+<item>
+<title>OS161 System Calls Implementation Notes</title>
+<link>http://blog.gregwym.info/os161-system-calls-implementation-notes.html</link>
+<guid>http://blog.gregwym.info/os161-system-calls-implementation-notes.html</guid>
+<pubDate>Mon, 31 Oct 2011 12:38:37 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[这篇文章的目的是记录CS350 Assignment2中, 我编写各种System Calls时所采用的思路. 实际coding的时候, 同一种System Call的实现方式很可能不止一种, 但殊途...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>这篇文章的目的是记录CS350 Assignment2中, 我编写各种System Calls时所采用的思路. 实际coding的时候, 同一种System Call的实现方式很可能不止一种, 但殊途同归.<br />注1: 文章顺序和实际coding顺序并不一定一致, 请参考Assignment中的Strategy部分.<br />注2: 如果没有仔细读过code和Assignment...这里很有些东西你可能读的似懂非懂.</p><p>欢迎在评论中提问...</p><p><hr /></p><h2>General Tips</h2><ol>
+<li>别管写什么function, 第一步永远是检查parameter是否有效!!!<br />(比如, pointer是不是NULL, string是不是空, etc)</li>
+<li>不要放过任何一个warning...需要explicit cast的时候, 千万不要偷懒.</li>
+<li>function一般使用parameter中的pointer进行value return, 正常的return用来return errno.</li>
+<li>开始coding之前, 除了读Assignment, 读code, 还要好好读Assignment Hint! 解答了很多FAQ</li>
+<li>注意在header file里用#ifndef, 保证header不会出现重复include</li>
+<li>kmalloc了的东西...在destroy的时候一定要kfree. 不然A3里, 你会发现各种memory leak<br />(Create某些data structure的中间, 如果出现error, 则需要首先free已经allocated的内存, 然后返回error)</li>
+<li>善用spl解决mutex问题. 当然, 首先你要明白什么样的操作需要mutex!</li>
+<li></li>
+</ol><p>我会边写这个Note边添加Tips...</p><p><!--more--></p><p><hr /></p><h2>Part 1, Play with the files and console</h2><p>在OS161中, 所有应用程序在打开, 关闭, 读取, 写入一个文件的时候, 都是通过一个file descriptor [ID]来标识某一个文件的. 需要注意的是, file descriptor [ID]和vnode是完全两个东西.</p><p>每个thread都有单独一套file descriptors [ID], 但两个thread的两个不同的file descriptor [ID]如果标识的是同一个文件, 则共用一个vnode.<br />(这里所说的file descriptors实际上只是一个int, 是代表一个file descriptor的ID, 而实际上file descriptor要保存很多内容. 后边继续)</p><p>简单来说, 我们需要给每一个thread都增加一个, 记录所有opened file的机制. 我们暂称之为file table.<br />file table可以就是个简单的array, 但为了让file table的operation和thread以及syscall相互独立, 减少重复code并减少bug机会, 我强烈建议大家把file table相关的所有operations都写成独立的functions, 放在单独的文件里.</p><h3>file table &amp; file descriptor</h3><p>file table其实很简单, 一个array<del>外加一个size_t记录array的长度</del>, 就ok了. (这里说的所有array都是struct array, OS161中自带的kernel array lib)<br />file descriptor中需要记录以下几个东西,</p><ul>
+<li>vnode pointer</li>
+<li>permission flags</li>
+<li>the current offset in file</li>
+<li>probably need something else, depends on your implementation. (like a reference counter, etc.)</li>
+</ul><p>然后就是操作file table的各种function, 比如</p><ul>
+<li>create file table</li>
+<li>destroy file table</li>
+<li>duplicate file table (is one of the most important part of <del>execv</del> fork, but not nessesary for now)</li>
+<li>add/get/delete a file descriptor</li>
+<li>may need extra functions or helpers for convenience</li>
+</ul><p>至此基本没有难点 (就类似写个小"class").<br />之后要把file table添加到thread里, 并且在thread_fork中进行initialization.</p><h3>Stdin &amp; Stdout 也是FILE!!!</h3><p>这是Assignment在"Implementing file system calls"中特别提到的一点.<br />在建立一个新的process时候, 不止要initialization一个file table, 而且还要把table的0, 1, 2分别设置成standard input, standard output和standard error, 不然printf就不work哦, 哈哈哈.</p><p>注: OS161中stdout和stderr是一样的.</p><h3>知道了怎么Open, Close就简单了</h3><p>open步骤 1. 创建file descriptor 2. vfs_open打开文件 (获取vnode) 3. 往file descriptor中存需要的数据 4. 把file descriptor加到file table中, 并取得ID 5. return ID给user program</p><p>如何用vfs_open打开文件, 请参考runprogram.c</p><h3>Read和Write差在细节</h3><p>有file descriptor就有vnode...如何用VOP_READ配合vnode和uio读文件, 请参看loadelf.c<br />注意offset怎么算!!!!!<br />考验你读code读够不够细致的时候到了...好好读vnode.h(的comment)吧.</p><p>Write和Read差在uio的配置, 和用VOP_WRITE.<br />请细读uio.h(的comment)= =...都是comment有用, code看不懂影响不是很大.</p><p><hr /></p><h2>Part 2, Get the process organized</h2><p>fork, getpid, waitpid, _exit...<br />注: 按我的理解, OS161所有的thread都是process, 只不过有parent和child之分.</p><p>这部分中, PID的管理逻辑是关键, 主要解决几个问题.</p><ul>
+<li>如何让一个process wait在一个PID上, 并在exit的时候wake up所有在当前PID waiting的process</li>
+<li>如何防止deadlock (P1 wait on P2, and P2 wait on P1)</li>
+<li>如何保存exitcode. 并明确, 何时可以安全的删除这个exitcode的记录</li>
+<li>如何重复使用已经空闲的PID 除此之外, fork还要考虑其他问题, 后边再说.</li>
+</ul><h3>Table解决一切问题...</h3><p>和file descriptor类似, PID也需要构建一个table. 区别在于, process table必须是global的! 也就是说, 整个系统只有一个process table.<br />然后考虑, 我们需要为每个PID/process保存哪些信息, 才能解决上边列举的几个问题.</p><p>process table相关的function (仅供参考),</p><ul>
+<li>create process table (use in thread_bootstrap)</li>
+<li>destroy process table (use in thread_shutdown)</li>
+<li>assign and save a PID for new process (use in thread_fork)</li>
+<li>mark a PID as inactive and save the exitcode (use when _exit is called)</li>
+<li>you may also want to add other things here. Like the actual implementation of waitpid, wakeup waitings, release a exited PID or any other PID related functions. But its all depends on your implementation decision.</li>
+</ul><h3>Wait&amp;Wakeup的钥匙 - A magical memory address</h3><p>第一个Assignment写完, 对于thread&#95;sleep和thread&#95;wakeup应该都很熟悉了.<br />两个function都consume一个pointer作为钥匙. 只要sleep的thread和wakeup的thread用的是同一个钥匙, 睡着的所有thread就能被唤醒.<br />这在implement waitpid和_exit的时候是很实用的.</p><h3>fork意味着, 一模一样</h3><p>这估计是这次Assignment中最难的部分.</p><p>fork的作用是生成一个和当前thread完全一样的thread. 说具体点就是,</p><ul>
+<li>CPU的每个register值一模一样</li>
+<li>address space中的memory一模一样</li>
+<li>打开的file一模一样 (duplicate a file table)</li>
+<li>其他一个thread中可能包含的部分</li>
+<li>只有PID不一样!!!</li>
+</ul><p>fork system call要点:</p><ol>
+<li>consume一个东西, trapframe. 这里保存着user program进入privilege mode之前, 所有register的数据.</li>
+<li>用memcpy把trapframe复制一份给新thread用</li>
+<li>调用thread&#95;fork的时候, 用复制的trapframe和md&#95;forkentry作为parameter.</li>
+</ol><p>thread_fork要点:</p><ol>
+<li>thread_fork要想办法知道, 是不是被fork system call调用的</li>
+<li>如果是, 需要复制address space</li>
+<li>如果是, 需要duplicate file table. 否则, 创建新的</li>
+</ol><p>md_forkentry要点:</p><ol>
+<li>trapframe要复制到kernel stack上 (太简单了以至于有时候想不到用)</li>
+<li>fork里复制的trapframe要free掉</li>
+<li>在trapframe里设置return value, (pc貌似也要increment...回忆不起来当时increment的原因了)</li>
+<li>address space需要activate</li>
+</ol><p>Follow这些要点, 应该可以比较顺利的搞定fork. 但我仍推荐先把fork和md_forkentry的工作原理搞明白, 再开始.<br />(如果写完了还没明白, 为什么要把md&#95;forkentry pass给thread&#95;fork, 那你绝对是奇葩)</p><p><hr /></p><p>到这里, A2中最难的部分过去了...</p><p>runprogram和execv, 我不确定有没有时间在下周一之前总结出来.<br />这两个大同小异, runprogram写好, execv只是稍微多点东西.<br />exception handling是打酱油...</p><p>大家加油</p>
+]]></content:encoded>
+<slash:comments>12</slash:comments>
+<comments>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/os161-system-calls-implementation-notes.html</wfw:commentRss>
+</item>
+<item>
+<title>关系模型概念整理 (Relational Model)</title>
+<link>http://blog.gregwym.info/guan-xi-mo-xing-gai-nian-zheng-li.html</link>
+<guid>http://blog.gregwym.info/guan-xi-mo-xing-gai-nian-zheng-li.html</guid>
+<pubDate>Wed, 19 Oct 2011 08:49:01 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[Definition实在不知道怎么概括= =...Intention of a relation: relation definition and constrainsExtention of a r...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>Definition实在不知道怎么概括= =...</p><ul>
+<li>Intention of a relation: relation definition and constrains</li>
+<li>Extention of a relation: the actual data, tuples</li>
+</ul><h3>Relation properties</h3><ul>
+<li>Set Theory <br />
+<br />
+<ul>
+<li>Attributes has order (not necessary)</li>
+<li>Value are used to identify tuples</li>
+<li>Tuples dont have order</li>
+<li>Tuples cant have duplication</li>
+</ul></li>
+<li>Attribute value are atomic</li>
+<li>Degree: How many attributes in the schema</li>
+<li>Cardinality: How many tuples in an instance</li>
+</ul><h3>Constraints</h3><ul>
+<li>Let the DBMS to ensure the entry or modification on data are legal</li>
+<li>Give applications' bug no chance to ruin the data</li>
+</ul><h3>Three Constraint Level</h3><ul>
+<li>Tuple-level <br />
+<br />
+<ul>
+<li>Domain restrictions (datatype)</li>
+<li>Attribute comparisons (好像是指check)</li>
+</ul></li>
+<li>Relation-level <br />
+<br />
+<ul>
+<li>Special type of keys <br />
+<br />
+<ul>
+<li>Superkey: 能uniquely identifies a tuple的一个or一组attribute</li>
+<li>Candidate key: Superkey的最小集, (最简单的一个or一组attribute)</li>
+<li>Primary key: 被选中, 用来identity tuples的Candidate key</li>
+</ul></li>
+</ul></li>
+<li>Database-level <br />
+<br />
+<ul>
+<li>Referential integrity <br />
+<br />
+<ul>
+<li>Foreign key: 其他relation中的primary key</li>
+<li>Referential integrity: 不允许出现和对应relation中的记录不符的情况</li>
+</ul></li>
+<li>Inclusion dependencies: = =`不懂</li>
+</ul></li>
+</ul>
+]]></content:encoded>
+<slash:comments>2</slash:comments>
+<comments>http://blog.gregwym.info/guan-xi-mo-xing-gai-nian-zheng-li.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/guan-xi-mo-xing-gai-nian-zheng-li.html</wfw:commentRss>
+</item>
+<item>
+<title>数据库基础概念整理</title>
+<link>http://blog.gregwym.info/shu-ju-ku-ji-chu-gai-nian-zheng-li.html</link>
+<guid>http://blog.gregwym.info/shu-ju-ku-ji-chu-gai-nian-zheng-li.html</guid>
+<pubDate>Wed, 19 Oct 2011 04:55:14 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[DefinitionsDatabase: is a large and persistent collection of pieces of information organized in a wa...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<h3>Definitions</h3><ul>
+<li>Database: is a large and persistent collection of pieces of information organized in a way that facilitate efficient retrieval and modification.</li>
+<li>DBMS: is a program that manages details related to storage and access for a database.</li>
+<li>Schema: is a description of the data interface to the database.</li>
+<li>Instance: is a database that conforms to a given schema.</li>
+<li>Transaction: is an application-specified atomic and durable unit of work.</li>
+<li>View: is a relation in the external schema whose instance is determined by the instances of the relations in the conceptual schema.</li>
+<li>Trigger: is a procedure executed by the database in response to a change to the database instance</li>
+</ul><h3>Three Level Schema Architecture</h3><ul>
+<li>External schema (view): visualized data</li>
+<li>Conceptual schema: logical structure</li>
+<li>Physical schema: file/storage devices</li>
+</ul><h3>Data Independence</h3><ul>
+<li>Application access the data through an abstract data model provided by the DBMS, rather than direct access</li>
+<li>Physical: applications cant touch the storage stucture</li>
+<li>Logical: applications cant change the data organization</li>
+</ul><h3>Four Transaction Properties</h3><p>NoSQL据说就是要break these properties= =`IDK why...</p><ul>
+<li>Atomic: once the transaction happens, it happened. No intermediate stage!</li>
+<li>Consistency: transaction follows the database consitences</li>
+<li>Isolated: concurrent transactions wont effect each other</li>
+<li>Durable: transaction results permanently</li>
+</ul><h3>What DBMS do</h3><ul>
+<li>Remoce common code from applications</li>
+<li>Provide uniform access to data</li>
+<li>Guarantee data integrity</li>
+<li>manage concurrent access</li>
+<li>Protect against system failure</li>
+<li>Set access policies for data</li>
+</ul>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/shu-ju-ku-ji-chu-gai-nian-zheng-li.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/shu-ju-ku-ji-chu-gai-nian-zheng-li.html</wfw:commentRss>
+</item>
+<item>
+<title>SQL语法整理</title>
+<link>http://blog.gregwym.info/sql-yu-fa-zheng-li.html</link>
+<guid>http://blog.gregwym.info/sql-yu-fa-zheng-li.html</guid>
+<pubDate>Mon, 17 Oct 2011 06:00:15 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[SELECTSELECT attribute-expression-list FROM relation-list [ WHERE condition ];attribute-expression-l...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<h3>SELECT</h3><pre><code>SELECT attribute-expression-list FROM relation-list [ WHERE condition ];
+</code></pre><p>attribute-expression-list:</p><ul>
+<li>[relation-name.]attribute</li>
+<li>[relation-name.]attribute [arithmatic computation] AS another name <br />
+<br />
+<ul>
+<li>i.e., E.Salary - 40000 AS SalaryDiff</li>
+</ul></li>
+<li>CASE WHEN ... THEN ...<br />ELSE ... END <br />
+<br />
+<ul>
+<li>i.e., CASE WHEN E.Salary &lt; 40000 THEN 0<br />ELSE E.Salary - 40000 END</li>
+</ul></li>
+</ul><p>relation-list:</p><ul>
+<li>list of table names</li>
+<li>seperate by comma</li>
+</ul><p>condition:</p><ul>
+<li>arithmetic operation +, -, *, /</li>
+<li>comparisions =, &lt;>, &lt;, &lt;=, >. >=</li>
+<li>logical connectives AND, OR, NOT</li>
+<li>attribute IN (Q)</li>
+<li>attribute NOT IN (Q)</li>
+<li>attribute op SOME (Q)</li>
+<li>attribute op ALL (Q)</li>
+<li>EXISTS (Q)</li>
+<li>NOT EXISTS (Q)</li>
+<li>IS [NOT] NULL</li>
+</ul><p><!--more--></p><h3>NULL</h3><h4>AND Table</h4><table border="1" cellpadding="2" cellspacing="0" width="100%">
+  <tbody>
+    <tr>
+      <td valign="top">AND</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">FALSE</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">NULL</td>
+      
+      <td valign="top">NULL</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL<br /></td>
+    </tr>
+  </tbody>
+</table><h4>OR Table</h4><table border="1" cellpadding="2" cellspacing="0" width="100%">
+  <tbody>
+    <tr>
+      <td valign="top">OR</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">TRUE</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">NULL</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">NULL</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+  </tbody>
+</table><h4>NOT Table</h4><table border="1" cellpadding="2" cellspacing="0" width="100%">
+  <tbody>
+    <tr>
+      <td valign="top">NOT</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+    
+    <tr>
+      <td valign="top"><br /></td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+  </tbody>
+</table><h3>UNION INTERSECT EXCEPT</h3><p>(Q1 and Q2 must have same attribute-list)</p><p>Q1 UNION Q2 => Together all the tuples in Q1 and Q2<br />Q1 INTERSECT Q2 => Only tuples in both Q1 and Q2<br />Q1 EXCEPT Q2 => Tuples only in Q1 but not in Q2</p><p>ALL关键字: 允许重复<br />UNION ALL will include twice of duplicate tuples<br />INTERSECT ALL will include all possible pairs of match tuples, duplication possible<br />EXCEPT ALL will include all "not in Q2" tuples, duplication possible</p><h3>[INNER]/OUTER JOIN</h3><ol>
+<li>Inner join把两个表连接在一起, 返回两个表中相匹配的记录, 是2和3的交集</li>
+<li>Left outer join, 左侧表所有的记录都返回, 右侧匹配的记录返回, 没有匹配的返回Null</li>
+<li>Right outer join, 与Left outer join相反, 右侧的记录返回, 左侧返回匹配的记录, 没有匹配返回Null</li>
+<li>Full outer join, 2和3的并集</li>
+<li>Cross join, 两个表的笛卡儿积, 返回所有可能的值, 不允许有连接条件</li>
+</ol><h3>ORDER BY</h3><pre><code>SELECT ... ... ORDER BY attribute [DESC/ASC], attribute [DESC/ASC], ......
+</code></pre><p>Note: 如果没有指定Order, return的数据可能是任意顺序</p><h3>GROUP BY, HAVING, Aggregate expressions</h3><p>{count, sum, avg, min, max} => Aggregate expressions</p><p>Order: Group => Having => Aggregate</p><ul>
+<li>count(*): number of tuples</li>
+<li>count(E): number of tupple for which E is non-NULL</li>
+<li>count(distinct E): number of distinct non-NULL E values</li>
+<li>sum(E)</li>
+<li>sum(distinct E)</li>
+<li>avg(E)</li>
+<li>avg(distinct E)</li>
+<li>min(E)</li>
+<li>max(E)</li>
+</ul><p>Note: 没有被group by指定的attribute不能出现在SELECT的attr-list中, 除非是aggregate</p><h3>INSERT INTO</h3><pre><code>INSERT INTO relation-name [( attribute-list )] VALUE ( value-list );
+</code></pre><h3>DELETE</h3><pre><code>DELETE FROM relation-name [ WHERE condition ];
+</code></pre><h3>UPDATE</h3><pre><code>UPDATE relation-name SET attribute-assignment-list [ WHERE condition ]; 
+</code></pre><p>attribute-assignment-list:</p><ul>
+<li>pairs of assignment</li>
+<li>seperate by comma</li>
+<li>i.e., WorkDept = 'E01', Address = 'Waterloo'</li>
+</ul><h3>CREATE TABLE</h3><pre><code>CREATE TABLE relation-name ( attribute-name attribute-type [constraints-list], ... )
+</code></pre><p>attribute-type: <a href="http://www.w3school.com.cn/sql/sql_datatypes.asp">http://www.w3school.com.cn/sql/sql_datatypes.asp</a></p><p>constraints-list: (Constraints的格式在各种数据库中都不太一样, 就不列举了)</p><ul>
+<li>NOT NULL</li>
+<li>PRIMARY KEY</li>
+<li>UNIQUE</li>
+<li>FOREIGN KEY</li>
+<li>Column or Tuple CHECK</li>
+</ul><h3>CREATE VIEW</h3><pre><code>CREATE VIEW view-name AS ( SELECT ... ) 
+</code></pre><p>从View SELECT的方法和table一样</p><h3>CREATE TRIGGER</h3><pre><code>CREATE TRIGGER trigger-name 
+AFTER UPDATE OF attribute-list ON relation-name 
+REFERENCING OLD as instance-name(o) NEW as instance-name(n) 
+FOR EACH ROW ...  
+</code></pre><p>不同database语法不一</p>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/sql-yu-fa-zheng-li.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/sql-yu-fa-zheng-li.html</wfw:commentRss>
+</item>
+</channel>
+</rss>

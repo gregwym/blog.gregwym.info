@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>OS161 Memory Management - 某储备粮的“学习笔记”</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 使用url函数转换相关路径 -->
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/style.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/prettify.css" />
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="http://blog.gregwym.info/images/favicon.ico">
+<link rel="apple-touch-icon" href="http://blog.gregwym.info/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="http://blog.gregwym.info/images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="http://blog.gregwym.info/images/apple-touch-icon-114x114.png">
+
+<!-- 通过自有函数输出HTML头部信息 -->
+<meta name="description" content="这次Assignment除了Physical Memory Management, 其他几个部分都相互关联. 所以在设计完成前几部分的时候, 最好将所有需要解决的问题都搞明白, 然后统一设计Addre..." />
+<meta name="keywords" content="cs350,os161,kernel" />
+<meta name="generator" content="Typecho 0.9/13.12.12" />
+<meta name="template" content="trapecho" />
+<link rel="pingback" href="action/xmlrpc.html" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="action/xmlrpc%3Frsd.html" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="action/xmlrpc%3Fwlw.html" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="feed/os161-memory-management.html" />
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="feed/rss/os161-memory-management.html" />
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="feed/atom/os161-memory-management.html" />
+<script type="text/javascript">
+//<![CDATA[
+var TypechoComment = {
+    dom : function (id) {
+        return document.getElementById(id);
+    },
+    
+    create : function (tag, attr) {
+        var el = document.createElement(tag);
+        
+        for (var key in attr) {
+            el.setAttribute(key, attr[key]);
+        }
+        
+        return el;
+    },
+
+    reply : function (cid, coid) {
+        var comment = this.dom(cid), parent = comment.parentNode,
+            response = this.dom('respond-post-77'), input = this.dom('comment-parent'),
+            form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+            textarea = response.getElementsByTagName('textarea')[0];
+
+        if (null == input) {
+            input = this.create('input', {
+                'type' : 'hidden',
+                'name' : 'parent',
+                'id'   : 'comment-parent'
+            });
+
+            form.appendChild(input);
+        }
+        
+        input.setAttribute('value', coid);
+
+        if (null == this.dom('comment-form-place-holder')) {
+            var holder = this.create('div', {
+                'id' : 'comment-form-place-holder'
+            });
+            
+            response.parentNode.insertBefore(holder, response);
+        }
+
+        comment.appendChild(response);
+        this.dom('cancel-comment-reply-link').style.display = '';
+        
+        if (null != textarea && 'text' == textarea.name) {
+            textarea.focus();
+        }
+        
+        return false;
+    },
+
+    cancelReply : function () {
+        var response = this.dom('respond-post-77'),
+        holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+        if (null != input) {
+            input.parentNode.removeChild(input);
+        }
+
+        if (null == holder) {
+            return true;
+        }
+
+        this.dom('cancel-comment-reply-link').style.display = 'none';
+        holder.parentNode.insertBefore(response, holder);
+        return false;
+    }
+}
+//]]>
+</script></head>
+
+<body onload="prettyPrint()">
+
+<div class="container">
+
+<header class="jumbotron" id="overview">
+        <h1>某储备粮的“学习笔记” </h1>
+    <p class="lead">by 咳嗽di小鱼</p>
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                
+                <a class="brand" href="index.html">
+                    Trapecho
+                </a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="index.html">Home</a></li>
+                        <li class="divider-vertical"></li>
+                                                                        <li><a href="category/sum-up/index.html" title="Sum Up">Sum Up</a></li>
+                                                <li><a href="category/code-dump/index.html" title="Code Dump">Code Dump</a></li>
+                                                <li><a href="category/network/index.html" title="Network">Network</a></li>
+                                                <li><a href="category/jotting/index.html" title="Jotting">Jotting</a></li>
+                                                <li><a href="category/Portfolio/index.html" title="Portfolio">Portfolio</a></li>
+                                                <li class="divider-vertical"></li>
+                                                                        <li><a href="linked-in.html" title="Linked In">Linked In</a></li>
+                                                <li><a href="guess-book.html" title="Guest Book">Guest Book</a></li>
+                                                <li><a href="about.html" title="About">About</a></li>
+                                                <li><a href="rss.html" title="RSS">RSS</a></li>
+                                            </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="content">
+
+
+<div class="row">
+    <div class="span9" id="content">
+        <div class="post">
+            <div class="page-header">
+                <h1>
+                    OS161 Memory Management                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: November 20, 2011</span>
+                    <span>Category: <a href="category/sum-up/index.html">Sum Up</a></span>
+                </h6>
+            </div>
+            <div class="entry-content"><p>这次Assignment除了Physical Memory Management, 其他几个部分都相互关联. 所以在设计完成前几部分的时候, 最好将所有需要解决的问题都搞明白, 然后统一设计Address Space的结构.</p><h2>TLB Management</h2><p>和TLB有关的, 需要解决的问题有这么几个:</p><ol>
+<li>Context Switch的时候, 如果不是两个不同的thread, 则不需要flush TLB</li>
+<li>当TLB被占满的时候, 要替换最老的TLB entry</li>
+<li>TLB内保存read-only信息</li>
+</ol><p>然后一个一个说…</p><ol>
+<li>只要检查上一次flush TLB时候的thread, 和现在的是不是同一个thread即可</li>
+<li>这部分这次Assignment已经把code写好大半了…`你需要做的就是把tlb&#95;get&#95;rr_victim return回来的那个entry替换掉</li>
+<li>理解MIPS TLB的每个flag bits的用处, 然后把read-only flag放在对应的位置.<br />当程序试图写入一个read-only的memory时候, vm&#95;fault拿到的faulttype是VM&#95;FAULT_READONLY.<br /><strong>Don't PANIC!!!</strong></li>
+</ol><p>TLB基本就这么多= =||`没啥东西…<br /><!--more--></p><h2>On-Demand Loading</h2><p>This is the fun part…哈哈哈<br />这部分, 需要, 灰常严谨的逻辑和计算…`还要对page loading的步骤非常清晰. 任何一点对内存地址或者file offset的计算错误, 或者理解错误, 都会mess up.</p><p>所以, 咱们重新来列一遍从程序开始运行, 到page loading结束的整个过程:</p><ul>
+<li>runprogram/execv拿到一个progname (ELF file's path), 并call load_elf.</li>
+<li>load_elf不立刻load到physical memory,<br />而是把ELF中的每一个segment所对应的virtual address定义好, 并且保存load这个segment所需要的所有信息.<br />(这些信息如何/以什么样的形式保存, 需要在动手之前就先明确!)</li>
+<li>当系统碰到一个TLB Miss时, 会有两种情况:</li>
+<li>这个page还没有被load到physical memory, 说明这个page是第一次被访问, <br />
+<br />
+<ul>
+<li>找到这个page所对应的segment的信息</li>
+<li>计算load这个page所需要的所有相关数据</li>
+<li>从physical memory steal一个page的内存</li>
+<li>将这个page的数据从file load到physical memory中<br />(提示: PADDR&#95;TO&#95;KVADDR is useful)</li>
+<li>将这个physical memory保存成这个segment vaddr对应的paddr</li>
+<li>将这对vaddr和paddr存入TLB</li>
+</ul></li>
+<li>反之, 直接将已知的一对vaddr和paddr存入TLB即可</li>
+</ul><p>本身, 整个过程还是很straight forward的. 可有一些special case需要handle…</p><ol>
+<li>有的segment不是从一个page的顶头开始的</li>
+<li>有的segment跨越多个page</li>
+<li>有的data segment的filesize是0, 但memsize需要填零</li>
+<li>…好像还有别的, = =想不起来了, 大家写的时候发现了, 告诉我下, 哈哈 最容易出错的部分还是计算, filesize, memsize, file offset, memory offset, 等各种数据…大家加油</li>
+</ol><h2>Address Space</h2><p>多写两句和as有关的</p><p>很多人在刚开始写这个assignment的时候, 最先纠结的就是, as的结构要不要改...<br />这是个好问题, 但答案是: 不一定要改as, 但肯定需要+东西.</p><p>在解释为什么之前, 咱们先来看看dumb_vm的as里, 每个东西都是干嘛用的.</p><pre><code>struct addrspace { 
+    #if OPT_DUMBVM 
+        vaddr_t as_vbase1; 
+        paddr_t as_pbase1; 
+        size_t as_npages1; 
+        vaddr_t as_vbase2; 
+        paddr_t as_pbase2; 
+        size_t as_npages2; 
+        paddr_t as_stackpbase; 
+    #else 
+        /* Put stuff here for your VM system */ 
+    #endif 
+};
+</code></pre><p>dumb_vm里只保存两个<del>segment</del>/region的内存信息</p><ul>
+<li>vbase是每个reg在virtual address上开始的位置</li>
+<li>pbase是每个reg在physical address上开始的位置</li>
+<li>npages是每一个reg一共占用了多少个virtual page/physical frame</li>
+<li>stackpbase顾名思义, stack在physical address上的底是哪里</li>
+</ul><p>然后咱们再研究下, 可能需要记录哪些信息. (并不一定全部都需要记录, 有些可以相互计算)</p><p>为了计算写入TLB的值, 需要</p><ul>
+<li>每个reg在virtual &amp; physical address的开始位置</li>
+<li>每个reg有多少个page/frame</li>
+<li>每个reg的permission flags</li>
+</ul><p>为了On-Demand Loading, 需要</p><ul>
+<li>当前app对应的ELF file是什么</li>
+<li>每个reg里的每个page/frame是否被load过</li>
+<li>每个reg里的每个page/frame的vaddr和paddr开始位置</li>
+<li>每个reg里的每个page/frame所对应在ELF-FILE中的program header information (例如: file offset)</li>
+<li>stack已经占用了多少个page</li>
+</ul><p>对比一下上下两个列表, 我们缺点什么呢?<br />原来的as没有记录reg的permissions, 没有记录page/frame是不是被load过了, 没有分别记录每个page/frame的vaddr+paddr(当然, 可以通过seg的数据进行计算), 也没有每个reg对应的ELF信息...stack也是固定大小</p><p>所以原本的as是100%缺少东西的, 但这些额外的东西, 具体应该保存到哪里就自由发挥了.</p><p>补充1: OS161里假设了一个ELF程序只包括两个segment. 虽然实际可能不止2个, 但现阶段, 只支持2个也没问题.<br />更新1: 叫seg不太确切, 还是叫region好了. 另补充了一些需要记录的内容.</p><h2>Physical Memory Management</h2><p>在dumbvm里, Physical Memory的分配机制非常简单. 在first和last之间, 一页一页的把内存分配出去, first逐次往后移动, 直到first = last, 就没有memory可用了. 也不回收, 不重复使用.</p><p>要想改变优化这个机制, 首先需要增加一个能够tracking所有可用Physical Frame使用状态的table. 在进行malloc或者free某个frame的时候, 在table中记录下来这个frame的状态. 这样, 如果存在free过的page, 这些page就可以优先被malloc, 从而重复利用已经free了的内存.</p><p>整体流程:</p><ul>
+<li>系统启动</li>
+<li>进入vm_bootstrap</li>
+<li>取得现在可用的Physical Memory的地址范围</li>
+<li>通过地址范围计算出有多少个可用的frame</li>
+<li>建立保存Physical Frame Status的table</li>
+<li>完成其他vm_bootstrap所需要做的工作</li>
+<li>再次取得可用的Physical Memory的地址范围, 这就是真正可用的内存范围</li>
+<li>停用原本的Physical Memory管理机制, 并接管所有alloc&#95;kpages和free&#95;kpages的操作</li>
+<li>vm系统启动完成</li>
+</ul><p>除此之外, 还需要修改allocation和free时候的操作, 让alloc能够通过某种algorithm来重复使用已经被free的内存位置. (用什么样的Algorithm就看各位了, 实在不行做liner search也是方法之一, 嘿嘿)</p><p>个别要点:</p><ul>
+<li>建立的table可能比最后实际需要的大, 但并无大碍. (因为table本身占用了一部分内存)</li>
+<li>alloc_kpages的时候, 有可能需要一次alloc超过一页的frame.<br />如果你使用的algorithm不方便在被free的内存中找出多个连续的frame, 那尽管把从未用过的连续frame分配出去吧.</li>
+<li>其他的待补充...</li>
+</ul><p><hr /></p><p>Instrumentation实在没什么好写的, 把declaration和initialization放对地方就好了.</p></div>
+            <div class="entry-tags">
+                Labels: 
+                <span class="label label-info">
+                    <a href="tag/cs350/index.html">cs350</a></span> <span class="label label-info"><a href="tag/os161/index.html">os161</a></span> <span class="label label-info"><a href="tag/kernel/index.html">kernel</a>                </span>
+            </div>
+        </div>
+        <hr class="soften" />
+        <div id="comments">
+                                    <h3>19 comments &raquo;</h3>
+            
+            <ol class="comment-list"><li id="comment-482" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/52809018dc923586c847b73018140be6?s=32&amp;r=X&amp;d=" alt="梦文" width="32" height="32" />        <cite class="fn">梦文</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-memory-management.html#comment-482">November 22nd, 2011 at 04:33 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>greg好人一生平安</p>    </div>
+    <div class="comment-reply">
+        <a href="os161-memory-management.html%3FreplyTo=482.html#respond-post-77" rel="nofollow" onclick="return TypechoComment.reply('comment-482', 482);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-483" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-memory-management.html#comment-483">November 22nd, 2011 at 10:39 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>0 0`谢谢...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-484" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/85964a598ad496b34c851df831a47cd6?s=32&amp;r=X&amp;d=" alt="michael.." width="32" height="32" />        <cite class="fn">michael..</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-memory-management.html#comment-484">November 22nd, 2011 at 10:52 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>好人一生平安，谢谢分享</p>    </div>
+    <div class="comment-reply">
+        <a href="os161-memory-management.html%3FreplyTo=484.html#respond-post-77" rel="nofollow" onclick="return TypechoComment.reply('comment-484', 484);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-486" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-memory-management.html#comment-486">November 22nd, 2011 at 10:57 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>thx`</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-485" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/43110ce9dd31ef52b54e761f1110fb50?s=32&amp;r=X&amp;d=" alt="杰森葱" width="32" height="32" />        <cite class="fn">杰森葱</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-memory-management.html#comment-485">November 22nd, 2011 at 10:54 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>辛苦了，感谢！！</p>    </div>
+    <div class="comment-reply">
+        <a href="os161-memory-management.html%3FreplyTo=485.html#respond-post-77" rel="nofollow" onclick="return TypechoComment.reply('comment-485', 485);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-487" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-memory-management.html#comment-487">November 22nd, 2011 at 10:58 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>客气`加油哈...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-488" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/23a3abfc430a4373d0b901d4c942f17a?s=32&amp;r=X&amp;d=" alt="吉他" width="32" height="32" />        <cite class="fn">吉他</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-memory-management.html#comment-488">November 23rd, 2011 at 02:02 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>G哥威武，永垂不朽</p>    </div>
+    <div class="comment-reply">
+        <a href="os161-memory-management.html%3FreplyTo=488.html#respond-post-77" rel="nofollow" onclick="return TypechoComment.reply('comment-488', 488);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-489" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-memory-management.html#comment-489">November 23rd, 2011 at 03:52 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>= =`我还没死呢...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-490" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/b04a3c3c4cff6dd2b529b26cf963d457?s=32&amp;r=X&amp;d=" alt="fred" width="32" height="32" />        <cite class="fn">fred</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-memory-management.html#comment-490">November 25th, 2011 at 10:38 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>经典   小心350professor= =</p>    </div>
+    <div class="comment-reply">
+        <a href="os161-memory-management.html%3FreplyTo=490.html#respond-post-77" rel="nofollow" onclick="return TypechoComment.reply('comment-490', 490);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-491" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-memory-management.html#comment-491">November 27th, 2011 at 03:02 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>他看不懂`...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-492" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/43110ce9dd31ef52b54e761f1110fb50?s=32&amp;r=X&amp;d=" alt="杰森葱" width="32" height="32" />        <cite class="fn">杰森葱</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-memory-management.html#comment-492">November 28th, 2011 at 03:35 am</a>
+            </div>
+    <div class="comment-content">
+    <p>Physical memory management 部分，请指点迷津</p>    </div>
+    <div class="comment-reply">
+        <a href="os161-memory-management.html%3FreplyTo=492.html#respond-post-77" rel="nofollow" onclick="return TypechoComment.reply('comment-492', 492);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-493" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-memory-management.html#comment-493">November 28th, 2011 at 11:25 am</a>
+            </div>
+    <div class="comment-content">
+    <p>交完348就弄`</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-500" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/fa239f3f1858f8dec5be5039f4b940d3?s=32&amp;r=X&amp;d=" alt="skyey" width="32" height="32" />        <cite class="fn">skyey</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-memory-management.html#comment-500">December 14th, 2011 at 04:57 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>final刚考完TLB - -</p>    </div>
+    <div class="comment-reply">
+        <a href="os161-memory-management.html%3FreplyTo=500.html#respond-post-77" rel="nofollow" onclick="return TypechoComment.reply('comment-500', 500);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-501" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-memory-management.html#comment-501">December 15th, 2011 at 12:44 am</a>
+            </div>
+    <div class="comment-content">
+    <p>那应该很稳啊...哈哈哈</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-681" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/4ff9a3facd9b2928ae4abe35420155d9?s=32&amp;r=X&amp;d=" alt="youling" width="32" height="32" />        <cite class="fn">youling</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-memory-management.html#comment-681">March 26th, 2013 at 06:49 am</a>
+            </div>
+    <div class="comment-content">
+    <p>大神，你452会有Note不？</p>    </div>
+    <div class="comment-reply">
+        <a href="os161-memory-management.html%3FreplyTo=681.html#respond-post-77" rel="nofollow" onclick="return TypechoComment.reply('comment-681', 681);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-696" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-memory-management.html#comment-696">April 8th, 2013 at 09:07 am</a>
+            </div>
+    <div class="comment-content">
+    <p>452不需要Notes, 上课就可以了. 我能总结出来的东西prof上课都讲过. Prof自己的notes在这里, http://www.cgl.uwaterloo.ca/~wmcowan/teaching/cs452/w13/notes/index.html</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-733" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/a6e4c5f184f2a391ab61caa6ccb42b67?s=32&amp;r=X&amp;d=" alt="DT" width="32" height="32" />        <cite class="fn">DT</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-memory-management.html#comment-733">July 2nd, 2013 at 01:02 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>好人一生平安～～～喵了个咪</p>    </div>
+    <div class="comment-reply">
+        <a href="os161-memory-management.html%3FreplyTo=733.html#respond-post-77" rel="nofollow" onclick="return TypechoComment.reply('comment-733', 733);">回复</a>    </div>
+    </li>
+<li id="comment-736" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/c424ce8e31ed37dffdb546b6fd4fd2af?s=32&amp;r=X&amp;d=" alt="Jerry" width="32" height="32" />        <cite class="fn">Jerry</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-memory-management.html#comment-736">July 14th, 2013 at 11:10 am</a>
+            </div>
+    <div class="comment-content">
+    <p>我们老师上课说，你们不要去网上找资料，他说之前他google了一下发现还有用中文写的，他说他完全看不懂是什么意思，哈哈 说的就是你，你中枪了</p>    </div>
+    <div class="comment-reply">
+        <a href="os161-memory-management.html%3FreplyTo=736.html#respond-post-77" rel="nofollow" onclick="return TypechoComment.reply('comment-736', 736);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-738" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-memory-management.html#comment-738">July 18th, 2013 at 12:07 am</a>
+            </div>
+    <div class="comment-content">
+    <p>哈哈`听说了这个事儿. 其实我也没写什么会剧透的东西, 具体怎么implemente还都要大家自由发挥.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+</ol>            
+            <div class="pagination">
+                            </div>
+            
+                        
+                        <div id="respond-post-77" class="respond">
+            
+            <div class="cancel-comment-reply">
+            <a id="cancel-comment-reply-link" href="os161-memory-management.html#respond-post-77" rel="nofollow" onclick="return TypechoComment.cancelReply();">取消回复</a>            </div>
+            
+            <form class="form-horizontal" method="post" action="http://blog.gregwym.info/os161-memory-management.html/comment?parent=484" id="comment_form">
+                <fieldset>
+                    <legend>Add new comment &raquo;</legend>
+                                        <div class="control-group">
+                        <label class="control-label" for="author">Nick name</label>
+                        <div class="controls">
+                            <input type="text" name="author" id="author" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="mail">E-mail<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" name="mail" id="mail" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Web</label>
+                        <div class="controls">
+                            <input type="text" name="url" id="url" class="input-large" value="" />
+                        </div>
+                    </div>
+                                        <div class="control-group">
+                        <label class="control-label" for="url">Comment</label>
+                        <div class="controls">
+                            <textarea class="input-xlarge" name="text" rows="3"></textarea>
+                            <p class="help-block">Enter your comment here...</p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Captcha</label>
+                        <div class="controls">
+                            <img src="action/captcha" alt="captcha" onclick="this.src = this.src + '?' + Math.random()" style="cursor: pointer" title="点击图片刷新验证码" /><br /><input type="text" class="captcha" name="captcha_code" /> <strong>请输入验证码</strong>							                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Submit comment</button>
+                    </div>
+                </fieldset>
+            </form>
+            </div>
+            
+
+        </div>    </div><!-- end #content-->
+    <div class="span3" id="sidebar">
+    <div class="widget_search">
+        <form method="post" id="searchform" class="form-search">
+            <input type="text" class="span2" name="s" id="s" />
+            <button type="submit" class="btn" id="searchsubmit">Search</button>
+        </form>
+    </div>
+    
+        
+                    <div class="widget">
+            <h3>Related Posts</h3>
+                        <ul>
+                            <li><a href="os161-system-calls-implementation-notes.html" title="OS161 System Calls Implementation Notes">OS161 System Calls Implementation Notes</a></li>
+                        </ul>
+        </div>
+            
+    
+        <div class="widget">
+        <h3>Recent Comments</h3>
+        <ul>
+                                    <li><a href="github-you-should-have-told-me-earlier.html#comment-952">payday loans</a>: wfxqtdq</li>
+                        <li><a href="Trapecho-boostrap-based-typecho-theme.html#comment-936">地铁线路图网</a>: 我也在用typecho，小巧玲珑，稍微改了以下默认模板，站现在简洁速度也不错，点击我的昵称可以访问。</li>
+                        <li><a href="about.html#comment-930">ramble</a>: 博客 ，请问如何显示显示文章前3段的摘要  不打乱格式</li>
+                        <li><a href="about.html#comment-874">清源</a>: 看来暂时只能看着用了，google的高亮的比较不明显。</li>
+                        <li><a href="about.html#comment-870">清源</a>: 大哥呀，主题这几天我看着感觉用中文书写标题字体太大了，正文的字体也太小了，估计还是适合用英文，不知道...</li>
+                    </ul>
+    </div>
+        
+        <div class="widget">
+    		<h3>Labels</h3>
+        <ul>
+                                    <a href="tag/algorithm/index.html" class="size-20">algorithm</a>
+                        <a href="tag/review/index.html" class="size-20">review</a>
+                        <a href="tag/cs240/index.html" class="size-10">cs240</a>
+                        <a href="tag/server/index.html" class="size-10">server</a>
+                        <a href="tag/VPS/index.html" class="size-10">VPS</a>
+                        <a href="tag/code/index.html" class="size-5">code</a>
+                        <a href="tag/database/index.html" class="size-5">database</a>
+                        <a href="tag/cs348/index.html" class="size-5">cs348</a>
+                        <a href="tag/typecho/index.html" class="size-5">typecho</a>
+                        <a href="tag/nginx/index.html" class="size-5">nginx</a>
+                        <a href="tag/search/index.html" class="size-5">search</a>
+                        <a href="tag/GUI/index.html" class="size-5">GUI</a>
+                        <a href="tag/linux/index.html" class="size-5">linux</a>
+                        <a href="tag/java/index.html" class="size-5">java</a>
+                        <a href="tag/DNS/index.html" class="size-5">DNS</a>
+                        <a href="tag/blog/index.html" class="size-5">blog</a>
+                        <a href="tag/apple/index.html" class="size-5">apple</a>
+                        <a href="tag/cs241/index.html" class="size-5">cs241</a>
+                        <a href="tag/compiler/index.html" class="size-5">compiler</a>
+                        <a href="tag/sql/index.html" class="size-5">sql</a>
+                    </ul>
+		</div>
+    
+    
+        <div class="widget">
+        <h3>Archives</h3>
+        <ul>
+            <li><a href="2013/09/index.html">September 2013</a></li>
+<li><a href="2012/12/index.html">December 2012</a></li>
+<li><a href="2012/11/index.html">November 2012</a></li>
+<li><a href="2012/08/index.html">August 2012</a></li>
+<li><a href="2012/06/index.html">June 2012</a></li>
+<li><a href="2012/04/index.html">April 2012</a></li>
+<li><a href="2012/03/index.html">March 2012</a></li>
+<li><a href="2012/02/index.html">February 2012</a></li>
+<li><a href="2011/12/index.html">December 2011</a></li>
+<li><a href="2011/11/index.html">November 2011</a></li>
+<li><a href="2011/10/index.html">October 2011</a></li>
+<li><a href="2011/06/index.html">June 2011</a></li>
+<li><a href="2011/05/index.html">May 2011</a></li>
+<li><a href="2011/04/index.html">April 2011</a></li>
+<li><a href="2011/03/index.html">March 2011</a></li>
+        </ul>
+    </div>
+    
+    
+        <div class="widget">
+        <h3>Others</h3>
+        <ul>
+                        <li class="last"><a href="http://blog.gregwym.info/admin/login.php">Login</a></li>
+                        <li><a href="http://validator.w3.org/check/referer">Valid XHTML</a></li>
+        </ul>
+    </div>
+    
+    </div><!-- end #sidebar -->
+    
+</div>
+<footer>
+    <p>
+        Powered by <a href="http://typecho.org/">Typecho</a>. 
+        <a href="http://dolast.com/pages/trapecho">Trapecho</a> theme by <a href="index.html">咳嗽di小鱼</a>. 
+        Hosting on <a href="https://www.digitalocean.com/?refcode=b846692d6a3a">Digital Ocean</a>
+    </p>
+</footer><!-- end #footer -->
+
+</div>
+</div>
+
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/jquery-1.7.1.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/bootstrap.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/prettify.js"></script>
+<script type="text/javascript">
+    // fix navbar on scroll
+    var $win = $(window)
+      , $nav = $('.navbar')
+      , navTop = $('.navbar').length && $('.navbar').offset().top - 10
+      , isFixed = 0
+
+    processScroll()
+
+    $win.on('scroll', processScroll)
+
+    function processScroll() {
+      var i, scrollTop = $win.scrollTop()
+      if (scrollTop >= navTop && !isFixed) {
+        isFixed = 1
+        $nav.addClass('navbar-fixed-top')
+      } else if (scrollTop <= navTop && isFixed) {
+        isFixed = 0
+        $nav.removeClass('navbar-fixed-top')
+      }
+    }
+    
+    $('.page-navigator li:not(:has(a))').html('<a>...</a>');
+    $('.page-navigator .current').addClass('active');
+    
+        $('pre').addClass('prettyprint linenums');
+        $('.entry-content a').attr('target','_blank');
+</script>
+</body>
+</html>
+

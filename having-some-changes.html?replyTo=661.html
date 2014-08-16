@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>Having Some Changes - 某储备粮的“学习笔记”</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 使用url函数转换相关路径 -->
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/style.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/prettify.css" />
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="http://blog.gregwym.info/images/favicon.ico">
+<link rel="apple-touch-icon" href="http://blog.gregwym.info/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="http://blog.gregwym.info/images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="http://blog.gregwym.info/images/apple-touch-icon-114x114.png">
+
+<!-- 通过自有函数输出HTML头部信息 -->
+<meta name="description" content="As you can see, I changed the entire blog into english, except the posts I wrote before and the blog..." />
+<meta name="keywords" content="blog" />
+<meta name="generator" content="Typecho 0.9/13.12.12" />
+<meta name="template" content="trapecho" />
+<link rel="pingback" href="action/xmlrpc.html" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="action/xmlrpc%3Frsd.html" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="action/xmlrpc%3Fwlw.html" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="feed/having-some-changes.html" />
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="feed/rss/having-some-changes.html" />
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="feed/atom/having-some-changes.html" />
+<script type="text/javascript">
+//<![CDATA[
+var TypechoComment = {
+    dom : function (id) {
+        return document.getElementById(id);
+    },
+    
+    create : function (tag, attr) {
+        var el = document.createElement(tag);
+        
+        for (var key in attr) {
+            el.setAttribute(key, attr[key]);
+        }
+        
+        return el;
+    },
+
+    reply : function (cid, coid) {
+        var comment = this.dom(cid), parent = comment.parentNode,
+            response = this.dom('respond-post-97'), input = this.dom('comment-parent'),
+            form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+            textarea = response.getElementsByTagName('textarea')[0];
+
+        if (null == input) {
+            input = this.create('input', {
+                'type' : 'hidden',
+                'name' : 'parent',
+                'id'   : 'comment-parent'
+            });
+
+            form.appendChild(input);
+        }
+        
+        input.setAttribute('value', coid);
+
+        if (null == this.dom('comment-form-place-holder')) {
+            var holder = this.create('div', {
+                'id' : 'comment-form-place-holder'
+            });
+            
+            response.parentNode.insertBefore(holder, response);
+        }
+
+        comment.appendChild(response);
+        this.dom('cancel-comment-reply-link').style.display = '';
+        
+        if (null != textarea && 'text' == textarea.name) {
+            textarea.focus();
+        }
+        
+        return false;
+    },
+
+    cancelReply : function () {
+        var response = this.dom('respond-post-97'),
+        holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+        if (null != input) {
+            input.parentNode.removeChild(input);
+        }
+
+        if (null == holder) {
+            return true;
+        }
+
+        this.dom('cancel-comment-reply-link').style.display = 'none';
+        holder.parentNode.insertBefore(response, holder);
+        return false;
+    }
+}
+//]]>
+</script></head>
+
+<body onload="prettyPrint()">
+
+<div class="container">
+
+<header class="jumbotron" id="overview">
+        <h1>某储备粮的“学习笔记” </h1>
+    <p class="lead">by 咳嗽di小鱼</p>
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                
+                <a class="brand" href="index.html">
+                    Trapecho
+                </a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="index.html">Home</a></li>
+                        <li class="divider-vertical"></li>
+                                                                        <li><a href="category/sum-up/index.html" title="Sum Up">Sum Up</a></li>
+                                                <li><a href="category/code-dump/index.html" title="Code Dump">Code Dump</a></li>
+                                                <li><a href="category/network/index.html" title="Network">Network</a></li>
+                                                <li><a href="category/jotting/index.html" title="Jotting">Jotting</a></li>
+                                                <li><a href="category/Portfolio/index.html" title="Portfolio">Portfolio</a></li>
+                                                <li class="divider-vertical"></li>
+                                                                        <li><a href="linked-in.html" title="Linked In">Linked In</a></li>
+                                                <li><a href="guess-book.html" title="Guest Book">Guest Book</a></li>
+                                                <li><a href="about.html" title="About">About</a></li>
+                                                <li><a href="rss.html" title="RSS">RSS</a></li>
+                                            </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="content">
+
+
+<div class="row">
+    <div class="span9" id="content">
+        <div class="post">
+            <div class="page-header">
+                <h1>
+                    Having Some Changes                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: August 14, 2012</span>
+                    <span>Category: <a href="category/jotting/index.html">Jotting</a></span>
+                </h6>
+            </div>
+            <div class="entry-content"><p>As you can see, I changed the entire blog into english, except the posts I wrote before and the blog title. It doesn't mean I will not write in Chinese any more. It's because I thought, in order to be standing out among the people around North America, I gotta have something the North America people can read and understand.</p><p>Just finished my 3B term @ University of Waterloo. Learnt a lot, worked a lot...<br />Things that I was or is recently working on:</p><ul>
+<li>doGRT: Going to implement the iPad UI. Refactor the entire app if I have time.</li>
+<li>Moe FM: Refactoring the entire app. Adding bunch of new features. (Hope you guys are still waiting for it)</li>
+<li>CampusNav: It's the project we made for our Software Architecture class. I'm planning to push it to the App Store.</li>
+<li>Yodo1 SDK: Review and help improve the SDK.</li>
+</ul><p>These should be able to keep me busy for my Summer, lol. Gotta stop playing around and start working now.</p><p>Wish everyone has a nice summer.</p></div>
+            <div class="entry-tags">
+                Labels: 
+                <span class="label label-info">
+                    <a href="tag/blog/index.html">blog</a>                </span>
+            </div>
+        </div>
+        <hr class="soften" />
+        <div id="comments">
+                                    <h3>7 comments &raquo;</h3>
+            
+            <ol class="comment-list"><li id="comment-642" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/17948ba5d78626f5d9eb0ff010e8df92?s=32&amp;r=X&amp;d=" alt="CzBiX" width="32" height="32" />        <cite class="fn"><a href="http://iczbix.com" rel="external nofollow">CzBiX</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="having-some-changes.html#comment-642">August 15th, 2012 at 03:23 am</a>
+            </div>
+    <div class="comment-content">
+    <p>I'm walk around and get soy sauce.</p>    </div>
+    <div class="comment-reply">
+        <a href="having-some-changes.html%3FreplyTo=642.html#respond-post-97" rel="nofollow" onclick="return TypechoComment.reply('comment-642', 642);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-643" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="having-some-changes.html#comment-643">August 15th, 2012 at 12:08 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>Welcome`lmao...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-657" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/d2ad946411bb7848e873d0c3588bfe45?s=32&amp;r=X&amp;d=" alt="gongyi" width="32" height="32" />        <cite class="fn"><a href="http://gongyi.info" rel="external nofollow">gongyi</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="having-some-changes.html#comment-657">September 6th, 2012 at 10:41 am</a>
+            </div>
+    <div class="comment-content">
+    <p>why do you guy write in english ? it's not convenient to communicate with the people who come from China.</p><p>btw,i'm neal !</p>    </div>
+    <div class="comment-reply">
+        <a href="having-some-changes.html%3FreplyTo=657.html#respond-post-97" rel="nofollow" onclick="return TypechoComment.reply('comment-657', 657);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-658" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="having-some-changes.html#comment-658">September 7th, 2012 at 08:53 am</a>
+            </div>
+    <div class="comment-content">
+    <p>= =`谁让咱得在地球另外一边立足呢...<br>
+看你头像能看出来, 哈哈</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-661" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/92890ee2858889ce1eb0dc89a0a49f4a?s=32&amp;r=X&amp;d=" alt="咳嗽网" width="32" height="32" />        <cite class="fn"><a href="http://www.kesouwang.com/" rel="external nofollow">咳嗽网</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="having-some-changes.html#comment-661">October 25th, 2012 at 04:35 am</a>
+            </div>
+    <div class="comment-content">
+    <p>主要是学习的</p>    </div>
+    <div class="comment-reply">
+        <a href="having-some-changes.html%3FreplyTo=661.html#respond-post-97" rel="nofollow" onclick="return TypechoComment.reply('comment-661', 661);">回复</a>    </div>
+    </li>
+<li id="comment-741" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/9c8a1f3c5d8b0d0e00eb6c9e78bbb655?s=32&amp;r=X&amp;d=" alt="C瓜哥" width="32" height="32" />        <cite class="fn"><a href="http://cguage.com" rel="external nofollow">C瓜哥</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="having-some-changes.html#comment-741">July 22nd, 2013 at 10:18 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>0. Orz. If I were u, I'll stay in US, and never back to China again...Life in China is too hard to bear!!!<br>
+1. so you study for bachelor or master?</p>    </div>
+    <div class="comment-reply">
+        <a href="having-some-changes.html%3FreplyTo=741.html#respond-post-97" rel="nofollow" onclick="return TypechoComment.reply('comment-741', 741);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-742" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="having-some-changes.html#comment-742">July 22nd, 2013 at 10:25 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>Lol. I study for Bachelor of CS at UWaterloo in Canada. Trying to find my first job right now.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+</ol>            
+            <div class="pagination">
+                            </div>
+            
+                        
+                        <div id="respond-post-97" class="respond">
+            
+            <div class="cancel-comment-reply">
+            <a id="cancel-comment-reply-link" href="having-some-changes.html#respond-post-97" rel="nofollow" onclick="return TypechoComment.cancelReply();">取消回复</a>            </div>
+            
+            <form class="form-horizontal" method="post" action="http://blog.gregwym.info/having-some-changes.html/comment?parent=661" id="comment_form">
+                <fieldset>
+                    <legend>Add new comment &raquo;</legend>
+                                        <div class="control-group">
+                        <label class="control-label" for="author">Nick name</label>
+                        <div class="controls">
+                            <input type="text" name="author" id="author" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="mail">E-mail<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" name="mail" id="mail" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Web</label>
+                        <div class="controls">
+                            <input type="text" name="url" id="url" class="input-large" value="" />
+                        </div>
+                    </div>
+                                        <div class="control-group">
+                        <label class="control-label" for="url">Comment</label>
+                        <div class="controls">
+                            <textarea class="input-xlarge" name="text" rows="3"></textarea>
+                            <p class="help-block">Enter your comment here...</p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Captcha</label>
+                        <div class="controls">
+                            <img src="action/captcha" alt="captcha" onclick="this.src = this.src + '?' + Math.random()" style="cursor: pointer" title="点击图片刷新验证码" /><br /><input type="text" class="captcha" name="captcha_code" /> <strong>请输入验证码</strong>							                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Submit comment</button>
+                    </div>
+                </fieldset>
+            </form>
+            </div>
+            
+
+        </div>    </div><!-- end #content-->
+    <div class="span3" id="sidebar">
+    <div class="widget_search">
+        <form method="post" id="searchform" class="form-search">
+            <input type="text" class="span2" name="s" id="s" />
+            <button type="submit" class="btn" id="searchsubmit">Search</button>
+        </form>
+    </div>
+    
+        
+                    <div class="widget">
+            <h3>Related Posts</h3>
+                        <ul>
+                            <li><a href="shuo-shuo-typecho`.html" title="说说Typecho`">说说Typecho`</a></li>
+                        </ul>
+        </div>
+            
+    
+        <div class="widget">
+        <h3>Recent Comments</h3>
+        <ul>
+                                    <li><a href="github-you-should-have-told-me-earlier.html#comment-952">payday loans</a>: wfxqtdq</li>
+                        <li><a href="Trapecho-boostrap-based-typecho-theme.html#comment-936">地铁线路图网</a>: 我也在用typecho，小巧玲珑，稍微改了以下默认模板，站现在简洁速度也不错，点击我的昵称可以访问。</li>
+                        <li><a href="about.html#comment-930">ramble</a>: 博客 ，请问如何显示显示文章前3段的摘要  不打乱格式</li>
+                        <li><a href="about.html#comment-874">清源</a>: 看来暂时只能看着用了，google的高亮的比较不明显。</li>
+                        <li><a href="about.html#comment-870">清源</a>: 大哥呀，主题这几天我看着感觉用中文书写标题字体太大了，正文的字体也太小了，估计还是适合用英文，不知道...</li>
+                    </ul>
+    </div>
+        
+        <div class="widget">
+    		<h3>Labels</h3>
+        <ul>
+                                    <a href="tag/algorithm/index.html" class="size-20">algorithm</a>
+                        <a href="tag/review/index.html" class="size-20">review</a>
+                        <a href="tag/cs240/index.html" class="size-10">cs240</a>
+                        <a href="tag/server/index.html" class="size-10">server</a>
+                        <a href="tag/VPS/index.html" class="size-10">VPS</a>
+                        <a href="tag/code/index.html" class="size-5">code</a>
+                        <a href="tag/database/index.html" class="size-5">database</a>
+                        <a href="tag/cs348/index.html" class="size-5">cs348</a>
+                        <a href="tag/typecho/index.html" class="size-5">typecho</a>
+                        <a href="tag/nginx/index.html" class="size-5">nginx</a>
+                        <a href="tag/search/index.html" class="size-5">search</a>
+                        <a href="tag/GUI/index.html" class="size-5">GUI</a>
+                        <a href="tag/linux/index.html" class="size-5">linux</a>
+                        <a href="tag/java/index.html" class="size-5">java</a>
+                        <a href="tag/DNS/index.html" class="size-5">DNS</a>
+                        <a href="tag/blog/index.html" class="size-5">blog</a>
+                        <a href="tag/apple/index.html" class="size-5">apple</a>
+                        <a href="tag/cs241/index.html" class="size-5">cs241</a>
+                        <a href="tag/compiler/index.html" class="size-5">compiler</a>
+                        <a href="tag/sql/index.html" class="size-5">sql</a>
+                    </ul>
+		</div>
+    
+    
+        <div class="widget">
+        <h3>Archives</h3>
+        <ul>
+            <li><a href="2013/09/index.html">September 2013</a></li>
+<li><a href="2012/12/index.html">December 2012</a></li>
+<li><a href="2012/11/index.html">November 2012</a></li>
+<li><a href="2012/08/index.html">August 2012</a></li>
+<li><a href="2012/06/index.html">June 2012</a></li>
+<li><a href="2012/04/index.html">April 2012</a></li>
+<li><a href="2012/03/index.html">March 2012</a></li>
+<li><a href="2012/02/index.html">February 2012</a></li>
+<li><a href="2011/12/index.html">December 2011</a></li>
+<li><a href="2011/11/index.html">November 2011</a></li>
+<li><a href="2011/10/index.html">October 2011</a></li>
+<li><a href="2011/06/index.html">June 2011</a></li>
+<li><a href="2011/05/index.html">May 2011</a></li>
+<li><a href="2011/04/index.html">April 2011</a></li>
+<li><a href="2011/03/index.html">March 2011</a></li>
+        </ul>
+    </div>
+    
+    
+        <div class="widget">
+        <h3>Others</h3>
+        <ul>
+                        <li class="last"><a href="http://blog.gregwym.info/admin/login.php">Login</a></li>
+                        <li><a href="http://validator.w3.org/check/referer">Valid XHTML</a></li>
+        </ul>
+    </div>
+    
+    </div><!-- end #sidebar -->
+    
+</div>
+<footer>
+    <p>
+        Powered by <a href="http://typecho.org/">Typecho</a>. 
+        <a href="http://dolast.com/pages/trapecho">Trapecho</a> theme by <a href="index.html">咳嗽di小鱼</a>. 
+        Hosting on <a href="https://www.digitalocean.com/?refcode=b846692d6a3a">Digital Ocean</a>
+    </p>
+</footer><!-- end #footer -->
+
+</div>
+</div>
+
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/jquery-1.7.1.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/bootstrap.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/prettify.js"></script>
+<script type="text/javascript">
+    // fix navbar on scroll
+    var $win = $(window)
+      , $nav = $('.navbar')
+      , navTop = $('.navbar').length && $('.navbar').offset().top - 10
+      , isFixed = 0
+
+    processScroll()
+
+    $win.on('scroll', processScroll)
+
+    function processScroll() {
+      var i, scrollTop = $win.scrollTop()
+      if (scrollTop >= navTop && !isFixed) {
+        isFixed = 1
+        $nav.addClass('navbar-fixed-top')
+      } else if (scrollTop <= navTop && isFixed) {
+        isFixed = 0
+        $nav.removeClass('navbar-fixed-top')
+      }
+    }
+    
+    $('.page-navigator li:not(:has(a))').html('<a>...</a>');
+    $('.page-navigator .current').addClass('active');
+    
+        $('pre').addClass('prettyprint linenums');
+        $('.entry-content a').attr('target','_blank');
+</script>
+</body>
+</html>
+

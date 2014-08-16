@@ -1,0 +1,866 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+xmlns:thr="http://purl.org/syndication/thread/1.0"
+xml:lang="zh-CN"
+xml:base="http://blog.gregwym.info/category/sum-up/"
+>
+<title type="text">某储备粮的“学习笔记” - Sum Up</title>
+<subtitle type="text">整理平时学习中碰到的各种难点重点, 以Computer Science相关内容为主. 涉及到的课程名称均为University of Waterloo的课程. </subtitle>
+<updated>2012-06-22T10:46:34+08:00</updated>
+<generator uri="http://typecho.org/" version="0.9/13.12.12">Typecho</generator>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/category/sum-up/" />
+<id>http://blog.gregwym.info/feed/atom/category/sum-up/</id>
+<link rel="self" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/category/sum-up/" />
+<entry>
+<title type="html"><![CDATA[Software Architecture - CS 446 Midterm Outline]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/software-architecture-CS446-midterm.html" />
+<id>http://blog.gregwym.info/software-architecture-CS446-midterm.html</id>
+<updated>2012-06-22T10:46:34+08:00</updated>
+<published>2012-06-22T10:46:34+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[Software Design Process ModelsDesign as search. Design spaces. Design state, goal structure, generat...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/software-architecture-CS446-midterm.html" xml:lang="zh-CN"><![CDATA[
+<h2>Software Design Process Models</h2><blockquote><p>Design as search. Design spaces. Design state, goal structure, generative design operations, early quantitative evaluations, control of design process. Basic models of design (transformational, plan/architecture driven). Relationship to other life-cycle activities.</p></blockquote><h3>Terms</h3><ul>
+<li>Module: a collection of classes</li>
+<li>Subsystem: a collection of classes with an interface</li>
+<li>Design window: the time, which design decision have to be made</li>
+<li>Service: the operation in common purpose, offered by a subsystem</li>
+</ul><p><!--more--></p><h3>Different Views</h3><ul>
+<li>Analysis focus on the problem domain <br />
+<br />
+<ul>
+<li>Analyst, end user, customer</li>
+</ul></li>
+<li>Design focus on the solution domain <br />
+<br />
+<ul>
+<li>designer, implementer</li>
+</ul></li>
+</ul><h3>Goals</h3><ul>
+<li>Designer <br />
+<br />
+<ul>
+<li>Specify interface of subsystems</li>
+<li>Usability</li>
+<li>Reusability</li>
+</ul></li>
+<li>Implementer <br />
+<br />
+<ul>
+<li>implementer</li>
+<li>Extender</li>
+<li>User</li>
+</ul></li>
+</ul><h3>Major Design Goals</h3><ul>
+<li>Behavioural Model <br />
+<br />
+<ol>
+<li>Concurrency</li>
+<li>Resource Handling</li>
+<li>Software Control</li>
+</ol></li>
+<li>Structural Model <br />
+<br />
+<ol>
+<li>Hardware/Software mapping</li>
+<li>Data Management</li>
+</ol></li>
+<li>Use Case Model <br />
+<br />
+<ol>
+<li>Boundary Conditions (边缘情况)</li>
+</ol></li>
+<li>Non Functional Requirements <br />
+<br />
+<ol>
+<li>Feasibility (可行性)</li>
+</ol></li>
+</ul><p>A lot of others.</p><p>Most of them involves trade off between each other</p><h3>Decomposition</h3><ul>
+<li>High cohesion</li>
+<li>Low coupling</li>
+</ul><h2>Architecture/Design Representation</h2><blockquote><p>What should be represented (structure, behaviour)? Informal representations of design, examples of design notations. Formal representation of design. Domain specific architecture descriptions. Role of standards, reference architectures. Design documentation.</p></blockquote><h3>Terms</h3><ul>
+<li>Subsystem decomposition: identify subsystems, service, and their association in between</li>
+<li>Architectural style: pattern for a subsystem decomposition</li>
+<li>Software architecture: instance of a style. composed of components and connectors</li>
+<li>Components: encapsulated subsystem, provides services</li>
+<li>Connectors: Facilitate communication within software. Simple procedure calls or shared data accesses</li>
+</ul><p>-</p><ul>
+<li>Conceptual Arch</li>
+<li>Concrete Arch</li>
+<li>Evolution</li>
+<li>Degradation <br />
+<br />
+<ul>
+<li>Drift: add things to conceptual</li>
+<li>Erosion: conflict to conceptual</li>
+<li>Recover: determining from implementation</li>
+</ul></li>
+</ul><h3>Architectural Style</h3><ul>
+<li>Vocab of design elements</li>
+<li>Set of config rules</li>
+<li>Semantic interpretation</li>
+</ul><p>Benefits</p><ul>
+<li>Design/Code reuse</li>
+<li>Visualization</li>
+<li>Interoperability (WTH is this word…)</li>
+<li>Style-specific analyses</li>
+</ul><h3>Style Examples</h3><ul>
+<li>Main program and subroutines</li>
+<li>Object-Oriented Style</li>
+<li>Layered Style</li>
+<li>Virtual Machine Layers <br />
+<br />
+<ul>
+<li>Closed/Open Layering</li>
+</ul></li>
+<li>3/4-Tier</li>
+<li>Client/Server</li>
+<li>Peer-to-Peer</li>
+<li>Batch Sequential</li>
+<li>Pipes and Filters</li>
+<li>Repository</li>
+<li>Implicit Invocation</li>
+<li>Publish-Subscribe</li>
+<li>Event-Based</li>
+<li>MVC</li>
+<li>Interpreter</li>
+<li>Sservice-Oriented Arch (SOA)</li>
+</ul><h3>Architectural Model</h3><p>Arch Views and Viewpoints<br />Different views should be consistent between each other.</p><ul>
+<li>Logical View <br />
+<br />
+<ul>
+<li>UML component diagram</li>
+</ul></li>
+<li>Physical View</li>
+<li>Deployment View <br />
+<br />
+<ul>
+<li>UML deployment diagram</li>
+</ul></li>
+<li>Concurrency/Process View</li>
+<li>Behavioral View <br />
+<br />
+<ul>
+<li>UML collaboration diagram</li>
+</ul></li>
+</ul><p>Metamodel意会了, 但是不知道怎么总结…<br />主要用来保证view之间的consistency</p><h3>Design Goals</h3><ul>
+<li>Reduce Complexity</li>
+<li>Scalability</li>
+<li>Adaptability</li>
+<li>Heterogeneity</li>
+<li>Portability</li>
+<li>Dependability <br />
+<br />
+<ul>
+<li>Reliability</li>
+<li>Availability</li>
+<li>Robustness</li>
+<li>Fault-tolerant</li>
+</ul></li>
+</ul><h3>Detail design activities</h3><ul>
+<li>Identify modules <br />
+<br />
+<ul>
+<li>Data Flow Analysis (DFA)</li>
+</ul></li>
+<li>Identify control structure <br />
+<br />
+<ul>
+<li>Instantiation of modules</li>
+<li>Management of base processes</li>
+</ul></li>
+<li>Decide on overall control structure <br />
+<br />
+<ul>
+<li>Centralized/Decentralized control</li>
+</ul></li>
+<li>Address boundary control conditions</li>
+<li>Address persistent data management</li>
+<li>Address hardware/software mapping</li>
+<li>Implement concurrency</li>
+<li>Define access control</li>
+</ul><p>...继续ing...</p><h2>Design Plans/Architecture</h2><blockquote><p>Review of small/medium scale plans (data structures, programming language structures, concurrency). Plans/architectures for common types of software systems (translators, embedded, real-time, user interface).</p></blockquote><p>...未开始...</p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/software-architecture-CS446-midterm.html#comments" thr:count="0" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/software-architecture-CS446-midterm.html" thr:count="0"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[CS 341 Algorithm 复习小记]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/cs-341-algorithm-brief-review.html" />
+<id>http://blog.gregwym.info/cs-341-algorithm-brief-review.html</id>
+<updated>2011-12-16T00:27:48+08:00</updated>
+<published>2011-12-16T00:27:48+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[Master TheoremT(n) = a * T(n / b) + f(n)x    = log_b(a)T(n) = θ(n^x)          if f(n) = O(n^(x-ε))  ...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/cs-341-algorithm-brief-review.html" xml:lang="zh-CN"><![CDATA[
+<h2>Master Theorem</h2><pre><code>T(n) = a * T(n / b) + f(n)
+x    = log_b(a)
+T(n) = θ(n^x)          if f(n) = O(n^(x-ε))
+       θ(n^x * lg(n))  if f(n) = θ(n^x)
+       θ(f(n))         if f(n) = Ω(n^(x+ε)) 
+                          and a * f(n/b) &amp;lt;= c * f(n)
+</code></pre><h2>Greedy</h2><ul>
+<li>At each step, make the "best" next choice.</li>
+<li>Never backtrack or change past choices.</li>
+<li>Never look ahead to see if this choice has negative consequences.</li>
+</ul><p><!--more--></p><h3>Greedy Proof, Type 1</h3><ol>
+<li>Describe a greedy local choice strategy</li>
+<li>Setup the configurations of the greedy solution G and the optimal solution O</li>
+<li>Argue that O can become G by replacing each entry in O<br />For each replacement, show it is possible, because it consist the compatibilty and optimality The last two step involves induction</li>
+</ol><ul>
+<li>In basecase, focusing on how the first greedy choice can be used in an optimal solution</li>
+<li>During induction,<br />assume the first k choices in an optimal solution are made by the greedy algorithm, show that the k+1 choice can be made by the greedy algorithm as well</li>
+</ul><h3>Greedy Proof, Type 2</h3><ol>
+<li>Describe a greedy local choice strategy</li>
+<li>Setup the configurations of the greedy solution G and the optimal solution O</li>
+<li>Find out the difference between O and G</li>
+<li>Try to reorder O to G and consists the optimality</li>
+</ol><h2>Dynamic Programming</h2><p>Dynamic Programming calculates a solution based on the result of a previous calculation. It saves the previous result so that no duplicate calculation needed. Dynamic Programming Design Recipe</p><ol>
+<li>Find out the subproblem <br />
+<br />
+<ul>
+<li>give a score evaluation function</li>
+<li>give a recursive difinition</li>
+</ul></li>
+<li>State how an array can be used to evaluate the scores <br />
+<br />
+<ul>
+<li>dimension</li>
+<li>evaluation order</li>
+<li>basecase</li>
+<li>final result</li>
+</ul></li>
+<li>How to recover the solution</li>
+</ol><h2>Graph</h2><h3>Representations of Graphs</h3><ul>
+<li>Pointers <br />
+<br />
+<ul>
+<li>vertices have pointers to adjacent vertices</li>
+<li>Cannot determine whether an edge exists directly</li>
+</ul></li>
+<li>Adjacency matrix <br />
+<br />
+<ul>
+<li>A matrix M, M[i, j] = 1 iff exists edge from i to j</li>
+<li>waste a lot of space</li>
+</ul></li>
+<li>Adjacency lists <br />
+<br />
+<ul>
+<li>Link-list like representation</li>
+</ul></li>
+</ul><p><hr /></p><p><del>继续ing...</del></p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/cs-341-algorithm-brief-review.html#comments" thr:count="1" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/cs-341-algorithm-brief-review.html" thr:count="1"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[OS161 Memory Management]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/os161-memory-management.html" />
+<id>http://blog.gregwym.info/os161-memory-management.html</id>
+<updated>2011-11-20T13:08:45+08:00</updated>
+<published>2011-11-20T13:08:45+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[这次Assignment除了Physical Memory Management, 其他几个部分都相互关联. 所以在设计完成前几部分的时候, 最好将所有需要解决的问题都搞明白, 然后统一设计Addre...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/os161-memory-management.html" xml:lang="zh-CN"><![CDATA[
+<p>这次Assignment除了Physical Memory Management, 其他几个部分都相互关联. 所以在设计完成前几部分的时候, 最好将所有需要解决的问题都搞明白, 然后统一设计Address Space的结构.</p><h2>TLB Management</h2><p>和TLB有关的, 需要解决的问题有这么几个:</p><ol>
+<li>Context Switch的时候, 如果不是两个不同的thread, 则不需要flush TLB</li>
+<li>当TLB被占满的时候, 要替换最老的TLB entry</li>
+<li>TLB内保存read-only信息</li>
+</ol><p>然后一个一个说…</p><ol>
+<li>只要检查上一次flush TLB时候的thread, 和现在的是不是同一个thread即可</li>
+<li>这部分这次Assignment已经把code写好大半了…`你需要做的就是把tlb&#95;get&#95;rr_victim return回来的那个entry替换掉</li>
+<li>理解MIPS TLB的每个flag bits的用处, 然后把read-only flag放在对应的位置.<br />当程序试图写入一个read-only的memory时候, vm&#95;fault拿到的faulttype是VM&#95;FAULT_READONLY.<br /><strong>Don't PANIC!!!</strong></li>
+</ol><p>TLB基本就这么多= =||`没啥东西…<br /><!--more--></p><h2>On-Demand Loading</h2><p>This is the fun part…哈哈哈<br />这部分, 需要, 灰常严谨的逻辑和计算…`还要对page loading的步骤非常清晰. 任何一点对内存地址或者file offset的计算错误, 或者理解错误, 都会mess up.</p><p>所以, 咱们重新来列一遍从程序开始运行, 到page loading结束的整个过程:</p><ul>
+<li>runprogram/execv拿到一个progname (ELF file's path), 并call load_elf.</li>
+<li>load_elf不立刻load到physical memory,<br />而是把ELF中的每一个segment所对应的virtual address定义好, 并且保存load这个segment所需要的所有信息.<br />(这些信息如何/以什么样的形式保存, 需要在动手之前就先明确!)</li>
+<li>当系统碰到一个TLB Miss时, 会有两种情况:</li>
+<li>这个page还没有被load到physical memory, 说明这个page是第一次被访问, <br />
+<br />
+<ul>
+<li>找到这个page所对应的segment的信息</li>
+<li>计算load这个page所需要的所有相关数据</li>
+<li>从physical memory steal一个page的内存</li>
+<li>将这个page的数据从file load到physical memory中<br />(提示: PADDR&#95;TO&#95;KVADDR is useful)</li>
+<li>将这个physical memory保存成这个segment vaddr对应的paddr</li>
+<li>将这对vaddr和paddr存入TLB</li>
+</ul></li>
+<li>反之, 直接将已知的一对vaddr和paddr存入TLB即可</li>
+</ul><p>本身, 整个过程还是很straight forward的. 可有一些special case需要handle…</p><ol>
+<li>有的segment不是从一个page的顶头开始的</li>
+<li>有的segment跨越多个page</li>
+<li>有的data segment的filesize是0, 但memsize需要填零</li>
+<li>…好像还有别的, = =想不起来了, 大家写的时候发现了, 告诉我下, 哈哈 最容易出错的部分还是计算, filesize, memsize, file offset, memory offset, 等各种数据…大家加油</li>
+</ol><h2>Address Space</h2><p>多写两句和as有关的</p><p>很多人在刚开始写这个assignment的时候, 最先纠结的就是, as的结构要不要改...<br />这是个好问题, 但答案是: 不一定要改as, 但肯定需要+东西.</p><p>在解释为什么之前, 咱们先来看看dumb_vm的as里, 每个东西都是干嘛用的.</p><pre><code>struct addrspace { 
+    #if OPT_DUMBVM 
+        vaddr_t as_vbase1; 
+        paddr_t as_pbase1; 
+        size_t as_npages1; 
+        vaddr_t as_vbase2; 
+        paddr_t as_pbase2; 
+        size_t as_npages2; 
+        paddr_t as_stackpbase; 
+    #else 
+        /* Put stuff here for your VM system */ 
+    #endif 
+};
+</code></pre><p>dumb_vm里只保存两个<del>segment</del>/region的内存信息</p><ul>
+<li>vbase是每个reg在virtual address上开始的位置</li>
+<li>pbase是每个reg在physical address上开始的位置</li>
+<li>npages是每一个reg一共占用了多少个virtual page/physical frame</li>
+<li>stackpbase顾名思义, stack在physical address上的底是哪里</li>
+</ul><p>然后咱们再研究下, 可能需要记录哪些信息. (并不一定全部都需要记录, 有些可以相互计算)</p><p>为了计算写入TLB的值, 需要</p><ul>
+<li>每个reg在virtual &amp; physical address的开始位置</li>
+<li>每个reg有多少个page/frame</li>
+<li>每个reg的permission flags</li>
+</ul><p>为了On-Demand Loading, 需要</p><ul>
+<li>当前app对应的ELF file是什么</li>
+<li>每个reg里的每个page/frame是否被load过</li>
+<li>每个reg里的每个page/frame的vaddr和paddr开始位置</li>
+<li>每个reg里的每个page/frame所对应在ELF-FILE中的program header information (例如: file offset)</li>
+<li>stack已经占用了多少个page</li>
+</ul><p>对比一下上下两个列表, 我们缺点什么呢?<br />原来的as没有记录reg的permissions, 没有记录page/frame是不是被load过了, 没有分别记录每个page/frame的vaddr+paddr(当然, 可以通过seg的数据进行计算), 也没有每个reg对应的ELF信息...stack也是固定大小</p><p>所以原本的as是100%缺少东西的, 但这些额外的东西, 具体应该保存到哪里就自由发挥了.</p><p>补充1: OS161里假设了一个ELF程序只包括两个segment. 虽然实际可能不止2个, 但现阶段, 只支持2个也没问题.<br />更新1: 叫seg不太确切, 还是叫region好了. 另补充了一些需要记录的内容.</p><h2>Physical Memory Management</h2><p>在dumbvm里, Physical Memory的分配机制非常简单. 在first和last之间, 一页一页的把内存分配出去, first逐次往后移动, 直到first = last, 就没有memory可用了. 也不回收, 不重复使用.</p><p>要想改变优化这个机制, 首先需要增加一个能够tracking所有可用Physical Frame使用状态的table. 在进行malloc或者free某个frame的时候, 在table中记录下来这个frame的状态. 这样, 如果存在free过的page, 这些page就可以优先被malloc, 从而重复利用已经free了的内存.</p><p>整体流程:</p><ul>
+<li>系统启动</li>
+<li>进入vm_bootstrap</li>
+<li>取得现在可用的Physical Memory的地址范围</li>
+<li>通过地址范围计算出有多少个可用的frame</li>
+<li>建立保存Physical Frame Status的table</li>
+<li>完成其他vm_bootstrap所需要做的工作</li>
+<li>再次取得可用的Physical Memory的地址范围, 这就是真正可用的内存范围</li>
+<li>停用原本的Physical Memory管理机制, 并接管所有alloc&#95;kpages和free&#95;kpages的操作</li>
+<li>vm系统启动完成</li>
+</ul><p>除此之外, 还需要修改allocation和free时候的操作, 让alloc能够通过某种algorithm来重复使用已经被free的内存位置. (用什么样的Algorithm就看各位了, 实在不行做liner search也是方法之一, 嘿嘿)</p><p>个别要点:</p><ul>
+<li>建立的table可能比最后实际需要的大, 但并无大碍. (因为table本身占用了一部分内存)</li>
+<li>alloc_kpages的时候, 有可能需要一次alloc超过一页的frame.<br />如果你使用的algorithm不方便在被free的内存中找出多个连续的frame, 那尽管把从未用过的连续frame分配出去吧.</li>
+<li>其他的待补充...</li>
+</ul><p><hr /></p><p>Instrumentation实在没什么好写的, 把declaration和initialization放对地方就好了.</p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/os161-memory-management.html#comments" thr:count="19" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/os161-memory-management.html" thr:count="19"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[OS161 System Calls Implementation Notes]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/os161-system-calls-implementation-notes.html" />
+<id>http://blog.gregwym.info/os161-system-calls-implementation-notes.html</id>
+<updated>2011-10-31T12:38:37+08:00</updated>
+<published>2011-10-31T12:38:37+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[这篇文章的目的是记录CS350 Assignment2中, 我编写各种System Calls时所采用的思路. 实际coding的时候, 同一种System Call的实现方式很可能不止一种, 但殊途...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/os161-system-calls-implementation-notes.html" xml:lang="zh-CN"><![CDATA[
+<p>这篇文章的目的是记录CS350 Assignment2中, 我编写各种System Calls时所采用的思路. 实际coding的时候, 同一种System Call的实现方式很可能不止一种, 但殊途同归.<br />注1: 文章顺序和实际coding顺序并不一定一致, 请参考Assignment中的Strategy部分.<br />注2: 如果没有仔细读过code和Assignment...这里很有些东西你可能读的似懂非懂.</p><p>欢迎在评论中提问...</p><p><hr /></p><h2>General Tips</h2><ol>
+<li>别管写什么function, 第一步永远是检查parameter是否有效!!!<br />(比如, pointer是不是NULL, string是不是空, etc)</li>
+<li>不要放过任何一个warning...需要explicit cast的时候, 千万不要偷懒.</li>
+<li>function一般使用parameter中的pointer进行value return, 正常的return用来return errno.</li>
+<li>开始coding之前, 除了读Assignment, 读code, 还要好好读Assignment Hint! 解答了很多FAQ</li>
+<li>注意在header file里用#ifndef, 保证header不会出现重复include</li>
+<li>kmalloc了的东西...在destroy的时候一定要kfree. 不然A3里, 你会发现各种memory leak<br />(Create某些data structure的中间, 如果出现error, 则需要首先free已经allocated的内存, 然后返回error)</li>
+<li>善用spl解决mutex问题. 当然, 首先你要明白什么样的操作需要mutex!</li>
+<li></li>
+</ol><p>我会边写这个Note边添加Tips...</p><p><!--more--></p><p><hr /></p><h2>Part 1, Play with the files and console</h2><p>在OS161中, 所有应用程序在打开, 关闭, 读取, 写入一个文件的时候, 都是通过一个file descriptor [ID]来标识某一个文件的. 需要注意的是, file descriptor [ID]和vnode是完全两个东西.</p><p>每个thread都有单独一套file descriptors [ID], 但两个thread的两个不同的file descriptor [ID]如果标识的是同一个文件, 则共用一个vnode.<br />(这里所说的file descriptors实际上只是一个int, 是代表一个file descriptor的ID, 而实际上file descriptor要保存很多内容. 后边继续)</p><p>简单来说, 我们需要给每一个thread都增加一个, 记录所有opened file的机制. 我们暂称之为file table.<br />file table可以就是个简单的array, 但为了让file table的operation和thread以及syscall相互独立, 减少重复code并减少bug机会, 我强烈建议大家把file table相关的所有operations都写成独立的functions, 放在单独的文件里.</p><h3>file table &amp; file descriptor</h3><p>file table其实很简单, 一个array<del>外加一个size_t记录array的长度</del>, 就ok了. (这里说的所有array都是struct array, OS161中自带的kernel array lib)<br />file descriptor中需要记录以下几个东西,</p><ul>
+<li>vnode pointer</li>
+<li>permission flags</li>
+<li>the current offset in file</li>
+<li>probably need something else, depends on your implementation. (like a reference counter, etc.)</li>
+</ul><p>然后就是操作file table的各种function, 比如</p><ul>
+<li>create file table</li>
+<li>destroy file table</li>
+<li>duplicate file table (is one of the most important part of <del>execv</del> fork, but not nessesary for now)</li>
+<li>add/get/delete a file descriptor</li>
+<li>may need extra functions or helpers for convenience</li>
+</ul><p>至此基本没有难点 (就类似写个小"class").<br />之后要把file table添加到thread里, 并且在thread_fork中进行initialization.</p><h3>Stdin &amp; Stdout 也是FILE!!!</h3><p>这是Assignment在"Implementing file system calls"中特别提到的一点.<br />在建立一个新的process时候, 不止要initialization一个file table, 而且还要把table的0, 1, 2分别设置成standard input, standard output和standard error, 不然printf就不work哦, 哈哈哈.</p><p>注: OS161中stdout和stderr是一样的.</p><h3>知道了怎么Open, Close就简单了</h3><p>open步骤 1. 创建file descriptor 2. vfs_open打开文件 (获取vnode) 3. 往file descriptor中存需要的数据 4. 把file descriptor加到file table中, 并取得ID 5. return ID给user program</p><p>如何用vfs_open打开文件, 请参考runprogram.c</p><h3>Read和Write差在细节</h3><p>有file descriptor就有vnode...如何用VOP_READ配合vnode和uio读文件, 请参看loadelf.c<br />注意offset怎么算!!!!!<br />考验你读code读够不够细致的时候到了...好好读vnode.h(的comment)吧.</p><p>Write和Read差在uio的配置, 和用VOP_WRITE.<br />请细读uio.h(的comment)= =...都是comment有用, code看不懂影响不是很大.</p><p><hr /></p><h2>Part 2, Get the process organized</h2><p>fork, getpid, waitpid, _exit...<br />注: 按我的理解, OS161所有的thread都是process, 只不过有parent和child之分.</p><p>这部分中, PID的管理逻辑是关键, 主要解决几个问题.</p><ul>
+<li>如何让一个process wait在一个PID上, 并在exit的时候wake up所有在当前PID waiting的process</li>
+<li>如何防止deadlock (P1 wait on P2, and P2 wait on P1)</li>
+<li>如何保存exitcode. 并明确, 何时可以安全的删除这个exitcode的记录</li>
+<li>如何重复使用已经空闲的PID 除此之外, fork还要考虑其他问题, 后边再说.</li>
+</ul><h3>Table解决一切问题...</h3><p>和file descriptor类似, PID也需要构建一个table. 区别在于, process table必须是global的! 也就是说, 整个系统只有一个process table.<br />然后考虑, 我们需要为每个PID/process保存哪些信息, 才能解决上边列举的几个问题.</p><p>process table相关的function (仅供参考),</p><ul>
+<li>create process table (use in thread_bootstrap)</li>
+<li>destroy process table (use in thread_shutdown)</li>
+<li>assign and save a PID for new process (use in thread_fork)</li>
+<li>mark a PID as inactive and save the exitcode (use when _exit is called)</li>
+<li>you may also want to add other things here. Like the actual implementation of waitpid, wakeup waitings, release a exited PID or any other PID related functions. But its all depends on your implementation decision.</li>
+</ul><h3>Wait&amp;Wakeup的钥匙 - A magical memory address</h3><p>第一个Assignment写完, 对于thread&#95;sleep和thread&#95;wakeup应该都很熟悉了.<br />两个function都consume一个pointer作为钥匙. 只要sleep的thread和wakeup的thread用的是同一个钥匙, 睡着的所有thread就能被唤醒.<br />这在implement waitpid和_exit的时候是很实用的.</p><h3>fork意味着, 一模一样</h3><p>这估计是这次Assignment中最难的部分.</p><p>fork的作用是生成一个和当前thread完全一样的thread. 说具体点就是,</p><ul>
+<li>CPU的每个register值一模一样</li>
+<li>address space中的memory一模一样</li>
+<li>打开的file一模一样 (duplicate a file table)</li>
+<li>其他一个thread中可能包含的部分</li>
+<li>只有PID不一样!!!</li>
+</ul><p>fork system call要点:</p><ol>
+<li>consume一个东西, trapframe. 这里保存着user program进入privilege mode之前, 所有register的数据.</li>
+<li>用memcpy把trapframe复制一份给新thread用</li>
+<li>调用thread&#95;fork的时候, 用复制的trapframe和md&#95;forkentry作为parameter.</li>
+</ol><p>thread_fork要点:</p><ol>
+<li>thread_fork要想办法知道, 是不是被fork system call调用的</li>
+<li>如果是, 需要复制address space</li>
+<li>如果是, 需要duplicate file table. 否则, 创建新的</li>
+</ol><p>md_forkentry要点:</p><ol>
+<li>trapframe要复制到kernel stack上 (太简单了以至于有时候想不到用)</li>
+<li>fork里复制的trapframe要free掉</li>
+<li>在trapframe里设置return value, (pc貌似也要increment...回忆不起来当时increment的原因了)</li>
+<li>address space需要activate</li>
+</ol><p>Follow这些要点, 应该可以比较顺利的搞定fork. 但我仍推荐先把fork和md_forkentry的工作原理搞明白, 再开始.<br />(如果写完了还没明白, 为什么要把md&#95;forkentry pass给thread&#95;fork, 那你绝对是奇葩)</p><p><hr /></p><p>到这里, A2中最难的部分过去了...</p><p>runprogram和execv, 我不确定有没有时间在下周一之前总结出来.<br />这两个大同小异, runprogram写好, execv只是稍微多点东西.<br />exception handling是打酱油...</p><p>大家加油</p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comments" thr:count="12" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/os161-system-calls-implementation-notes.html" thr:count="12"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[关系模型概念整理 (Relational Model)]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/guan-xi-mo-xing-gai-nian-zheng-li.html" />
+<id>http://blog.gregwym.info/guan-xi-mo-xing-gai-nian-zheng-li.html</id>
+<updated>2011-10-19T08:49:01+08:00</updated>
+<published>2011-10-19T08:49:01+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[Definition实在不知道怎么概括= =...Intention of a relation: relation definition and constrainsExtention of a r...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/guan-xi-mo-xing-gai-nian-zheng-li.html" xml:lang="zh-CN"><![CDATA[
+<p>Definition实在不知道怎么概括= =...</p><ul>
+<li>Intention of a relation: relation definition and constrains</li>
+<li>Extention of a relation: the actual data, tuples</li>
+</ul><h3>Relation properties</h3><ul>
+<li>Set Theory <br />
+<br />
+<ul>
+<li>Attributes has order (not necessary)</li>
+<li>Value are used to identify tuples</li>
+<li>Tuples dont have order</li>
+<li>Tuples cant have duplication</li>
+</ul></li>
+<li>Attribute value are atomic</li>
+<li>Degree: How many attributes in the schema</li>
+<li>Cardinality: How many tuples in an instance</li>
+</ul><h3>Constraints</h3><ul>
+<li>Let the DBMS to ensure the entry or modification on data are legal</li>
+<li>Give applications' bug no chance to ruin the data</li>
+</ul><h3>Three Constraint Level</h3><ul>
+<li>Tuple-level <br />
+<br />
+<ul>
+<li>Domain restrictions (datatype)</li>
+<li>Attribute comparisons (好像是指check)</li>
+</ul></li>
+<li>Relation-level <br />
+<br />
+<ul>
+<li>Special type of keys <br />
+<br />
+<ul>
+<li>Superkey: 能uniquely identifies a tuple的一个or一组attribute</li>
+<li>Candidate key: Superkey的最小集, (最简单的一个or一组attribute)</li>
+<li>Primary key: 被选中, 用来identity tuples的Candidate key</li>
+</ul></li>
+</ul></li>
+<li>Database-level <br />
+<br />
+<ul>
+<li>Referential integrity <br />
+<br />
+<ul>
+<li>Foreign key: 其他relation中的primary key</li>
+<li>Referential integrity: 不允许出现和对应relation中的记录不符的情况</li>
+</ul></li>
+<li>Inclusion dependencies: = =`不懂</li>
+</ul></li>
+</ul>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/guan-xi-mo-xing-gai-nian-zheng-li.html#comments" thr:count="2" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/guan-xi-mo-xing-gai-nian-zheng-li.html" thr:count="2"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[数据库基础概念整理]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/shu-ju-ku-ji-chu-gai-nian-zheng-li.html" />
+<id>http://blog.gregwym.info/shu-ju-ku-ji-chu-gai-nian-zheng-li.html</id>
+<updated>2011-10-19T04:55:14+08:00</updated>
+<published>2011-10-19T04:55:14+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[DefinitionsDatabase: is a large and persistent collection of pieces of information organized in a wa...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/shu-ju-ku-ji-chu-gai-nian-zheng-li.html" xml:lang="zh-CN"><![CDATA[
+<h3>Definitions</h3><ul>
+<li>Database: is a large and persistent collection of pieces of information organized in a way that facilitate efficient retrieval and modification.</li>
+<li>DBMS: is a program that manages details related to storage and access for a database.</li>
+<li>Schema: is a description of the data interface to the database.</li>
+<li>Instance: is a database that conforms to a given schema.</li>
+<li>Transaction: is an application-specified atomic and durable unit of work.</li>
+<li>View: is a relation in the external schema whose instance is determined by the instances of the relations in the conceptual schema.</li>
+<li>Trigger: is a procedure executed by the database in response to a change to the database instance</li>
+</ul><h3>Three Level Schema Architecture</h3><ul>
+<li>External schema (view): visualized data</li>
+<li>Conceptual schema: logical structure</li>
+<li>Physical schema: file/storage devices</li>
+</ul><h3>Data Independence</h3><ul>
+<li>Application access the data through an abstract data model provided by the DBMS, rather than direct access</li>
+<li>Physical: applications cant touch the storage stucture</li>
+<li>Logical: applications cant change the data organization</li>
+</ul><h3>Four Transaction Properties</h3><p>NoSQL据说就是要break these properties= =`IDK why...</p><ul>
+<li>Atomic: once the transaction happens, it happened. No intermediate stage!</li>
+<li>Consistency: transaction follows the database consitences</li>
+<li>Isolated: concurrent transactions wont effect each other</li>
+<li>Durable: transaction results permanently</li>
+</ul><h3>What DBMS do</h3><ul>
+<li>Remoce common code from applications</li>
+<li>Provide uniform access to data</li>
+<li>Guarantee data integrity</li>
+<li>manage concurrent access</li>
+<li>Protect against system failure</li>
+<li>Set access policies for data</li>
+</ul>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/shu-ju-ku-ji-chu-gai-nian-zheng-li.html#comments" thr:count="0" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/shu-ju-ku-ji-chu-gai-nian-zheng-li.html" thr:count="0"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[SQL语法整理]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/sql-yu-fa-zheng-li.html" />
+<id>http://blog.gregwym.info/sql-yu-fa-zheng-li.html</id>
+<updated>2011-10-17T06:00:15+08:00</updated>
+<published>2011-10-17T06:00:15+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[SELECTSELECT attribute-expression-list FROM relation-list [ WHERE condition ];attribute-expression-l...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/sql-yu-fa-zheng-li.html" xml:lang="zh-CN"><![CDATA[
+<h3>SELECT</h3><pre><code>SELECT attribute-expression-list FROM relation-list [ WHERE condition ];
+</code></pre><p>attribute-expression-list:</p><ul>
+<li>[relation-name.]attribute</li>
+<li>[relation-name.]attribute [arithmatic computation] AS another name <br />
+<br />
+<ul>
+<li>i.e., E.Salary - 40000 AS SalaryDiff</li>
+</ul></li>
+<li>CASE WHEN ... THEN ...<br />ELSE ... END <br />
+<br />
+<ul>
+<li>i.e., CASE WHEN E.Salary &lt; 40000 THEN 0<br />ELSE E.Salary - 40000 END</li>
+</ul></li>
+</ul><p>relation-list:</p><ul>
+<li>list of table names</li>
+<li>seperate by comma</li>
+</ul><p>condition:</p><ul>
+<li>arithmetic operation +, -, *, /</li>
+<li>comparisions =, &lt;>, &lt;, &lt;=, >. >=</li>
+<li>logical connectives AND, OR, NOT</li>
+<li>attribute IN (Q)</li>
+<li>attribute NOT IN (Q)</li>
+<li>attribute op SOME (Q)</li>
+<li>attribute op ALL (Q)</li>
+<li>EXISTS (Q)</li>
+<li>NOT EXISTS (Q)</li>
+<li>IS [NOT] NULL</li>
+</ul><p><!--more--></p><h3>NULL</h3><h4>AND Table</h4><table border="1" cellpadding="2" cellspacing="0" width="100%">
+  <tbody>
+    <tr>
+      <td valign="top">AND</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">FALSE</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">NULL</td>
+      
+      <td valign="top">NULL</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL<br /></td>
+    </tr>
+  </tbody>
+</table><h4>OR Table</h4><table border="1" cellpadding="2" cellspacing="0" width="100%">
+  <tbody>
+    <tr>
+      <td valign="top">OR</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">TRUE</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">NULL</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">NULL</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+  </tbody>
+</table><h4>NOT Table</h4><table border="1" cellpadding="2" cellspacing="0" width="100%">
+  <tbody>
+    <tr>
+      <td valign="top">NOT</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+    
+    <tr>
+      <td valign="top"><br /></td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+  </tbody>
+</table><h3>UNION INTERSECT EXCEPT</h3><p>(Q1 and Q2 must have same attribute-list)</p><p>Q1 UNION Q2 => Together all the tuples in Q1 and Q2<br />Q1 INTERSECT Q2 => Only tuples in both Q1 and Q2<br />Q1 EXCEPT Q2 => Tuples only in Q1 but not in Q2</p><p>ALL关键字: 允许重复<br />UNION ALL will include twice of duplicate tuples<br />INTERSECT ALL will include all possible pairs of match tuples, duplication possible<br />EXCEPT ALL will include all "not in Q2" tuples, duplication possible</p><h3>[INNER]/OUTER JOIN</h3><ol>
+<li>Inner join把两个表连接在一起, 返回两个表中相匹配的记录, 是2和3的交集</li>
+<li>Left outer join, 左侧表所有的记录都返回, 右侧匹配的记录返回, 没有匹配的返回Null</li>
+<li>Right outer join, 与Left outer join相反, 右侧的记录返回, 左侧返回匹配的记录, 没有匹配返回Null</li>
+<li>Full outer join, 2和3的并集</li>
+<li>Cross join, 两个表的笛卡儿积, 返回所有可能的值, 不允许有连接条件</li>
+</ol><h3>ORDER BY</h3><pre><code>SELECT ... ... ORDER BY attribute [DESC/ASC], attribute [DESC/ASC], ......
+</code></pre><p>Note: 如果没有指定Order, return的数据可能是任意顺序</p><h3>GROUP BY, HAVING, Aggregate expressions</h3><p>{count, sum, avg, min, max} => Aggregate expressions</p><p>Order: Group => Having => Aggregate</p><ul>
+<li>count(*): number of tuples</li>
+<li>count(E): number of tupple for which E is non-NULL</li>
+<li>count(distinct E): number of distinct non-NULL E values</li>
+<li>sum(E)</li>
+<li>sum(distinct E)</li>
+<li>avg(E)</li>
+<li>avg(distinct E)</li>
+<li>min(E)</li>
+<li>max(E)</li>
+</ul><p>Note: 没有被group by指定的attribute不能出现在SELECT的attr-list中, 除非是aggregate</p><h3>INSERT INTO</h3><pre><code>INSERT INTO relation-name [( attribute-list )] VALUE ( value-list );
+</code></pre><h3>DELETE</h3><pre><code>DELETE FROM relation-name [ WHERE condition ];
+</code></pre><h3>UPDATE</h3><pre><code>UPDATE relation-name SET attribute-assignment-list [ WHERE condition ]; 
+</code></pre><p>attribute-assignment-list:</p><ul>
+<li>pairs of assignment</li>
+<li>seperate by comma</li>
+<li>i.e., WorkDept = 'E01', Address = 'Waterloo'</li>
+</ul><h3>CREATE TABLE</h3><pre><code>CREATE TABLE relation-name ( attribute-name attribute-type [constraints-list], ... )
+</code></pre><p>attribute-type: <a href="http://www.w3school.com.cn/sql/sql_datatypes.asp">http://www.w3school.com.cn/sql/sql_datatypes.asp</a></p><p>constraints-list: (Constraints的格式在各种数据库中都不太一样, 就不列举了)</p><ul>
+<li>NOT NULL</li>
+<li>PRIMARY KEY</li>
+<li>UNIQUE</li>
+<li>FOREIGN KEY</li>
+<li>Column or Tuple CHECK</li>
+</ul><h3>CREATE VIEW</h3><pre><code>CREATE VIEW view-name AS ( SELECT ... ) 
+</code></pre><p>从View SELECT的方法和table一样</p><h3>CREATE TRIGGER</h3><pre><code>CREATE TRIGGER trigger-name 
+AFTER UPDATE OF attribute-list ON relation-name 
+REFERENCING OLD as instance-name(o) NEW as instance-name(n) 
+FOR EACH ROW ...  
+</code></pre><p>不同database语法不一</p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/sql-yu-fa-zheng-li.html#comments" thr:count="0" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/sql-yu-fa-zheng-li.html" thr:count="0"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[Java现学现卖之Layout Managers]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/java-xian-xue-xian-mai-zhi-layout-managers.html" />
+<id>http://blog.gregwym.info/java-xian-xue-xian-mai-zhi-layout-managers.html</id>
+<updated>2011-06-24T12:29:35+08:00</updated>
+<published>2011-06-24T12:29:35+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[Java里一共提供了8种Layout ManagerBorderLayoutBoxLayoutCardLayoutFlowLayoutGridBagLayoutGridLayoutGroupLayou...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/java-xian-xue-xian-mai-zhi-layout-managers.html" xml:lang="zh-CN"><![CDATA[
+<p>Java里一共提供了8种Layout Manager</p><ul>
+<li>BorderLayout</li>
+<li>BoxLayout</li>
+<li>CardLayout</li>
+<li>FlowLayout</li>
+<li>GridBagLayout</li>
+<li>GridLayout</li>
+<li>GroupLayout</li>
+<li>SpringLayout</li>
+</ul><p>这其中最后两种是专门为GUI Builder设计的, 并不是很适合手动写, 我就没花时间研究, 但应该是这几种Layout Manager中, 灵活性最大的两种.</p><p>网上有人说GridBagLayout是手写UI时&#96;功能最强大的Layout...可一般强大就是复杂的代名词, 我也把它跳过了= =&#96;(好吧, 我确实比较懒, 但更主要是时间不够)</p><p>先说说基础,<br />给一个container设置Layout使用 .setLayout(LayoutManager) 这个方法.<br />针对不同的Layout, 添加component时候, .add()有时可能需要额外的参数</p><p>然后来说说我玩明白了的几种Layout</p><p><!--more--></p><h3>BorderLayout</h3><p><img src="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/BorderLayoutDemo.png" alt="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/BorderLayoutDemo.png" /><br />这是所有content pane的默认Layout. 它将整个界面划分为PAGE&#95;START, PAGE&#95;END, CENTER, LINE&#95;START, LINE&#95;END 五个部分. 可以分别理解为一个页面的header, footer, content, left-sidebar, right-sidebar.</p><p>.add() 的时候需要在后边增加一个额外的参数, 标识这个component该被添加到哪个区域.<br />例: pane.add(button, BorderLayout.PAGE_END);</p><h3>BoxLayout</h3><p><img src="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/BoxLayoutDemo.png" alt="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/BoxLayoutDemo.png" /><br />这个Layout适用于单纯的将components纵向或横向直线排列. 在Constructor中, 用X&#95;AXIS或者Y&#95;AXIS标识排列方向.<br />BoxLayout本身无视components的 preferredSize, 但如果设置了maximumSize那就另当别论了. 这点在设置自适应宽度或高度的components时候, 很有用处.</p><p>BoxLayout还有两个很有用的排版小工具, 通过 .add这几个小东西, 可以很轻松的调整Layout中的空间</p><ul>
+<li>Box.createHorizontalGlue(); 水平的自动填充空间</li>
+<li>Box.createRigidArea(new Dimension(width, height)); 创建一个占据多大空间的空白</li>
+</ul><p>Trick: RigidArea的width或者height可以为0, 而且可以添加到任意其他Layout中</p><h3>FlowLayout</h3><p><img src="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/FlowLayoutDemo.png" alt="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/FlowLayoutDemo.png" /><br />这是JPanel的默认Layout. 和Box类似, 也是把components直线排列. 区别在于, 它更智能(当然有时候太聪明不是好事儿). 可以很方便的设置</p><ul>
+<li>.setAlignment() 左/右对齐</li>
+<li>.setComponentOrientation() 从左到右/从右到左</li>
+<li>.setHgap() .setVgap() components之间的水平/垂直间距</li>
+</ul><h3>GridLayout</h3><p><img src="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/GridLayoutDemo.png" alt="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/GridLayoutDemo.png" /><br />这个Layout就是画格子. 把一个矩形空间分成n * m的格子, 可以自适应大小, 同Flow可以设置间距.</p><p>其实还是很好用的, 但在排版中比较awkward...因为很多时候并不需要像表格一样的空间.<br />创建方法很简单, new GridLayout(col, row);</p><h3>CardLayout</h3><p><img src="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/CardLayoutDemo.png" alt="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/CardLayoutDemo.png" /> <img src="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/CardLayoutDemo-2.png" alt="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/CardLayoutDemo-2.png" /><br />啊哈哈哈...这个我的最爱啊`!<br />这个Layout其实就像一摞卡片, 每次你只能看到最上边的一张卡. 你可以按顺序前后切换, 也可以要求显示特定的一张, 在这次做翻页的时候非常给力!</p><p>.add() 的时候, 需要增加一个额外的String参数, 标识这个card的name, 在.show(c, name)的时候会用到<br />切换Card可以用.first(c) .last(c) .previous(c) .next(c)</p><p><hr /></p><p>参考资料: <a href="http://download.oracle.com/javase/tutorial/uiswing/layout/visual.html">enter link description here</a></p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/java-xian-xue-xian-mai-zhi-layout-managers.html#comments" thr:count="2" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/java-xian-xue-xian-mai-zhi-layout-managers.html" thr:count="2"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[XLib初接触]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/xlib-chu-jie-chu.html" />
+<id>http://blog.gregwym.info/xlib-chu-jie-chu.html</id>
+<updated>2011-05-15T04:24:52+08:00</updated>
+<published>2011-05-15T04:24:52+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[XLib是X Window编程的基础Library, 使用时首先需要在文件头中#include &amp;lt;X11/Xlib.h&amp;gt;在绘制图形界面之前, 第一步要连接到一个Display. 就好比画画...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/xlib-chu-jie-chu.html" xml:lang="zh-CN"><![CDATA[
+<p>XLib是X Window编程的基础Library, 使用时首先需要在文件头中</p><pre><code>#include &lt;X11/Xlib.h&gt;
+</code></pre><p>在绘制图形界面之前, 第一步要连接到一个Display. 就好比画画之前先要找到一张桌子或者画板, 你不能举着一张纸直接就往上泼墨...</p><pre><code>// Open display 
+Display* display; 
+display = XOpenDisplay(""); 
+if(!display){ 
+    printf("Cannot open display\n"); 
+    exit(-1); 
+} 
+</code></pre><p><!--more--></p><p>之后可以通过一些函数, 获取当前Display的各种信息. 如需要, 可以保存到variable里供后边绘图时候使用.</p><pre><code>int printScreenInfo(Display* display){ 
+    int screen_num;  // 当前屏幕的编号 
+    int screen_width;    // 当前屏幕的宽度 
+    int screen_height;   // 当前屏幕的高度 
+    Window root_window; // root窗口的编号 
+    unsigned long white_pixel;   // 白色像素的编号 
+    unsigned long black_pixel;   // 黑色像素的编号 
+    screen_num = DefaultScreen(display); 
+    screen_width = DisplayWidth(display, screen_num); 
+    screen_height = DisplayHeight(display, screen_num); 
+    root_window = RootWindow(display, screen_num); 
+    white_pixel = WhitePixel(display, screen_num); 
+    black_pixel = BlackPixel(display, screen_num); 
+    printf("Screen Number: \t%d\n
+                    Width: \t%d\n
+                   Height: \t%d\n
+                     Root: \t%d\n
+                    White: \t%d\n
+                    Black: \t%d\n", 
+           screen_num, screen_width, screen_height, 
+           root_window, white_pixel, black_pixel); 
+    return 0; 
+}
+</code></pre><p>画板摆好以后, 就要在上边铺上一张用来画画的纸, 也就是一个窗口...</p><pre><code>// Define window properties 
+Window window; 
+int x, y; 
+unsigned int width, height, border_width; 
+width = 850; 
+height = 470; 
+x = y = 50; 
+border_width = 0; 
+
+// Define display constants 
+int screen_num = DefaultScreen(display); 
+unsigned long white_pixel = WhitePixel(display, screen_num); 
+unsigned long black_pixel = BlackPixel(display, screen_num); 
+
+// Create window 
+window = XCreateSimpleWindow(display, RootWindow(display, screen_num), 
+                             x, y, width, height, border_width, 
+                             black_pixel, white_pixel); 
+
+// Map win to display &amp; Flush display 
+XMapWindow(display, win); 
+XFlush(display);
+</code></pre><p>万事俱备只欠画画儿了`XLib的function都挺容易看懂的...</p><pre><code>int drawInterface(Display* display, Window window, unsigned long black_pixel, unsigned long white_pixel ){
+    // Define GCs for drawing 
+    GC foregc; 
+    foregc = XCreateGC (display, window, 0, 0); 
+    XSetBackground( display, foregc, black_pixel ); 
+    XSetForeground( display, foregc, white_pixel ); 
+
+    // Start Drawing 
+    XClearWindow(display, window); 
+    // Door 
+    XDrawRectangle(display, window, foregc, 1, 1, 630, 460); 
+    XFillRectangle(display, window, foregc, 66, 66, 480, 330); 
+    // Dashboard 
+    XDrawRectangle(display, window, foregc, 633, 1, 215, 460); 
+    XDrawRectangle(display, window, foregc, 650, 45, 185, 330); 
+    // Timer 
+    XDrawRectangle(display, window, foregc, 660, 60, 160, 65); 
+    // And More... 
+
+    // Flush display to show everything changed 
+    XFlush(display);
+}
+</code></pre><p><del>Event Handling的部分晚点再整理</del></p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/xlib-chu-jie-chu.html#comments" thr:count="0" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/xlib-chu-jie-chu.html" thr:count="0"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[Compiler各个步骤的含义]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/compiler-ge-ge-bu-zhou-de-han-yi.html" />
+<id>http://blog.gregwym.info/compiler-ge-ge-bu-zhou-de-han-yi.html</id>
+<updated>2011-04-19T06:15:49+08:00</updated>
+<published>2011-04-19T06:15:49+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[Step1: String -&gt; Scanning (DFA) -&gt; Tokens Scanner又叫Lexical analyzer或Lexer.其目的在于, 将需要compile的源代码逐字读入c...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/compiler-ge-ge-bu-zhou-de-han-yi.html" xml:lang="zh-CN"><![CDATA[
+<h3>Step1: String -> Scanning (DFA) -> Tokens Scanner又叫Lexical analyzer或Lexer.</h3><p>其目的在于, 将需要compile的源代码逐字读入compiler, 并将每一个符合"词汇命名规则(Lexical Syntax)"的字段转换成token存储.<br />换句话说, 就是一遍读, 一遍看每一个单词的拼写对不对. 对的就转成token, 拼错了就输出error.</p><p>作业中对应: <a href="http://www.student.cs.uwaterloo.ca/~cs241/a6/">A6 P4</a><br />(某些语言的compiler在Scanning之后还包含Preprocessing, 因为不在241讨论范围内, 不做解释)</p><h3>Step2: Tokens -> Parsing(LL/LR) -> Intermediate Format (<a href="http://www.student.cs.uwaterloo.ca/~cs241/wl/wli.html">WLI</a>)</h3><p>Parsing又叫Syntactic Analysis.<br />其目的在于, 将token与token联系在一起, 并将他们的转换成符合一定规范的"中间格式", 一般是某种树状结构, 例如241中定义的<a href="http://www.student.cs.uwaterloo.ca/~cs241/wl/wli.html">WLI</a>.</p><p>在Parsing过程中, 如果遇到不符合某种语言的"语法规则(Grammar)"时, 则输出error. 如果语法正确, 则输出对应格式.<br />简单说, 就是看的说的话是不是人话, 有没有缺个标点少个括号.<br />如果不是人话那就说明你该重新学语法去了.</p><p>作业中对应: <a href="http://www.student.cs.uwaterloo.ca/~cs241/a8/">A8 P4</a></p><p><!--more--></p><h3>Step3: Intermediate Format -> Semantic Analysis(Context-Sensitive Analysis) -></h3><p>Semantic Analysis的目的在于, 检查程序是否存在语义上的冲突. 或者说, 上下文是不是相符.</p><p>比如在C中, 如果没有declare过变量int a;, 则a = 3;就不合法.<br />再比如, 如果a declare为int, 则a = 'b';就不合法, 因为a不能为char.</p><p>作业中对应: <a href="http://www.student.cs.uwaterloo.ca/~cs241/a10/">A9 A10</a><br />(Optimization为代码优化, 241没有涉及, 知道即可)</p><h3>Step4: -> Code Generation -> Code Fragment</h3><p>将Intermediate Format转换为另一种格式, 比如MIPS或者二进制文件, 可与上一步同步进行.</p><p>作业中对应: <a href="http://www.student.cs.uwaterloo.ca/~cs241/a10/">A9 A10</a>, <a href="http://www.student.cs.uwaterloo.ca/~cs241/a3/">A3</a>, <a href="http://www.student.cs.uwaterloo.ca/~cs241/a4/">A4</a></p><h3>Step5: Code Fragements -> Linking -> Executable File(Single File)</h3><p>将多个compile好的多个文件链接在一起, 生成一个可执行的二进制文件(或仅生成合并以后的单个文件, 但文件本身可能无法执行)</p><p>作业中对应: <a href="http://www.student.cs.uwaterloo.ca/~cs241/a5/">A5 P1, P2</a></p><p>附: 09FALL 第二题答案</p><ol>
+<li>Scanning</li>
+<li>Parsing</li>
+<li>Semantic Analysis</li>
+<li>Parsing</li>
+<li>Semantic Analysis</li>
+<li>Linking</li>
+<li>Semantic Analysis</li>
+<li>Parsing</li>
+<li>1A@#SR%$#</li>
+<li>&#43; foo</li>
+<li>x</li>
+</ol>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/compiler-ge-ge-bu-zhou-de-han-yi.html#comments" thr:count="0" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/compiler-ge-ge-bu-zhou-de-han-yi.html" thr:count="0"/>
+</entry>
+</feed>

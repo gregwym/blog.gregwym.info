@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+xmlns:thr="http://purl.org/syndication/thread/1.0"
+xml:lang="zh-CN"
+xml:base="http://blog.gregwym.info/tag/VPS/"
+>
+<title type="text">某储备粮的“学习笔记” - VPS</title>
+<subtitle type="text"></subtitle>
+<updated>2011-06-04T15:10:35+08:00</updated>
+<generator uri="http://typecho.org/" version="0.9/13.12.12">Typecho</generator>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/tag/VPS/" />
+<id>http://blog.gregwym.info/feed/atom/tag/VPS/</id>
+<link rel="self" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/tag/VPS/" />
+<entry>
+<title type="html"><![CDATA[Linux的用户(user)和用户组(group)管理]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/linux-de-yong-hu--user--he-yong-hu-zu--group--guan-li.html" />
+<id>http://blog.gregwym.info/linux-de-yong-hu--user--he-yong-hu-zu--group--guan-li.html</id>
+<updated>2011-06-04T15:10:35+08:00</updated>
+<published>2011-06-04T15:10:35+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[Linux的多用户权限管理还是很强大的...熟悉了各种命令之后, 对每一个用户的权利可以说是操控自如.用户(user)和用户组(group)相关的配置文件、命令或目录/etc/passwd 用户配置文...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/linux-de-yong-hu--user--he-yong-hu-zu--group--guan-li.html" xml:lang="zh-CN"><![CDATA[
+<p>Linux的多用户权限管理还是很强大的...熟悉了各种命令之后, 对每一个用户的权利可以说是操控自如.</p><h3>用户(user)和用户组(group)相关的配置文件、命令或目录</h3><ul>
+<li>/etc/passwd 用户配置文件</li>
+<li>/etc/shadow 用户密码影子文件</li>
+<li>/etc/group 用户组配置文件</li>
+<li>/etc/gshadow 用户组配置影子文件</li>
+</ul><p><!--more--></p><h3>配置文件的格式</h3><ul>
+<li><p>/etc/passwd 的每一行采用以下格式:<br />name:password:uid:gid:comment:home:shell</p><br />
+<br />
+<pre><code>name       用户名
+password   密码
+uid        用户的UserID
+gid        用户所对应默认用户组的GroupID
+comment    备注
+home       用户的主目录绝对路径
+shell      用户登录的shell/任意命令的绝对路径
+</code></pre></li>
+<li><p>/etc/group 的每一行采用以下格式:<br />group&#95;name:passwd:GID:user&#95;list</p><br />
+<br />
+<pre><code>group_name 用户组名
+passwd     用户组密码
+GID        用户组GroupID
+user_list  该组的所有用户
+</code></pre></li>
+</ul><h3>管理用户(user)和用户组(group)的相关命令</h3><pre><code>useradd   添加用户
+passwd    为用户设置密码
+usermod   修改用户命令，可以通过usermod来修改登录名、用户的家目录等等；
+pwcov     同步用户从/etc/passwd到/etc/shadow
+pwck      pwck是校验用户配置文件/etc/passwd和/etc/shadow文件内容是否合法或完整；
+pwunconv  是pwcov 的立逆向操作，是从/etc/shadow和 /etc/passwd 创建/etc/passwd ，然后会删除 /etc/shadow 文件；
+finger    查看用户信息工具
+id        查看用户的UID、GID及所归属的用户组
+chfn      更改用户信息工具
+su        用户切换工具
+sudo      通过另一个用户来执行命令（execute a command as another user），su 是用来切换用户，然后通过切换到的用户来完成相应的任务，但sudo 能后面直接执行命令，比如sudo 不需要root 密码就可以执行root 赋与的执行只有root才能执行相应的命令；但得通过visudo 来编辑/etc/sudoers来实现；
+visudo    编辑 /etc/sudoers 的命令；也可以不用这个命令，直接用vi 来编辑 /etc/sudoers 的效果是一样的；
+groupadd  添加用户组；
+groupdel  删除用户组；
+groupmod  修改用户组信息
+groups    显示用户所属的用户组
+gpasswd   将用户从用户组中添加/移除
+grpck     校验用户组配置文件/etc/group和/etc/gshadow文件内容是否合法或完整；
+grpconv   通过/etc/group和/etc/gshadow的文件内容来同步或创建/etc/gshadow，如果/etc/gshadow 不存在则创建；
+grpunconv 通过/etc/group 和/etc/gshadow文件内容来同步或创建/etc/group，然后删除gshadow文件；
+</code></pre><h3>用户管理实例</h3><pre><code>useradd visitor  # 添加一个叫visitor的新用户(主用户组默认为同名) 
+passwd visitor   # 给visitor添加密码 
+groupadd theme-park  # 添加一个叫theme-park的用户组 
+groupadd city-park   # 添加一个叫city-park的用户组 
+usermod -g theme-park visitor   # 将visitor的主用户组修改为park 
+gpasswd -a visitor city-park    # 将visitor添加到city-park用户组
+</code></pre><p>参考资料:<br /><a href="http://fedora.linuxsir.org/main/?q=node/91">Linux 用户（user）和用户组（group）管理概述</a><br /><a href="http://www.aka.org.cn/Lectures/002/Lecture-2.2.1/0.html">Linux 介绍和基本操作</a></p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/linux-de-yong-hu--user--he-yong-hu-zu--group--guan-li.html#comments" thr:count="3" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/linux-de-yong-hu--user--he-yong-hu-zu--group--guan-li.html" thr:count="3"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[Quickweb OpenVZ安装PPTP VPN实践笔记(不用MPPE)]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html" />
+<id>http://blog.gregwym.info/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html</id>
+<updated>2011-04-22T23:56:29+08:00</updated>
+<published>2011-04-22T23:56:29+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[从回国之前, 一直倒腾到家`可算是把VPN搭好了...OpenVZ的VPS在内核这块实在是缺少自由, 如果是Xen这次就不会这么复杂了.废话少说.基本过程和网上其他的教程都差不多, 主要在于加密和ip...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html" xml:lang="zh-CN"><![CDATA[
+<p>从回国之前, 一直倒腾到家`可算是把VPN搭好了...<br />OpenVZ的VPS在内核这块实在是缺少自由, 如果是Xen这次就不会这么复杂了.<br />废话少说.</p><p>基本过程和网上其他的教程都差不多, 主要在于加密和ipforward的配置.</p><ol>
+<li><p>安装ppp和iptables</p><br />
+<br />
+<pre><code>yum install -y ppp iptables
+</code></pre></li>
+<li><p>安装pptpd</p><br />
+<br />
+<pre><code>wget http://poptop.sourceforge.net/yum/stable/packages/pptpd-1.3.4-2.rhel5.i386.rpm 
+rpm -ivh pptpd-1.3.4-2.rhel5.i386.rpm 
+</code></pre></li>
+</ol><p><!--more--></p><ol>
+<li><p>配置/etc/ppp/options.pptpd</p><p>这个是不使用MPPE加密的配置, 适用于母鸡kernel不支持MPPE的童鞋</p><br />
+<br />
+<pre><code>name pptpd 
+# Encryption部分全部注释掉, 不使用加密 
+# 使用chap验证 
++chap 
+#使用Google DNS 
+ms-dns 8.8.8.8 
+ms-dns 8.8.4.4 
+proxyarp 
+lock 
+nobsdcomp 
+novj 
+novjccomp 
+nologfd 
+nodeflate 
+</code></pre><br />
+<br />
+<p>这个是使用MPPE的配置, 如果你的母鸡支持, 推荐用这个</p><br />
+<br />
+<pre><code>name pptpd 
+# 禁用pap, chap, mschap 
+refuse-pap 
+refuse-chap 
+refuse-mschap 
+# 强制mschap-v2和mppe-128 
+require-mschap-v2 
+require-mppe-128 
+#使用Google DNS 
+ms-dns 8.8.8.8 
+ms-dns 8.8.4.4 
+proxyarp 
+lock 
+nobsdcomp 
+novj 
+novjccomp 
+nologfd
+</code></pre></li>
+<li><p>配置/etc/pptpd.conf</p><br />
+<br />
+<pre><code>option /etc/ppp/options.pptpd 
+# 设置ip分配方案 
+localip 172.16.36.1 
+remoteip 172.16.36.2-254 
+</code></pre></li>
+<li><p>配置/etc/ppp/chap-secrets, 设置登录帐号</p><br />
+<br />
+<pre><code># Secrets for authentication using CHAP 
+# client   server   secret   IP_addresses 
+帐号       pptpd    密码      *(表示任意IP都可以连接)
+</code></pre></li>
+<li><p>配置ip转发 /etc/sysctl.conf</p><br />
+<br />
+<pre><code>net.ipv4.ip_forward = 1
+</code></pre><br />
+<br />
+<p>在bash中执行</p><br />
+<br />
+<pre><code>sysctl -p 
+service pptpd restart 
+service iptables restart 
+iptables -t nat -A POSTROUTING -s 172.16.36.0/24 -o venet0 -j MASQUERADE 
+iptables -I FORWARD -p tcp --syn -i ppt+ -j TCPMSS --set-mss 1356 
+service iptables save 
+service iptables restart 
+chkconfig pptpd on 
+chkconfig iptables on
+</code></pre></li>
+</ol><p>这些都配置好了以后, 如果你使用了MPPE, 那就可以尝试连接了.</p><p>如果你没有使用MPPE</p><ul>
+<li>在Windows中设置VPN, 取消include windows logon domain, 选择PPTP连接,<br />Data加密选择Optional, 选择CHAP验证登录</li>
+<li>在Mac/iOS中设置VPN, 将加密设置为"无"即可 这样就可以尝试连接了</li>
+</ul><p>Note: 日志文件在/var/log/messages, 如果log中出现, "This system lacks kernel support for PPP. " 字样, 请发ticket让ISP给你打开PPP支持, 之后就应该可以正常连接了.</p><p><hr /></p><p>参考资料:<br /><a href="http://rashost.com/blog/centos5-pptpd-vpn">CentOS 5 VPS上配置pptpd作为VPN服务器</a><br /><a href="http://good784.blog.163.com/blog/static/327217152007670350514/">不带MPPE的VPN服务器端及客户端的设置笔记</a></p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html#comments" thr:count="7" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html" thr:count="7"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[linux服务器`自动备份数据库+网页到邮箱]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html" />
+<id>http://blog.gregwym.info/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html</id>
+<updated>2011-04-05T10:11:48+08:00</updated>
+<published>2011-04-05T10:11:48+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[我的QQ邮箱现在已经有3T容量了...原来玩WordPress的时候其实就一直拿来做数据库备份, 现在容量变大几倍有余, 自然是备份的不二选择. 这可比FDC的大容量VPS划算多了, 特别是当你的网站...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html" xml:lang="zh-CN"><![CDATA[
+<p>我的QQ邮箱现在已经有3T容量了...<br />原来玩WordPress的时候其实就一直拿来做数据库备份, 现在容量变大几倍有余, 自然是备份的不二选择. 这可比<a href="https://www.fdcservers.net/order-1.php?plan_id=358">FDC的大容量VPS</a>划算多了, 特别是当你的网站并没有多大的时候. (书苑现在的数据库也都还没有1G...)</p><p>这个脚本来自<a href="http://www.vpsmm.com/edu/everyday-auto-backup-linux-vps.html">小夜博客</a>, 经我略加修改了一下.<br />下载: <a href="http://blog.gregwym.info/usr/uploads/2011/04/259619282.sh" title="backup_to_mail.sh">backup&#95;to&#95;mail.sh</a></p><p><hr /></p><p>很简单的一段bash script, 只需要自定义下mysql的用户名密码, 邮箱地址和要备份的目录.</p><p>然后进行下边的步骤:</p><p>首先要建立好放置备份文件的目录</p><pre><code>mkdir /home/backup
+</code></pre><p>然后安装发送邮件的程序</p><pre><code>yum install sendmail mutt
+</code></pre><p>把backup&#95;to&#95;mail.sh放到刚刚建立的目录中, 然后给脚本增加运行权限</p><pre><code>chmod a+x /home/backup/backup_to_mail.sh
+</code></pre><p>最后一步是设置定时运行, 输入</p><pre><code>crontab -e
+</code></pre><p>然后在vi编辑界面中加入下面这行文字</p><pre><code>00 00 * * * /home/backup/backup_to_mail.sh
+</code></pre><p>:x + enter就ok了.</p><p>其中00 00表示在每日00分, 00点的时候运行该脚本.</p><p>下边是脚本的内容, 以备附件失效和以后学习...</p><pre><code>#!/bin/bash
+MYSQL_USER=root                             #mysql username
+MYSQL_PASS=***********                      #mysql password
+MAIL_TO=*******@***.**                      #mailling to
+WEB_DATA=/home/wwwroot/                     #to be backup dir
+
+#define variables
+DataBakName=Data_$(date +%Y%m%d).tar.gz
+WebBakName=Web_$(date +%Y%m%d).tar.gz
+OldData=Data_$(date -d -3day +%Y%m%d).tar.gz
+OldWeb=Web_$(date -d -3day +%Y%m%d).tar.gz
+DataSubject="Backup: gregwym.info database "$(date +%Y%m%d)
+WebSubject="Backup: gregwym.info web dir "$(date +%Y%m%d)
+
+#delete data from 3days earlier
+rm -rf /home/backup/$OldData /home/backup/$OldWeb
+cd /home/backup
+
+#export database to compressed gz files
+for db in `/usr/local/mysql/bin/mysql -u$MYSQL_USER -p$MYSQL_PASS -B -N -e 'SHOW DATABASES' | xargs`; do
+    (/usr/local/mysql/bin/mysqldump --single-transaction -u$MYSQL_USER -p$MYSQL_PASS ${db} | gzip -9 - &gt; ${db}.sql.gz)
+done
+
+#compress database files
+tar zcf /home/backup/$DataBakName /home/backup/*.sql.gz
+rm -rf /home/backup/*.sql.gz
+#mail database
+echo $DataSubject | mutt -a /home/backup/$DataBakName -s "${DataSubject}" $MAIL_TO
+
+#compress backup dir
+tar zcf /home/backup/$WebBakName $WEB_DATA
+#mail dir
+echo $WebSubject | mutt -a /home/backup/$WebBakName -s "${WebSubject}" $MAIL_TO
+
+echo "bye"
+#END
+</code></pre><p>如果不希望备份网页文件, 或者希望数据库和网页分别备份的, 可以自行拆分脚本为两个文件.</p><p>如果只是想降低备份网页文件的频率, 可以将#mail dir部分替换为:</p><pre><code>if [ $(date +%A) = "Sunday" ]; then 
+    echo $WebSubject | mutt -a /home/backup/$WebBakName -s "${WebSubject}" $MAIL_TO 
+fi
+</code></pre>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html#comments" thr:count="1" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html" thr:count="1"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[说说Typecho`]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/shuo-shuo-typecho%60.html" />
+<id>http://blog.gregwym.info/shuo-shuo-typecho%60.html</id>
+<updated>2011-04-04T12:16:33+08:00</updated>
+<published>2011-04-04T12:16:33+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[弄完最后的物理作业本想接着把STAT也搞定`可看看有8页之多...还是先睡一觉再说吧, 这两天时差又乱套了, 要调回来.距离12点还有点时间, 换换脑子随便写点东西...高中的时候就折腾过WordPr...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/shuo-shuo-typecho%60.html" xml:lang="zh-CN"><![CDATA[
+<p>弄完最后的物理作业本想接着把STAT也搞定`可看看有8页之多...还是先睡一觉再说吧, 这两天时差又乱套了, 要调回来.<br />距离12点还有点时间, 换换脑子随便写点东西...</p><p>高中的时候就折腾过WordPress, 借朋友的空间搭了个小博`写了两句就没兴致继续下去了. 大部分时间都花在了研究各种插件上边. 但不知道为什么, WordPress一直就没有让我有强烈的归属感. 虽然它插件很多, 主题很多, 能高度定制化...可都少了点什么.</p><p>啊`是他太乱了...</p><p>添加了各种杂七杂八的插件以后, 单侧栏恐怕都塞不下了, 再配上本就没什么几篇的博文列表, 整个页面显得臃肿杂乱`主次颠倒, 自然也就没有了继续下去的动力.<br />虽然这算是我自己的客观因素...但WordPress越长越肥, 功能繁多却不实用的现状是毋庸置疑的.</p><p><hr /></p><p>不记得到底是先注意到Typecho, 还是先动了玩VPS的主意, 反正这俩分不开. 在某博看到Typecho的介绍和他简洁的风格时就决定了我肯定要抛弃WordPress了.</p><p>他实在太简单了...</p><ul>
+<li>安装只要填写管理员, 站点信息和数据库配置就万事大吉, 一步到位.</li>
+<li>一个博客需要的东西, 五脏俱全. 在添加了代码加亮, 博客友联等几个常用插件之后, 可以直接开拔.</li>
+<li>后台就是简简单单的内容+评论管理, 和外观设定.</li>
+<li>主题导入后, 自己调整些零碎也很得心应手.</li>
+<li>数据库一共只有6张表.</li>
+<li>主题文件只分, 头&#96;脚&#96;内容&#96;评论&#96;侧栏`列表...外加一张style-sheet. 从头到脚透露这简单的概念.</li>
+</ul><p>按Typecho官方说法, 一个完全重写的全新后台系统正在开发中, 实在是非常期待.<br />有想法要好好学习下Typecho的源码, 不过还是先考完试再说吧.</p><p>附个在别处看到的相关短文, 深以为然:</p><blockquote><p><a href="http://www.sinzi.org/start-typecho/">为什么放弃Wordpress使用Typecho?</a></p></blockquote><p>时间差不多了...睡觉睡觉`</p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/shuo-shuo-typecho%60.html#comments" thr:count="2" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/shuo-shuo-typecho%60.html" thr:count="2"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[果断换VPS...这回是QuickWeb]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/guo-duan-huan-vps-zhe-hui-shi-quickweb.html" />
+<id>http://blog.gregwym.info/guo-duan-huan-vps-zhe-hui-shi-quickweb.html</id>
+<updated>2011-04-03T07:10:58+08:00</updated>
+<published>2011-04-03T07:10:58+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[Hostrail实在是不给力...`CPU不灵, 装lnmp慢的一塌糊涂, 好不容易Setup好, 各种问题层出不穷.HyperVM Panel时不时无法访问, 即使可以访问也慢得要死html页的...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/guo-duan-huan-vps-zhe-hui-shi-quickweb.html" xml:lang="zh-CN"><![CDATA[
+<p>Hostrail实在是不给力...`CPU不灵, 装lnmp慢的一塌糊涂, 好不容易Setup好, 各种问题层出不穷.<br /><ul>
+<li>HyperVM Panel时不时无法访问, 即使可以访问也慢得要死</li>
+<li>html页的速度倒还不错, 可Typecho这么轻量化的php应用都慢的不成样子</li>
+<li>从3.29到4.1这段时间, server至少down了两次, 而且都是长时间的</li>
+<li>外加各种不确定性重启...</li>
+</ul><br />
+悲催的不是一点两点= =||`<br />买的时候抱着随便玩玩的心理也就没仔细研究, 之后才看明白VPS是怎么一潭深水.<br /><br />这两天好好的查了下VPS的相关信息, 留下这么几个性价比高, 又比较靠谱的ISP:<br />VPSYOU, YardVPS, Ramhost, QuickWeb<br /><ul>
+<li>VPSYOU价格中等, OpenVZ 256m的版本$4/m, CPU是745x2, 硬盘20G.</li>
+<li>YardVPS的OpenVZ口碑不太好, 但他的Xen据说硬盘速度超一流, 512m 1.5T流量, $7.95/m. <br />
+不过很少有货, 我看到有一个但因为犹豫不决miss掉了.</li>
+<li>Ramhost是口碑最好的一个. 所有信息都只有夸没有贬, 只是一直没货, 而且256m要$8.99/m.<br />
+(Ramhost每周末会补货, 要注意刷网页)</li>
+<li>QuickWeb在网站上post出来的plan的性价比不是很高, 最低的OpenVZ/Xen都要$9.95/m. <br />
+有个<a target="_blank" href="http://quickweb.co.nz/chinese">Chinese Promo</a>还可以, Texas机房的256mOpenVZ要$5.5/m, 不过好像也是out of stock.</li>
+</ul><p>最后来介绍下我的最终选择:<br />QuickWeb一开始并不在我的选择范围内, 甚至根本不知道这个ISP, 因为几个大的VPS博客都没有特别推荐过这个ISP. 后来在<a target="_blank" href="http://neal.im/">Neal的博客</a>发现他在做<a target="_blank" href="http://neal.im/webhosting/">QuickWeb的代购</a>, 才发现这也是一家在美国蛮有实力的IPS. (之所以说有实力是因为他们在美国五个大的数据中心都有机房)<br />最后入手的这个是$35.88/年的plan, 平摊下来一月只要$3, Neal主推的就是这个plan.<br />他自己的blog就搭在这个plan的VPS上, 访问速度很好, 而且看底下评论的反响普遍不错, 经Google四处查证以后, 决定还是下手试试看. Paypal付款给Neal以后, 主机即时开通.<br /><br />规格:<br />OpenVZ/SolusVM<br />Intel(R) Xeon(R) CPU X3440 @ 2.53GHz, 单核<br />256M/384M突发<br />10G硬盘, 速度测试平均22M/s<br />美国凤凰城机房10Mbit带宽(Phoenix/LA) 250G/m流量<br />+$5可升级100Mbit<br />+$10可升级1000Mbit<br /><br />到目前为止, 对这个主机还是很满意的, 速度和性能方面都很不错. LNMP只用了20分钟就装好了.<br />有需求的朋友可以联系Neal代购, <a target="_blank" href="http://neal.im/webhosting/">http://neal.im/webhosting/</a><br /></p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/guo-duan-huan-vps-zhe-hui-shi-quickweb.html#comments" thr:count="5" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/guo-duan-huan-vps-zhe-hui-shi-quickweb.html" thr:count="5"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[先折腾着`]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/xian-zhe-teng-zhe.html" />
+<id>http://blog.gregwym.info/xian-zhe-teng-zhe.html</id>
+<updated>2011-03-30T05:37:09+08:00</updated>
+<published>2011-03-30T05:37:09+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[眼馋VPS很久了...毕竟没资本弄dedicated server, 弄个VPS玩玩也算像个样子.这个VPS是hostrail.com的VPS 2 Power Units Server,60G硬盘40...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/xian-zhe-teng-zhe.html" xml:lang="zh-CN"><![CDATA[
+<p>眼馋VPS很久了...毕竟没资本弄dedicated server, 弄个VPS玩玩也算像个样子.<br />这个VPS是<del>hostrail.com的<a href="https://hostrail.com/vps.php/">VPS 2 Power Units Server</a></del>,</p><ul>
+<li>60G硬盘</li>
+<li>400G带宽</li>
+<li>384MB内存</li>
+<li>0.8G CPU(写的是0,6, 实际是0.2x4)</li>
+<li>1 IP</li>
+</ul><p>总体来说= =`还算ok吧. 毕竟配上coupon, 每3个月才$6.29, 而且这个价格还是终身的, 即使速度不太理想, 也不算大碍. 稳定性有待长期验证.</p><p><strong><em>后续请看 <a href="http://blog.gregwym.info/guo-duan-huan-vps-zhe-hui-shi-quickweb.html">http://blog.gregwym.info/guo-duan-huan-vps-zhe-hui-shi-quickweb.html</a></em></strong></p><p><hr /></p><p>已经在Title上写了是学习笔记, 那必然主要用来记技术上的东西.<br />越往后学越觉得脑子不够用, 很多以前折腾过的东西, 再碰到的时候明明知道以前解决过却想不起来/找不到解决的方法了. 所以能有这个地方收集平时学到的点滴, 总又一天会派上用场.</p><p>(又因为找不到合适的笔记软件, 记录Code什么的, 用网页的形式最合适不过...)</p><p>Intro就这样吧`</p><p><hr /></p><p>做个Code Highlight的演示</p><pre><code>if(this.is.c++()){ 
+    return "this should be highlighted\n" 
+} 
+</code></pre>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/xian-zhe-teng-zhe.html#comments" thr:count="2" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/xian-zhe-teng-zhe.html" thr:count="2"/>
+</entry>
+</feed>

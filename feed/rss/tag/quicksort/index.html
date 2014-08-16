@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/tag/quicksort/">
+<title>某储备粮的“学习笔记” - quicksort</title>
+<link>http://blog.gregwym.info/tag/quicksort/</link>
+<description></description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-san--sorting-and-randomized-algorithms.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-san--sorting-and-randomized-algorithms.html">
+<title>CS 240复习总结之三: Sorting and Randomized Algorithms</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-san--sorting-and-randomized-algorithms.html</link>
+<dc:date>2011-04-06T08:12:26+08:00</dc:date>
+<description>Comparison-based sorting最优Runtime为Ω(n log n)QuickSelect用QuickSort algorithm快速查找第k大的数 (avg rumtime: Θ(n))组成函数
+choose-pivot(A) 在数据中选择其中一个作为pivot
+partition(A, p) 使用A[p]作为pivot, 将A中的数据分为 
+
+
+所有小于等于pivot的数据
+pivot本身
+所有大于pivot的数据
+
+Implementation下载: quickselect.ccvoid swap(int *A, int i, int j){ 
+    int temp; 
+    temp = A[i]; 
+    A[i] = A[j]; 
+    A[j] = temp; 
+    return; 
+}
+
+partition(A, p)思路: 逐次将最外侧的一对不符合partition规则的item对调
+
+ int partition(int *A, int p, int n){ 
+     swap(A, 0, p); 
+     int i = 1, j = n - 1; 
+     while(i &lt;= j){ 
+         while(A[i] &lt;= A[0] &amp;&amp; i &lt; n) i++; 
+         while(A[j] &gt; A[0] &amp;&amp; j &gt; 0) j--; 
+         if(i &lt;= j) swap(A, i, j); 
+     } 
+     swap(A, 0, j); 
+     return j; 
+ } 
+
+quick-select(A, k)思路: 以partition分组数据以后, 判断第k大的数所在的分组, 然后recall其本身, 达到持续缩小搜索范围的目的
+
+int quickSelect(int *A, int k, int n){ 
+    int p = 0; 
+    int i = partition(A, p, n); 
+    if(i == k) return A[i]; 
+    else if(i &gt; k) return quickSelect(A, k, i); 
+    else if(i &lt; k) return quickSelect(A+i+1, k-i-1, n-i-1); 
+    return -1; 
+}
+
+choose-pivot(A)思路1: 永远取第一个item为pivot思路2: 取从0到n-1之间的随机数为pivot
+QuickSort快速排序(分治法)avg rumtime: Θ(n log n)
+结构与QuickSelect基本相同
+区别: 需要对partition分出的两组数据都进行排序
+
+ void quickSort(int *A, int n){ 
+     if(n &lt;= 1) return; 
+     int p = 0; 
+     int i = partition(A, p, n); 
+     quickSort(A, i); 
+     quickSort(A + i + 1, n - i - 1);
+ } 
+
+Non-comparison-based sorting最优Runtime为O(n)Counting Sort前提: Array A包含n个数据, 数据的最大值小于k思路:
+建立一个大小为k的空白Array C, 填零.
+将从0到k, 每一个数字在 A 出现的次数, 填到 C 对应的index中
+从1到k, 将 C 中的数字逐次累加 C[i] = C[i] + C[i - 1]
+则C[i]为任意A[x] == i, 在排序后应该在的index
+Runtime: O(n)Space: Θ(k)下载: countingsort.ccvoid countingSort(int *A, int k, int n){ 
+    int i, B[n], C[k]; 
+    for(i = 0; i &lt; n; i++){ 
+        C[A[i]]++; 
+        B[i] = A[i]; 
+    } 
+    for(i = 1; i &lt; k; i++) C[i] = C[i] + C[i-1]; 
+    for(i = n-1; i &gt;= 0; i--){ 
+        C[B[i]]--; 
+        A[C[B[i]]] = B[i]; 
+    } 
+    return; 
+}
+Radix sort前提: Array A包含的数据均可拆分成d个片段xd-1xd-2… x, 且任一片段xi满足0 &lt;= xi &lt; k例如: 十进制数的每一位都是0 &lt;= xi &lt; 9的单位数字思路: 以每一个xi为基准 (从0到d - 1), 运行counting sort.Runtime: Θ(d(n+k))Space: Θ(n+k)注: 如果以从d-1到0的顺序执行, 则是以最低位为基准(LSD). 正常是以最高位为基准(MSD).更新1: 各种Sorting Algorithm的动画演示http://jsdo.it/norahiko/oxIy/fullscreen更新2: 修正了partition中的bug更多CS 240总结请看: http://blog.gregwym.info/tag/cs240/</description>
+</item>
+</rdf:RDF>

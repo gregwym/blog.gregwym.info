@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/category/code-dump/">
+<title>某储备粮的“学习笔记” - Code Dump</title>
+<link>http://blog.gregwym.info/category/code-dump/</link>
+<description>收集平时Coding中用到的好用的functions, 以便日后重复利用, 也是防止下次日后重复劳动重复学习. </description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/read-file-into-string.html"/>
+<rdf:li resource="http://blog.gregwym.info/xlib-chu-jie-chu.html"/>
+<rdf:li resource="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-san--sorting-and-randomized-algorithms.html"/>
+<rdf:li resource="http://blog.gregwym.info/zhao-shu-zu-vector-nei-di-k-da-de-shu.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/read-file-into-string.html">
+<title>[Java]读取文件成字符串</title>
+<link>http://blog.gregwym.info/read-file-into-string.html</link>
+<dc:date>2012-03-09T22:49:35+08:00</dc:date>
+<description>String filename = "path/file.txt";
+File file = new File(filename);
+FileInputStream fileinput = new FileInputStream(file.getAbsolutePath());
+int x = fileinput.available();
+byte b[] = new byte[x];
+fileinput.read(b);
+String string = new String(b);
+System.out.println(string);
+开始实习以后, 真的没什么自己的时间了. 学到了不少东西, 但还是老样子, 自己摸索自己成长. 长篇的理论知识整理确实重要, 但这些代码片段, 在需要的时候也是实实在在能帮上忙的东西.闲的时间少了, 估计以后这类东西会比较多吧...参考源: http://mcoffe.blogbus.com/logs/22801413.html</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/xlib-chu-jie-chu.html">
+<title>XLib初接触</title>
+<link>http://blog.gregwym.info/xlib-chu-jie-chu.html</link>
+<dc:date>2011-05-15T04:24:52+08:00</dc:date>
+<description>XLib是X Window编程的基础Library, 使用时首先需要在文件头中#include &lt;X11/Xlib.h&gt;
+在绘制图形界面之前, 第一步要连接到一个Display. 就好比画画之前先要找到一张桌子或者画板, 你不能举着一张纸直接就往上泼墨...// Open display 
+Display* display; 
+display = XOpenDisplay(""); 
+if(!display){ 
+    printf("Cannot open display\n"); 
+    exit(-1); 
+} 
+之后可以通过一些函数, 获取当前Display的各种信息. 如需要, 可以保存到variable里供后边绘图时候使用.int printScreenInfo(Display* display){ 
+    int screen_num;  // 当前屏幕的编号 
+    int screen_width;    // 当前屏幕的宽度 
+    int screen_height;   // 当前屏幕的高度 
+    Window root_window; // root窗口的编号 
+    unsigned long white_pixel;   // 白色像素的编号 
+    unsigned long black_pixel;   // 黑色像素的编号 
+    screen_num = DefaultScreen(display); 
+    screen_width = DisplayWidth(display, screen_num); 
+    screen_height = DisplayHeight(display, screen_num); 
+    root_window = RootWindow(display, screen_num); 
+    white_pixel = WhitePixel(display, screen_num); 
+    black_pixel = BlackPixel(display, screen_num); 
+    printf("Screen Number: \t%d\n
+                    Width: \t%d\n
+                   Height: \t%d\n
+                     Root: \t%d\n
+                    White: \t%d\n
+                    Black: \t%d\n", 
+           screen_num, screen_width, screen_height, 
+           root_window, white_pixel, black_pixel); 
+    return 0; 
+}
+画板摆好以后, 就要在上边铺上一张用来画画的纸, 也就是一个窗口...// Define window properties 
+Window window; 
+int x, y; 
+unsigned int width, height, border_width; 
+width = 850; 
+height = 470; 
+x = y = 50; 
+border_width = 0; 
+
+// Define display constants 
+int screen_num = DefaultScreen(display); 
+unsigned long white_pixel = WhitePixel(display, screen_num); 
+unsigned long black_pixel = BlackPixel(display, screen_num); 
+
+// Create window 
+window = XCreateSimpleWindow(display, RootWindow(display, screen_num), 
+                             x, y, width, height, border_width, 
+                             black_pixel, white_pixel); 
+
+// Map win to display &amp; Flush display 
+XMapWindow(display, win); 
+XFlush(display);
+万事俱备只欠画画儿了`XLib的function都挺容易看懂的...int drawInterface(Display* display, Window window, unsigned long black_pixel, unsigned long white_pixel ){
+    // Define GCs for drawing 
+    GC foregc; 
+    foregc = XCreateGC (display, window, 0, 0); 
+    XSetBackground( display, foregc, black_pixel ); 
+    XSetForeground( display, foregc, white_pixel ); 
+
+    // Start Drawing 
+    XClearWindow(display, window); 
+    // Door 
+    XDrawRectangle(display, window, foregc, 1, 1, 630, 460); 
+    XFillRectangle(display, window, foregc, 66, 66, 480, 330); 
+    // Dashboard 
+    XDrawRectangle(display, window, foregc, 633, 1, 215, 460); 
+    XDrawRectangle(display, window, foregc, 650, 45, 185, 330); 
+    // Timer 
+    XDrawRectangle(display, window, foregc, 660, 60, 160, 65); 
+    // And More... 
+
+    // Flush display to show everything changed 
+    XFlush(display);
+}
+Event Handling的部分晚点再整理</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-san--sorting-and-randomized-algorithms.html">
+<title>CS 240复习总结之三: Sorting and Randomized Algorithms</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-san--sorting-and-randomized-algorithms.html</link>
+<dc:date>2011-04-06T08:12:26+08:00</dc:date>
+<description>Comparison-based sorting最优Runtime为Ω(n log n)QuickSelect用QuickSort algorithm快速查找第k大的数 (avg rumtime: Θ(n))组成函数
+choose-pivot(A) 在数据中选择其中一个作为pivot
+partition(A, p) 使用A[p]作为pivot, 将A中的数据分为 
+
+
+所有小于等于pivot的数据
+pivot本身
+所有大于pivot的数据
+
+Implementation下载: quickselect.ccvoid swap(int *A, int i, int j){ 
+    int temp; 
+    temp = A[i]; 
+    A[i] = A[j]; 
+    A[j] = temp; 
+    return; 
+}
+
+partition(A, p)思路: 逐次将最外侧的一对不符合partition规则的item对调
+
+ int partition(int *A, int p, int n){ 
+     swap(A, 0, p); 
+     int i = 1, j = n - 1; 
+     while(i &lt;= j){ 
+         while(A[i] &lt;= A[0] &amp;&amp; i &lt; n) i++; 
+         while(A[j] &gt; A[0] &amp;&amp; j &gt; 0) j--; 
+         if(i &lt;= j) swap(A, i, j); 
+     } 
+     swap(A, 0, j); 
+     return j; 
+ } 
+
+quick-select(A, k)思路: 以partition分组数据以后, 判断第k大的数所在的分组, 然后recall其本身, 达到持续缩小搜索范围的目的
+
+int quickSelect(int *A, int k, int n){ 
+    int p = 0; 
+    int i = partition(A, p, n); 
+    if(i == k) return A[i]; 
+    else if(i &gt; k) return quickSelect(A, k, i); 
+    else if(i &lt; k) return quickSelect(A+i+1, k-i-1, n-i-1); 
+    return -1; 
+}
+
+choose-pivot(A)思路1: 永远取第一个item为pivot思路2: 取从0到n-1之间的随机数为pivot
+QuickSort快速排序(分治法)avg rumtime: Θ(n log n)
+结构与QuickSelect基本相同
+区别: 需要对partition分出的两组数据都进行排序
+
+ void quickSort(int *A, int n){ 
+     if(n &lt;= 1) return; 
+     int p = 0; 
+     int i = partition(A, p, n); 
+     quickSort(A, i); 
+     quickSort(A + i + 1, n - i - 1);
+ } 
+
+Non-comparison-based sorting最优Runtime为O(n)Counting Sort前提: Array A包含n个数据, 数据的最大值小于k思路:
+建立一个大小为k的空白Array C, 填零.
+将从0到k, 每一个数字在 A 出现的次数, 填到 C 对应的index中
+从1到k, 将 C 中的数字逐次累加 C[i] = C[i] + C[i - 1]
+则C[i]为任意A[x] == i, 在排序后应该在的index
+Runtime: O(n)Space: Θ(k)下载: countingsort.ccvoid countingSort(int *A, int k, int n){ 
+    int i, B[n], C[k]; 
+    for(i = 0; i &lt; n; i++){ 
+        C[A[i]]++; 
+        B[i] = A[i]; 
+    } 
+    for(i = 1; i &lt; k; i++) C[i] = C[i] + C[i-1]; 
+    for(i = n-1; i &gt;= 0; i--){ 
+        C[B[i]]--; 
+        A[C[B[i]]] = B[i]; 
+    } 
+    return; 
+}
+Radix sort前提: Array A包含的数据均可拆分成d个片段xd-1xd-2… x, 且任一片段xi满足0 &lt;= xi &lt; k例如: 十进制数的每一位都是0 &lt;= xi &lt; 9的单位数字思路: 以每一个xi为基准 (从0到d - 1), 运行counting sort.Runtime: Θ(d(n+k))Space: Θ(n+k)注: 如果以从d-1到0的顺序执行, 则是以最低位为基准(LSD). 正常是以最高位为基准(MSD).更新1: 各种Sorting Algorithm的动画演示http://jsdo.it/norahiko/oxIy/fullscreen更新2: 修正了partition中的bug更多CS 240总结请看: http://blog.gregwym.info/tag/cs240/</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/zhao-shu-zu-vector-nei-di-k-da-de-shu.html">
+<title>找数组/vector内第k大的数</title>
+<link>http://blog.gregwym.info/zhao-shu-zu-vector-nei-di-k-da-de-shu.html</link>
+<dc:date>2011-04-01T05:26:20+08:00</dc:date>
+<description>= =...`消极怠工消极怠工, 240拖到最后一秒算是交掉了. w/e找一个vector里第k大的数一直是个有意思的课题, 这次又碰到了, 自己写了一个. 记下来记下来, 以后八成用得到.网上给的思路很多, 大家普遍认为用quicksort的algorithm是效率最好的. 原本也不怎么在乎效率问题, 完全是被240逼的啊啊啊啊啊...vector好像并不是高效率的选择, 不过随它去吧`这次的tree实在有够恶心#include &lt;vector&gt; 
+
+int kTh(vector&lt;int&gt; &amp; vals, int k){ 
+    if(k == 0){ // 如果k为0, 则取中点 
+        k = vals.size(); 
+        k = k / 2 + k % 2; 
+    }
+
+    vector&lt;int&gt; v, l ,r; 
+    int i; 
+    v = vals; 
+    int c, n = 0, s = v.size(), p = v[0]; // pivot = the first 
+
+    while(true){ 
+        for(i = s-1; i &gt;= 0; i--){ // partite 
+            c = v[i]; 
+            if(c &lt;= p) l.push_back(c); 
+            else if(c &gt; p) r.push_back(c); 
+        } 
+        s = l.size(); 
+        if(s == k) break; // find the k'th 
+        else if(s &gt; k) v = l; // in left 
+        else if(s &lt; k) { // in right 
+            k = k - l.size(); 
+            v = r; 
+        } 
+
+        l.clear(); 
+        r.clear(); 
+        s = v.size(); 
+        p = v[0]; // re-choose pivot 
+    } 
+    return p; 
+}
+欢迎大家批评指正...= =`更新更规范的写法, 请见 CS 240复习总结之三: Sorting and Randomized Algorithms</description>
+</item>
+</rdf:RDF>

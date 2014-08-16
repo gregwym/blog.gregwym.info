@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+xmlns:content="http://purl.org/rss/1.0/modules/content/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+xmlns:atom="http://www.w3.org/2005/Atom"
+xmlns:wfw="http://wellformedweb.org/CommentAPI/">
+<channel>
+<title>某储备粮的“学习笔记” - Portfolio</title>
+<link>http://blog.gregwym.info/category/Portfolio/</link>
+<atom:link href="http://blog.gregwym.info/feed/category/Portfolio/" rel="self" type="application/rss+xml" />
+<language>zh-CN</language>
+<description>Portfolio</description>
+<lastBuildDate>Sun, 01 Sep 2013 21:57:27 +0800</lastBuildDate>
+<pubDate>Sun, 01 Sep 2013 21:57:27 +0800</pubDate>
+<item>
+<title>Kaching - Express.js payment solution</title>
+<link>http://blog.gregwym.info/kaching.html</link>
+<guid>http://blog.gregwym.info/kaching.html</guid>
+<pubDate>Sun, 01 Sep 2013 21:57:27 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[Kaching is a simple payments solution for Express-based web app, inspired by Passport.js. Together w...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p><a href="https://github.com/gregwym/kaching">Kaching</a> is a simple payments solution for <a href="https://github.com/visionmedia/express">Express</a>-based web app, inspired by <a href="http://passportjs.org/">Passport.js</a>. Together with various <em>strategies</em>, Kaching provides a unified control flow to hook up with different online payment services.</p><p>For now, Kaching only provides <a href="https://github.com/gregwym/kaching-paypal">kaching-paypal</a> to accepting payment through <a href="http://www.paypal.com">Paypal</a>. More strategies are under plan.</p><h2>Install</h2><pre><code>$ npm install kaching
+$ npm install kaching-paypal
+</code></pre><h2>Example</h2><p><a href="https://github.com/gregwym/kaching/tree/master/example">https://github.com/gregwym/kaching/tree/master/example</a></p><h2>Usage</h2><h3>0. Setup with Kaching</h3><p>Paypal strategy require the <code>client_id</code> and <code>client_secret</code> offered by Paypal to operate. You can obtain them from <a href="https://developer.paypal.com/webapps/developer/applications">https://developer.paypal.com/webapps/developer/applications</a>.</p><p>It use <code>api.sandbox.paypal.com</code> as the default paypal host address. Feel free to change it in production environment.</p><pre><code>var PaypalStrategy = require('kaching-paypal');
+var kaching = require('kaching');
+
+kaching.use(new PaypalStrategy({
+  host: '&lt;paypal_rest_api_endpoint&gt;',        // optional
+  port: '',                                  // optional
+  client_id: '&lt;paypal_client_id&gt;',
+  client_secret: '&lt;paypal_client_secret&gt;'
+}));
+</code></pre><p><!--more--></p><h3>1. Create a payment</h3><p>Use <code>kaching.create</code>, specifying <code>paypal</code> strategy, to create a Paypal payment. The payment detail should be setup and saved in <code>req.payment</code> prior invoking the create middleware.</p><p>After kaching created the pending payment, it replaces <code>req.payment</code> with the real payment object that was returned from Paypal API. Save it securely. (i.e., together with the user's order.)</p><pre><code>app.get('...', function(req, res, next) {
+  // Setup payment detail in `req.payment`.
+  req.payment = {
+    amount:{
+      total:'7.47',
+      currency:'USD'
+    },
+    redirect_urls: {
+      return_url: 'http://&lt;return_url&gt;',
+      cancel_url: 'http://&lt;cancel_url&gt;'
+    },
+    description:'Kaching paypal test transaction'
+  };
+  next();
+}, kaching.create('paypal', {
+  // Optional options
+}), function(req, res) {
+  // Now `req.payment` is the Paypal returned payment object
+  res.json(req.payment);
+});
+</code></pre><h3>2. Redirect user to Paypal to approve the payment</h3><p>For most of the time, user should redirect to Paypal to complete the payment right away. You can find the page url in <code>payment.links</code> and do whatever you want.</p><p>Or simpler, append the <code>kaching.approve</code> middleware after the last request handler. It will redirect the user to the payment approval page.</p><pre><code>app.get('...', function(req, res, next) {
+  ...
+}, kaching.create('paypal', {
+  ...
+}), function(req, res, next) {
+  console.log(JSON.stringify(req.payment));
+  next();
+}, kaching.approve('paypal'));
+</code></pre><p>If you want to use <code>kaching.approve</code> somewhere else, make sure <code>req.payment</code> contain a valid payment object.</p><h3>3. Execute the approved payment to complete the transaction</h3><p>User will be redirect to <code>return_url</code> once the payment has been approved. Paypal will specify the <code>payer_id</code> in <code>req.query.PayerID</code>. This piece of information is required to execute and complete the payment, so save it securely.</p><p>Commonly, execute the payment right after can save many trouble. Here is an example,</p><pre><code>app.get('&lt;return_route&gt;', function(req, res, next) {
+  // Prepare payment information and payerId
+  req.payment = ...;           // Fetch the payment object from anywhere it was saved.
+  req.payment.payer_id = req.query.PayerID;
+  next();
+}, kaching.execute('paypal'), function(req, res) {
+  res.json(req.payment);       // Now the payment has been completed.
+});
+</code></pre><p>Like <code>kaching.create</code>, <code>kaching.execute</code> will update <code>req.payment</code> to the latest. And it's up to you to deal with it.</p><h2>API</h2><p>Note: all the middleware look for the payment informations in <code>req.payment</code>. Make sure it is set before passing control to a middleware.</p><h3>PaypalStrategy(options)</h3><p>Construct a new <code>strategy</code>.</p><pre><code>var options = {
+  host: '&lt;paypal_rest_api_endpoint&gt;',        // optional
+  port: '',                                  // optional
+  client_id: '&lt;paypal_client_id&gt;',
+  client_secret: '&lt;paypal_client_secret&gt;'
+}
+</code></pre><h3>PaypalStrategy#create</h3><p>Build the payment creation middleware.</p><p>It use <code>req.payment</code> as the payment_detail skeleton.</p><pre><code>req.payment = {
+  intent: '[sale | authorize]',             // default: sale
+  payment_method: '[paypal | credit_card]', // default: paypal
+  funding_instruments: {                    // required when payment_method = credit_card
+    ...   // https://developer.paypal.com/webapps/developer/docs/api/#fundinginstrument-object
+  },
+  amount: {                                 // required
+    ...   // https://developer.paypal.com/webapps/developer/docs/api/#amount-object
+  },
+  item_list: {                              // optional
+    ...   // https://developer.paypal.com/webapps/developer/docs/api/#itemlist-object
+  },
+  description: 'Payment description',       // optional
+  redirect_urls: {                          // required when payment_method = paypal
+    return_url: ...,
+    cancel_url: ...
+  }
+};
+</code></pre><p>You may notice that, things like <code>intent</code>, <code>payment_method</code> and <code>redirect_urls</code> are not necessarily be different for each payment. You can set the default value for them when building the middleware.</p><pre><code>...
+}, kaching.create('paypal', {
+  intent: 'sale',
+  payment_method: 'paypal',
+  redirect_urls: { ... } 
+}), 
+...
+</code></pre><p>Then you can omit these fields in <code>req.payment</code>.</p><h3>PaypalStrategy#approve</h3><p>Build the payment approval middleware. Mainly redirect to the <code>approval_url</code> in <code>payment.links</code>.</p><h3>PaypalStrategy#execute</h3><p>Build the approved payment execution middleware. The middleware find the payment in <code>req.payment</code> and execute it with <code>req.payment.payer_id</code>.</p><h2>Credits</h2><ul>
+<li><a href="https://github.com/gregwym">Greg Wang</a></li>
+</ul><h2>License</h2><p><a href="http://opensource.org/licenses/MIT">The MIT License</a></p><p>Copyright (c) 2013 Greg Wang <a href="http://gregwym.info/">http://gregwym.info/</a></p>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/kaching.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/kaching.html</wfw:commentRss>
+</item>
+<item>
+<title>InformaticToolbar: iOS Toolbar Enhancement Library</title>
+<link>http://blog.gregwym.info/informatic-toolbar.html</link>
+<guid>http://blog.gregwym.info/informatic-toolbar.html</guid>
+<pubDate>Mon, 05 Nov 2012 09:08:18 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[First of all, the repo: https://github.com/gregwym/InformaticToolbarIntroRemember in the Mail App, i...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>First of all, the repo: <a href="https://github.com/gregwym/InformaticToolbar">https://github.com/gregwym/InformaticToolbar</a></p><h2>Intro</h2><p>Remember in the Mail App, it shows update status and sending mail progress in the bottom toolbar. I think it is a really neat way to show information, especially for those apps who use native iOS UI elements.</p><p>However, I couldn't find any lib out there for this task. So I decide to invent the wheel myself.</p><p>Feel free to post any issues or patch. It's my pleasure for any who like my work.</p><h2>What it does</h2><p>InformaticToolbar is mainly an UIViewController Category which allows you to add several <strong><em>UIBarButtonItem</em></strong>s set to your toolbar.</p><p>The sets are defined as subclasses of <strong><em>ITBarItemSet</em></strong>. All <strong><em>ITBarItemSet</em></strong> can have a <strong><em>dismiss button</em></strong> if the target and action has been defined. If more than one set has been added, a <strong><em>switch button</em></strong> (an arrow) will be displayed on the left for user to switch between sets.</p><p>For now, there are three pre-defined set:</p><ul>
+<li><strong><em>ITLabelBarItemSet</em></strong>: a textLabel and a detailTextLabel</li>
+<li><strong><em>ITProgressBarItemSet</em></strong>: a textLabel and a progressBar</li>
+<li><strong><em>ITConfirmationBarItemSet</em></strong>: two label and a check-mark button</li>
+</ul><p>You can easily create new sets by extending <strong><em>ITBarItemSet</em></strong> yourself.</p><p><strong>Screenshot:</strong></p><p><img src="https://github.com/downloads/gregwym/InformaticToolbar/InformaticToolbar" alt="Screenshot" /></p><p><!--more--></p><h2>How to use</h2><h3>First: clone it to your project directory</h3><pre><code>cd *your-project-location*
+git submodule add git://github.com/gregwym/InformaticToolbar.git
+</code></pre><h3>Second: add to your project</h3><p>You can either add the source codes directly or</p><ul>
+<li>drag and drop <code>InformaticToolbar.xcodeproj</code> to your project.</li>
+<li>In your project setting <br />
+<br />
+<ul>
+<li>In <strong>Build Phases->Target Dependencies</strong>, add <code>InformaticToolbar</code> (the library)</li>
+<li>In <strong>Build Phases->Link Binary With Libraries</strong>, add <code>libInformaticToolbar.a</code></li>
+<li>In <strong>Build Settings</strong>, add <code>"${PROJECT_DIR}/InformaticToolbar/"</code> to <strong>User Header Search Paths</strong>, include the quotation marks.</li>
+<li>In <strong>Build Settings</strong>, set <strong>Always Search User Path</strong> to <code>YES</code></li>
+<li>In <strong>Build Settings</strong>, set <strong>Other Linker Flags</strong> to <code>-ObjC</code></li>
+</ul></li>
+</ul><h3>Third: add the header</h3><p>In any <code>UIViewController</code> that you want to use this lib, add <code>#import "InformaticToolbar.h"</code> at the front.</p><p>Or easier, you can add the import to YOUR <code>Prefix.pch</code> file.</p><h3>Forth: add an item set to toolbar</h3><p>Let's say I want to add a Label to my toolbar, I can call the following method in an <code>UIViewController</code>:</p><pre><code>- (IBAction)addLabelBarItemSet:(id)sender
+{
+    ITLabelBarItemSet *labelBarItemSet = [ITLabelBarItemSet labelBarItemSetWithDismissTarget:self andAction:@selector(dismissBarItemSet:)];
+    labelBarItemSet.textLabel.text = @"This is text label. ";
+    labelBarItemSet.detailTextLabel.text = @"This is detail text label. ";
+    [self pushBarItemSet:labelBarItemSet animated:YES];
+}
+
+- (void)dismissBarItemSet:(ITBarItemSet *)sender
+{
+    [self removeBarItemSet:sender animated:YES];
+}
+</code></pre><h2>Demo Project</h2><p>In the project, there is a demo app you can tryout. <code>ITViewController.m</code> includes the sample usage of all three pre-defined item sets.</p><h2>License</h2><p><a href="http://creativecommons.org/licenses/by-sa/3.0/"><img src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" alt="Creative Commons License" /></a></p><p>InformaticToolbar by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/gregwym/InformaticToolbar" property="cc:attributionName" rel="cc:attributionURL">Greg Wang</a> is licensed under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/informatic-toolbar.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/informatic-toolbar.html</wfw:commentRss>
+</item>
+<item>
+<title>Typecho用Markdown编辑器</title>
+<link>http://blog.gregwym.info/typecho-markdown-editor.html</link>
+<guid>http://blog.gregwym.info/typecho-markdown-editor.html</guid>
+<pubDate>Sun, 18 Mar 2012 23:08:18 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[在网上找了下Typecho的Markdown插件, 有两个版本, 主要区别如下明城制作的Markdown插件 浏览时转换Markdown=>HTML数据库保存Markdown文本ichuan制作的Ma...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>在网上找了下Typecho的Markdown插件, 有两个版本, 主要区别如下</p><ul>
+<li><a href="http://www.gracecode.com/archives/3082/">明城</a>制作的Markdown插件 <br />
+<br />
+<ul>
+<li>浏览时转换Markdown=>HTML</li>
+<li>数据库保存Markdown文本</li>
+</ul></li>
+<li><a href="http://forum.typecho.org/topic.php?id=1218">ichuan</a>制作的Markdown4TE <br />
+<br />
+<ul>
+<li>保存文章时转换Markdown=>HTML</li>
+<li>数据库保存HTML文本</li>
+</ul></li>
+</ul><p>这两种实现都各有利弊, 我个人倾向于ichuan的做法.<br />原因无外乎, 能保持Typecho文章数据的一致性, 以前存HTML现在还是存HTML, 只是编辑的方式变了.</p><p><hr /></p><p>但ichuan的插件在用的时候不是那么顺利. 因为js放置的位置好像有些问题, 编辑器和预览99%的时候加载失败(Chrome 17). 预览界面的CSS定义也有些问题.</p><p>于是自己动手丰衣足食, 把成果po出来给和我碰到同样问题的朋友们.</p><ul>
+<li>保留了原插件的保存和读取部分</li>
+<li>重新构造了编辑器部分 <br />
+<br />
+<ul>
+<li>使用了和Stack Oveflow一样的最新<a href="http://code.google.com/p/pagedown/">PageDown编辑器</a></li>
+<li>编辑器带实时效果预览</li>
+<li>完整定义了各种格式的预览效果</li>
+</ul></li>
+</ul><p>Mar 19/2012 v0.2.1</p><ul>
+<li>修复了无法插入附件的BUG</li>
+</ul><p><!--more--></p><h3>下载</h3><blockquote><p><a href="https://github.com/gregwym/Markdown4TE/zipball/master">https://github.com/gregwym/Markdown4TE/zipball/master</a></p></blockquote><h3>Github</h3><blockquote><p><a href="https://github.com/gregwym/Markdown4TE">https://github.com/gregwym/Markdown4TE</a></p></blockquote><h3>有图有真相</h3><blockquote><p><a href="https://github.com/gregwym/Markdown4TE/raw/master/Markdown_Screenshot.png"><img src="https://github.com/gregwym/Markdown4TE/raw/master/Markdown_Screenshot.png" alt="Markdown编辑器截图" /></a></p></blockquote><p><hr /></p><h2>效果展示部分</h2><h1>H1</h1><h2>H2</h2><h3>H3</h3><p><strong>strong text</strong><br /><em>emphasized text</em><br /><strong><em>strong &amp; emphasized text</em></strong></p><p><hr /></p><p><a href="http://dolast.com">enter link description here</a></p><blockquote><p>Blockquote</p></blockquote><pre><code>enter code here
+</code></pre><ol>
+<li><p>List item</p><br />
+<br />
+<ul>
+<li>List item</li>
+</ul></li>
+</ol>
+]]></content:encoded>
+<slash:comments>47</slash:comments>
+<comments>http://blog.gregwym.info/typecho-markdown-editor.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/typecho-markdown-editor.html</wfw:commentRss>
+</item>
+<item>
+<title>Trapecho - 基于Bootstrap的Typecho主题</title>
+<link>http://blog.gregwym.info/Trapecho-boostrap-based-typecho-theme.html</link>
+<guid>http://blog.gregwym.info/Trapecho-boostrap-based-typecho-theme.html</guid>
+<pubDate>Sat, 17 Mar 2012 23:00:44 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[之前的浮云主题也用了快一年了, 有些腻味.主题本身也有很多问题, 比如代码质量不是很好, 主题的CSS对博客文章的Typography没有很规范的支持, 浮云比较吃CPU...一直想换主题却没有找到好...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>之前的浮云主题也用了快一年了, 有些腻味.<br />主题本身也有很多问题, 比如代码质量不是很好, 主题的CSS对博客文章的Typography没有很规范的支持, 浮云比较吃CPU...</p><p>一直想换主题却没有找到好的. 最近对Bootstrap很是痴迷, 又有了点空闲, 就顺手仿着Bootstrap官网风格做了一个Typecho的主题.<br />自己觉得效果还不错, po出来给喜欢的朋友.</p><h2>设计风格</h2><ul>
+<li>黑白灰</li>
+<li>简洁明了</li>
+</ul><h2>特色功能</h2><ul>
+<li>自动吸附顶端的导航栏</li>
+<li>在各种设备上自适应显示 (如: iPhone/iPad)</li>
+<li>侧栏的新浪微博展示插件</li>
+<li>集成Google Code Prettify</li>
+</ul><h2>应用的技术</h2><ul>
+<li>Bootstrap + jQuery</li>
+<li>HTML5 + CSS3</li>
+<li>Responsive CSS</li>
+</ul><h3>下载</h3><p><del>下载我放在doLast.com上了, 点Download即可</del></p><blockquote><p><del><a href="http://dolast.com/pages/trapecho">http://dolast.com/pages/trapecho</a></del><br /><a href="https://github.com/gregwym/Trapecho/zipball/master">https://github.com/gregwym/Trapecho/zipball/master</a></p></blockquote><p><!--more--></p><p><hr /></p><h2>功能详解</h2><h3>新浪微博</h3><ul>
+<li>在<code>/admin/options-theme.php</code>主题设置页中填入新浪微博的UID, 侧栏中就会显示新浪微博的插件.</li>
+<li>在设置中删除UID号码并保存, 即可关闭插件</li>
+</ul><h3>根据分辨率自适应布局</h3><ul>
+<li>如果您在看我的博客, 现在把浏览器缩小就能看出效果.</li>
+<li>在iPhone/iPad等移动设备上也能有很好的博客阅读体验</li>
+<li>支持iOS的阅读器模式</li>
+</ul><h3>侧栏可选项</h3><ul>
+<li>显示最新文章</li>
+<li>显示相关文章</li>
+<li>显示最近回复</li>
+<li>显示标签</li>
+<li>显示分类</li>
+<li>显示归档</li>
+<li>显示友情链接(需要友情链接插件)</li>
+<li>显示其它杂项</li>
+</ul><h3>Google Code Prettify</h3><ul>
+<li>为了统一主题风格, 也特别定义了代码的高亮方式, 如果有朋友不喜欢, 从<code>footer.php</code>最后删除和<code>pre</code>有关的几行JavaScript即可.</li>
+<li><p>使用很简单, 展示大段的代码, 使用<code>&lt;pre&gt;</code>将代码括住, 就会自动高亮, 语言类型自动识别.</p><br />
+<br />
+<pre><code>&lt;pre&gt;
+    &lt;!--你的代码放在中间--&gt;
+&lt;/pre&gt;
+</code></pre></li>
+<li><p>比如,</p><br />
+<br />
+<pre><code>int main(){
+    cout &lt;&lt; "Welcome to Trapecho" &lt;&lt; endl;
+    return 0;
+}
+</code></pre></li>
+<li><p>更多使用方法请参考, <a href="http://google-code-prettify.googlecode.com/svn/trunk/README.html">google-code-prettify README</a></p></li>
+</ul>
+]]></content:encoded>
+<slash:comments>47</slash:comments>
+<comments>http://blog.gregwym.info/Trapecho-boostrap-based-typecho-theme.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/Trapecho-boostrap-based-typecho-theme.html</wfw:commentRss>
+</item>
+</channel>
+</rss>

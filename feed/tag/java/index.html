@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+xmlns:content="http://purl.org/rss/1.0/modules/content/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+xmlns:atom="http://www.w3.org/2005/Atom"
+xmlns:wfw="http://wellformedweb.org/CommentAPI/">
+<channel>
+<title>某储备粮的“学习笔记” - java</title>
+<link>http://blog.gregwym.info/tag/java/</link>
+<atom:link href="http://blog.gregwym.info/feed/tag/java/" rel="self" type="application/rss+xml" />
+<language>zh-CN</language>
+<description></description>
+<lastBuildDate>Fri, 09 Mar 2012 22:49:35 +0800</lastBuildDate>
+<pubDate>Fri, 09 Mar 2012 22:49:35 +0800</pubDate>
+<item>
+<title>[Java]读取文件成字符串</title>
+<link>http://blog.gregwym.info/read-file-into-string.html</link>
+<guid>http://blog.gregwym.info/read-file-into-string.html</guid>
+<pubDate>Fri, 09 Mar 2012 22:49:35 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[String filename = "path/file.txt";File file = new File(filename);FileInputStream fileinput = new Fil...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<pre><code>String filename = "path/file.txt";
+File file = new File(filename);
+FileInputStream fileinput = new FileInputStream(file.getAbsolutePath());
+int x = fileinput.available();
+byte b[] = new byte[x];
+fileinput.read(b);
+String string = new String(b);
+System.out.println(string);
+</code></pre><p>开始实习以后, 真的没什么自己的时间了. 学到了不少东西, 但还是老样子, 自己摸索自己成长. 长篇的理论知识整理确实重要, 但这些代码片段, 在需要的时候也是实实在在能帮上忙的东西.</p><p>闲的时间少了, 估计以后这类东西会比较多吧...</p><p><hr /></p><p>参考源: <a target="_blank" href="http://mcoffe.blogbus.com/logs/22801413.html">http://mcoffe.blogbus.com/logs/22801413.html</a></p>
+]]></content:encoded>
+<slash:comments>3</slash:comments>
+<comments>http://blog.gregwym.info/read-file-into-string.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/read-file-into-string.html</wfw:commentRss>
+</item>
+<item>
+<title>Java现学现卖之Layout Managers</title>
+<link>http://blog.gregwym.info/java-xian-xue-xian-mai-zhi-layout-managers.html</link>
+<guid>http://blog.gregwym.info/java-xian-xue-xian-mai-zhi-layout-managers.html</guid>
+<pubDate>Fri, 24 Jun 2011 12:29:35 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[Java里一共提供了8种Layout ManagerBorderLayoutBoxLayoutCardLayoutFlowLayoutGridBagLayoutGridLayoutGroupLayou...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>Java里一共提供了8种Layout Manager</p><ul>
+<li>BorderLayout</li>
+<li>BoxLayout</li>
+<li>CardLayout</li>
+<li>FlowLayout</li>
+<li>GridBagLayout</li>
+<li>GridLayout</li>
+<li>GroupLayout</li>
+<li>SpringLayout</li>
+</ul><p>这其中最后两种是专门为GUI Builder设计的, 并不是很适合手动写, 我就没花时间研究, 但应该是这几种Layout Manager中, 灵活性最大的两种.</p><p>网上有人说GridBagLayout是手写UI时&#96;功能最强大的Layout...可一般强大就是复杂的代名词, 我也把它跳过了= =&#96;(好吧, 我确实比较懒, 但更主要是时间不够)</p><p>先说说基础,<br />给一个container设置Layout使用 .setLayout(LayoutManager) 这个方法.<br />针对不同的Layout, 添加component时候, .add()有时可能需要额外的参数</p><p>然后来说说我玩明白了的几种Layout</p><p><!--more--></p><h3>BorderLayout</h3><p><img src="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/BorderLayoutDemo.png" alt="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/BorderLayoutDemo.png" /><br />这是所有content pane的默认Layout. 它将整个界面划分为PAGE&#95;START, PAGE&#95;END, CENTER, LINE&#95;START, LINE&#95;END 五个部分. 可以分别理解为一个页面的header, footer, content, left-sidebar, right-sidebar.</p><p>.add() 的时候需要在后边增加一个额外的参数, 标识这个component该被添加到哪个区域.<br />例: pane.add(button, BorderLayout.PAGE_END);</p><h3>BoxLayout</h3><p><img src="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/BoxLayoutDemo.png" alt="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/BoxLayoutDemo.png" /><br />这个Layout适用于单纯的将components纵向或横向直线排列. 在Constructor中, 用X&#95;AXIS或者Y&#95;AXIS标识排列方向.<br />BoxLayout本身无视components的 preferredSize, 但如果设置了maximumSize那就另当别论了. 这点在设置自适应宽度或高度的components时候, 很有用处.</p><p>BoxLayout还有两个很有用的排版小工具, 通过 .add这几个小东西, 可以很轻松的调整Layout中的空间</p><ul>
+<li>Box.createHorizontalGlue(); 水平的自动填充空间</li>
+<li>Box.createRigidArea(new Dimension(width, height)); 创建一个占据多大空间的空白</li>
+</ul><p>Trick: RigidArea的width或者height可以为0, 而且可以添加到任意其他Layout中</p><h3>FlowLayout</h3><p><img src="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/FlowLayoutDemo.png" alt="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/FlowLayoutDemo.png" /><br />这是JPanel的默认Layout. 和Box类似, 也是把components直线排列. 区别在于, 它更智能(当然有时候太聪明不是好事儿). 可以很方便的设置</p><ul>
+<li>.setAlignment() 左/右对齐</li>
+<li>.setComponentOrientation() 从左到右/从右到左</li>
+<li>.setHgap() .setVgap() components之间的水平/垂直间距</li>
+</ul><h3>GridLayout</h3><p><img src="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/GridLayoutDemo.png" alt="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/GridLayoutDemo.png" /><br />这个Layout就是画格子. 把一个矩形空间分成n * m的格子, 可以自适应大小, 同Flow可以设置间距.</p><p>其实还是很好用的, 但在排版中比较awkward...因为很多时候并不需要像表格一样的空间.<br />创建方法很简单, new GridLayout(col, row);</p><h3>CardLayout</h3><p><img src="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/CardLayoutDemo.png" alt="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/CardLayoutDemo.png" /> <img src="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/CardLayoutDemo-2.png" alt="http://download.oracle.com/javase/tutorial/figures/uiswing/layout/CardLayoutDemo-2.png" /><br />啊哈哈哈...这个我的最爱啊`!<br />这个Layout其实就像一摞卡片, 每次你只能看到最上边的一张卡. 你可以按顺序前后切换, 也可以要求显示特定的一张, 在这次做翻页的时候非常给力!</p><p>.add() 的时候, 需要增加一个额外的String参数, 标识这个card的name, 在.show(c, name)的时候会用到<br />切换Card可以用.first(c) .last(c) .previous(c) .next(c)</p><p><hr /></p><p>参考资料: <a href="http://download.oracle.com/javase/tutorial/uiswing/layout/visual.html">enter link description here</a></p>
+]]></content:encoded>
+<slash:comments>2</slash:comments>
+<comments>http://blog.gregwym.info/java-xian-xue-xian-mai-zhi-layout-managers.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/java-xian-xue-xian-mai-zhi-layout-managers.html</wfw:commentRss>
+</item>
+<item>
+<title>这辈子写的第一个给人用的程序...</title>
+<link>http://blog.gregwym.info/zhe-bei-zi-xie-de-di-yi-ge-gei-ren-yong-de-cheng-xu.html</link>
+<guid>http://blog.gregwym.info/zhe-bei-zi-xie-de-di-yi-ge-gei-ren-yong-de-cheng-xu.html</guid>
+<pubDate>Fri, 24 Jun 2011 05:29:17 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[埋头写了3整天的code&#96;...不用Interface Builder写GUI真是自虐啊&#96;不过结果还是不错的`啊哈哈哈写的是个Twitter-like Web Service的客户端,...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>埋头写了3整天的code&#96;...不用Interface Builder写GUI真是自虐啊&#96;<br />不过结果还是不错的`啊哈哈哈</p><p>写的是个Twitter-like Web Service的客户端, 网页端在这里<br /><a href="https://hci-courses.cs.uwaterloo.ca/channelw/">https://hci-courses.cs.uwaterloo.ca/channelw/</a><br />不是开放注册, 但可以邀请...有人想玩玩看的话, 可以留言回复哈`<br />Post上来得瑟一下</p><p>Java运行文件下载:<br /><a href="http://blog.gregwym.info/usr/uploads/2011/06/797283141.jar" title="mikrocalendar.jar">mikrocalendar.jar</a></p><p>截图如下:<br /><img src="http://blog.gregwym.info/usr/uploads/2011/06/3407415072.jpg" alt="Channel W 截图" /></p>
+]]></content:encoded>
+<slash:comments>4</slash:comments>
+<comments>http://blog.gregwym.info/zhe-bei-zi-xie-de-di-yi-ge-gei-ren-yong-de-cheng-xu.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/zhe-bei-zi-xie-de-di-yi-ge-gei-ren-yong-de-cheng-xu.html</wfw:commentRss>
+</item>
+</channel>
+</rss>

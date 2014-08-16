@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+xmlns:thr="http://purl.org/syndication/thread/1.0"
+xml:lang="zh-CN"
+xml:base="http://blog.gregwym.info/tag/cs349/"
+>
+<title type="text">某储备粮的“学习笔记” - cs349</title>
+<subtitle type="text"></subtitle>
+<updated>2011-05-15T04:24:52+08:00</updated>
+<generator uri="http://typecho.org/" version="0.9/13.12.12">Typecho</generator>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/tag/cs349/" />
+<id>http://blog.gregwym.info/feed/atom/tag/cs349/</id>
+<link rel="self" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/tag/cs349/" />
+<entry>
+<title type="html"><![CDATA[XLib初接触]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/xlib-chu-jie-chu.html" />
+<id>http://blog.gregwym.info/xlib-chu-jie-chu.html</id>
+<updated>2011-05-15T04:24:52+08:00</updated>
+<published>2011-05-15T04:24:52+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[XLib是X Window编程的基础Library, 使用时首先需要在文件头中#include &amp;lt;X11/Xlib.h&amp;gt;在绘制图形界面之前, 第一步要连接到一个Display. 就好比画画...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/xlib-chu-jie-chu.html" xml:lang="zh-CN"><![CDATA[
+<p>XLib是X Window编程的基础Library, 使用时首先需要在文件头中</p><pre><code>#include &lt;X11/Xlib.h&gt;
+</code></pre><p>在绘制图形界面之前, 第一步要连接到一个Display. 就好比画画之前先要找到一张桌子或者画板, 你不能举着一张纸直接就往上泼墨...</p><pre><code>// Open display 
+Display* display; 
+display = XOpenDisplay(""); 
+if(!display){ 
+    printf("Cannot open display\n"); 
+    exit(-1); 
+} 
+</code></pre><p><!--more--></p><p>之后可以通过一些函数, 获取当前Display的各种信息. 如需要, 可以保存到variable里供后边绘图时候使用.</p><pre><code>int printScreenInfo(Display* display){ 
+    int screen_num;  // 当前屏幕的编号 
+    int screen_width;    // 当前屏幕的宽度 
+    int screen_height;   // 当前屏幕的高度 
+    Window root_window; // root窗口的编号 
+    unsigned long white_pixel;   // 白色像素的编号 
+    unsigned long black_pixel;   // 黑色像素的编号 
+    screen_num = DefaultScreen(display); 
+    screen_width = DisplayWidth(display, screen_num); 
+    screen_height = DisplayHeight(display, screen_num); 
+    root_window = RootWindow(display, screen_num); 
+    white_pixel = WhitePixel(display, screen_num); 
+    black_pixel = BlackPixel(display, screen_num); 
+    printf("Screen Number: \t%d\n
+                    Width: \t%d\n
+                   Height: \t%d\n
+                     Root: \t%d\n
+                    White: \t%d\n
+                    Black: \t%d\n", 
+           screen_num, screen_width, screen_height, 
+           root_window, white_pixel, black_pixel); 
+    return 0; 
+}
+</code></pre><p>画板摆好以后, 就要在上边铺上一张用来画画的纸, 也就是一个窗口...</p><pre><code>// Define window properties 
+Window window; 
+int x, y; 
+unsigned int width, height, border_width; 
+width = 850; 
+height = 470; 
+x = y = 50; 
+border_width = 0; 
+
+// Define display constants 
+int screen_num = DefaultScreen(display); 
+unsigned long white_pixel = WhitePixel(display, screen_num); 
+unsigned long black_pixel = BlackPixel(display, screen_num); 
+
+// Create window 
+window = XCreateSimpleWindow(display, RootWindow(display, screen_num), 
+                             x, y, width, height, border_width, 
+                             black_pixel, white_pixel); 
+
+// Map win to display &amp; Flush display 
+XMapWindow(display, win); 
+XFlush(display);
+</code></pre><p>万事俱备只欠画画儿了`XLib的function都挺容易看懂的...</p><pre><code>int drawInterface(Display* display, Window window, unsigned long black_pixel, unsigned long white_pixel ){
+    // Define GCs for drawing 
+    GC foregc; 
+    foregc = XCreateGC (display, window, 0, 0); 
+    XSetBackground( display, foregc, black_pixel ); 
+    XSetForeground( display, foregc, white_pixel ); 
+
+    // Start Drawing 
+    XClearWindow(display, window); 
+    // Door 
+    XDrawRectangle(display, window, foregc, 1, 1, 630, 460); 
+    XFillRectangle(display, window, foregc, 66, 66, 480, 330); 
+    // Dashboard 
+    XDrawRectangle(display, window, foregc, 633, 1, 215, 460); 
+    XDrawRectangle(display, window, foregc, 650, 45, 185, 330); 
+    // Timer 
+    XDrawRectangle(display, window, foregc, 660, 60, 160, 65); 
+    // And More... 
+
+    // Flush display to show everything changed 
+    XFlush(display);
+}
+</code></pre><p><del>Event Handling的部分晚点再整理</del></p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/xlib-chu-jie-chu.html#comments" thr:count="0" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/xlib-chu-jie-chu.html" thr:count="0"/>
+</entry>
+</feed>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+xmlns:thr="http://purl.org/syndication/thread/1.0"
+xml:lang="zh-CN"
+xml:base="http://blog.gregwym.info/tag/nginx/"
+>
+<title type="text">某储备粮的“学习笔记” - nginx</title>
+<subtitle type="text"></subtitle>
+<updated>2012-04-05T22:07:00+08:00</updated>
+<generator uri="http://typecho.org/" version="0.9/13.12.12">Typecho</generator>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/tag/nginx/" />
+<id>http://blog.gregwym.info/feed/atom/tag/nginx/</id>
+<link rel="self" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/tag/nginx/" />
+<entry>
+<title type="html"><![CDATA[CentOS下用yum搭建LNMP服务器]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/setup-lnmp-using-yum-under-centos.html" />
+<id>http://blog.gregwym.info/setup-lnmp-using-yum-under-centos.html</id>
+<updated>2012-04-05T22:07:00+08:00</updated>
+<published>2012-04-05T22:07:00+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[CentOS下搭服务器也折腾好几次了, 每次都知道个大概, 具体repo的地址什么的还都要现找, 实在不效率, 干脆整理记录下来.yum安装比较简单快捷, 但默认配置的安全和性能方面不如LNMP一键安...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/setup-lnmp-using-yum-under-centos.html" xml:lang="zh-CN"><![CDATA[
+<p>CentOS下搭服务器也折腾好几次了, 每次都知道个大概, 具体repo的地址什么的还都要现找, 实在不效率, 干脆整理记录下来.</p><p><em>yum安装比较简单快捷, 但默认配置的安全和性能方面不如LNMP一键安装包. 推荐生产环境用一键安装包</em></p><p>如果你在国内的话, 先替换CentOS-Base.repo</p><pre><code>mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
+# 如果是CentOS 5.*
+wget http://mirrors.163.com/.help/CentOS5-Base-163.repo
+# 如果是CentOS 6.*
+wget http://mirrors.163.com/.help/CentOS6-Base-163.repo
+yum makecache
+</code></pre><p><!--more--></p><p>如果之前有apache, 卸载</p><pre><code>yum remove httpd
+</code></pre><p>更新软件到最新版本</p><pre><code>yum -y update
+</code></pre><p>安装源</p><pre><code># 如果是CentOS 5.*
+rpm -ivh http://nginx.org/packages/centos/5/noarch/RPMS/nginx-release-centos-5-0.el5.ngx.noarch.rpm
+rpm -ivh http://fedora.mirror.nexicom.net/epel/5/i386/epel-release-5-4.noarch.rpm
+rpm -ivh http://rpms.famillecollet.com/enterprise/remi-release-5.rpm
+# 如果是CentOS 6.*
+rpm -ivh http://nginx.org/packages/centos/6/noarch/RPMS/nginx-release-centos-6-0.el6.ngx.noarch.rpm
+rpm -ivh http://fedora.mirror.nexicom.net/epel/6/i386/epel-release-6-8.noarch.rpm
+rpm -ivh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+</code></pre><p>编辑启用remi源</p><pre><code>vi /etc/yum.repos.d/remi.repo
+# 将[remi]下的enabled=0改为enabled=1
+# 按esc
+# :x回车
+</code></pre><p>执行安装, 根据需要增减要安装的php模块</p><pre><code>yum install nginx mysql mysql-server php-fpm php-cli php-mysql php-gd php-imap php-ldap php-odbc php-pear php-xml php-xmlrpc php-mbstring php-mcrypt php-mssql php-snmp php-soap php-tidy
+</code></pre><p>启动nginx, php-fpm, mysqld</p><pre><code>service nginx restart
+service php-fpm restart
+service mysqld restart
+</code></pre><p>设置自动启动</p><pre><code>chkconfig nginx on
+chkconfig php-fpm on
+chkconfig mysqld on
+</code></pre><p>mysql密码设置</p><pre><code>mysql_secure_installation
+</code></pre><p>至于目录权限管理什么的, 就不写了.</p><p>niginx配置文件在/etc/nginx/nginx.conf<br />php-fpm配置文件在/etc/php-fpm.conf<br />php配置文件/etc/php.ini<br />mysql配置文件/etc/my.cnf</p><p>参考文章:<br /><a href="http://www.ppkj.net/2011/11/18/centos6-yum-%E6%90%AD%E5%BB%BAlinux-nginx-php-mysql-lnmp/">http://www.ppkj.net/2011/11/18/centos6-yum-%E6%90%AD%E5%BB%BAlinux-nginx-php-mysql-lnmp/</a><br /><a href="http://www.centos.bz/2011/03/yum-install-nginx-mysql-php-fastcgi-lnmp/">http://www.centos.bz/2011/03/yum-install-nginx-mysql-php-fastcgi-lnmp/</a></p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/setup-lnmp-using-yum-under-centos.html#comments" thr:count="9" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/setup-lnmp-using-yum-under-centos.html" thr:count="9"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[Nginx设置301重新定向]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/nginx-she-zhi-301-chong-xin-ding-xiang.html" />
+<id>http://blog.gregwym.info/nginx-she-zhi-301-chong-xin-ding-xiang.html</id>
+<updated>2011-04-06T03:25:52+08:00</updated>
+<published>2011-04-06T03:25:52+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[入了个新的域名, 打算做点小应用试试.原来的Nginx设定里, 子域名会自动对应子目录. 如果碰巧有人输入了我为新域名设定的目录名, 就会造成域名不统一的情况出现...所以研究了下301定向, 发现N...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/nginx-she-zhi-301-chong-xin-ding-xiang.html" xml:lang="zh-CN"><![CDATA[
+<p>入了个新的域名, 打算做点小应用试试.</p><p>原来的Nginx设定里, 子域名会自动对应子目录. 如果碰巧有人输入了我为新域名设定的目录名, 就会造成域名不统一的情况出现...所以研究了下301定向, 发现Nginx的设置真的好简单.</p><p>在nginx.conf里的自动对应规则之前, 加入下边的内容</p><pre><code>server { 
+    server_name www.xxxx.com; 
+    rewrite ^(.*) http://xxxx.com$1 permanent; 
+}
+</code></pre><p>继续去整理240的内容了...</p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/nginx-she-zhi-301-chong-xin-ding-xiang.html#comments" thr:count="0" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/nginx-she-zhi-301-chong-xin-ding-xiang.html" thr:count="0"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[Nginx二级域名自动或手动匹配子目录]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/nginx-er-ji-yu-ming-zi-dong-huo-shou-dong-pi-pei-zi-mu-lu.html" />
+<id>http://blog.gregwym.info/nginx-er-ji-yu-ming-zi-dong-huo-shou-dong-pi-pei-zi-mu-lu.html</id>
+<updated>2011-03-31T00:23:51+08:00</updated>
+<published>2011-03-31T00:23:51+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[说写就写.刚刚搞定了Nginx二级域名的自动rewrite, 只要把自动匹配的配置放在几个特殊server定义之前, 就不会相互影响, 还挺简单的.需要在nginx.conf里修改http里增加新的s...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/nginx-er-ji-yu-ming-zi-dong-huo-shou-dong-pi-pei-zi-mu-lu.html" xml:lang="zh-CN"><![CDATA[
+<p>说写就写.</p><p>刚刚搞定了Nginx二级域名的自动rewrite, 只要把自动匹配的配置放在几个特殊server定义之前, 就不会相互影响, 还挺简单的.<br />需要在nginx.conf里修改http里增加新的server部分</p><p>先说说标准的二级域名rewrite怎么写:</p><pre><code>server { 
+    listen 80; 
+    server_name sub.domain.com; 
+    index index.html index.htm index.php;
+    root /***/wwwroot/sub_domain; 
+    include other.conf; 
+
+    location ~ .*\.(php|php5)?$ { 
+        fastcgi_pass unix:/tmp/php-cgi.sock; 
+        fastcgi_index index.php; 
+        include fcgi.conf; 
+    } 
+
+    location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$ { 
+        expires 30d; 
+    } 
+
+    location ~ .*\.(js|css)?$ { 
+        expires 12h; 
+    } 
+
+    access_log off; 
+}
+</code></pre><p>基本上在server_name里写上地址, root里写上对应的目录就万事大吉了</p><p>然后是自动匹配的部分, 区别只在server_name和root的解析上:</p><pre><code>server_name *.domain.com; 
+set $subdomain "default"; 
+if ( $host ~* (.*)\.(.*)\.(.*)) { 
+    set $subdomain $1; 
+} 
+root /***/wwwroot/$subdomain;
+</code></pre><p>第一篇结束...哈哈</p><p>注: 以上配置是以Lnmp一键安装包自动生成的配置文件为基础修改的</p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/nginx-er-ji-yu-ming-zi-dong-huo-shou-dong-pi-pei-zi-mu-lu.html#comments" thr:count="0" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/nginx-er-ji-yu-ming-zi-dong-huo-shou-dong-pi-pei-zi-mu-lu.html" thr:count="0"/>
+</entry>
+</feed>

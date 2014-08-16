@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>Typecho用Markdown编辑器 - 某储备粮的“学习笔记”</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 使用url函数转换相关路径 -->
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/style.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/prettify.css" />
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="http://blog.gregwym.info/images/favicon.ico">
+<link rel="apple-touch-icon" href="http://blog.gregwym.info/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="http://blog.gregwym.info/images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="http://blog.gregwym.info/images/apple-touch-icon-114x114.png">
+
+<!-- 通过自有函数输出HTML头部信息 -->
+<meta name="description" content="在网上找了下Typecho的Markdown插件, 有两个版本, 主要区别如下明城制作的Markdown插件 浏览时转换Markdown=&gt;HTML数据库保存Markdown文本ichuan制作的Ma..." />
+<meta name="keywords" content="typecho,markdown,plugin,editor" />
+<meta name="generator" content="Typecho 0.9/13.12.12" />
+<meta name="template" content="trapecho" />
+<link rel="pingback" href="action/xmlrpc.html" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="action/xmlrpc%3Frsd.html" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="action/xmlrpc%3Fwlw.html" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="feed/typecho-markdown-editor.html" />
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="feed/rss/typecho-markdown-editor.html" />
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="feed/atom/typecho-markdown-editor.html" />
+<script type="text/javascript">
+//<![CDATA[
+var TypechoComment = {
+    dom : function (id) {
+        return document.getElementById(id);
+    },
+    
+    create : function (tag, attr) {
+        var el = document.createElement(tag);
+        
+        for (var key in attr) {
+            el.setAttribute(key, attr[key]);
+        }
+        
+        return el;
+    },
+
+    reply : function (cid, coid) {
+        var comment = this.dom(cid), parent = comment.parentNode,
+            response = this.dom('respond-post-90'), input = this.dom('comment-parent'),
+            form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+            textarea = response.getElementsByTagName('textarea')[0];
+
+        if (null == input) {
+            input = this.create('input', {
+                'type' : 'hidden',
+                'name' : 'parent',
+                'id'   : 'comment-parent'
+            });
+
+            form.appendChild(input);
+        }
+        
+        input.setAttribute('value', coid);
+
+        if (null == this.dom('comment-form-place-holder')) {
+            var holder = this.create('div', {
+                'id' : 'comment-form-place-holder'
+            });
+            
+            response.parentNode.insertBefore(holder, response);
+        }
+
+        comment.appendChild(response);
+        this.dom('cancel-comment-reply-link').style.display = '';
+        
+        if (null != textarea && 'text' == textarea.name) {
+            textarea.focus();
+        }
+        
+        return false;
+    },
+
+    cancelReply : function () {
+        var response = this.dom('respond-post-90'),
+        holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+        if (null != input) {
+            input.parentNode.removeChild(input);
+        }
+
+        if (null == holder) {
+            return true;
+        }
+
+        this.dom('cancel-comment-reply-link').style.display = 'none';
+        holder.parentNode.insertBefore(response, holder);
+        return false;
+    }
+}
+//]]>
+</script></head>
+
+<body onload="prettyPrint()">
+
+<div class="container">
+
+<header class="jumbotron" id="overview">
+        <h1>某储备粮的“学习笔记” </h1>
+    <p class="lead">by 咳嗽di小鱼</p>
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                
+                <a class="brand" href="index.html">
+                    Trapecho
+                </a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="index.html">Home</a></li>
+                        <li class="divider-vertical"></li>
+                                                                        <li><a href="category/sum-up/index.html" title="Sum Up">Sum Up</a></li>
+                                                <li><a href="category/code-dump/index.html" title="Code Dump">Code Dump</a></li>
+                                                <li><a href="category/network/index.html" title="Network">Network</a></li>
+                                                <li><a href="category/jotting/index.html" title="Jotting">Jotting</a></li>
+                                                <li><a href="category/Portfolio/index.html" title="Portfolio">Portfolio</a></li>
+                                                <li class="divider-vertical"></li>
+                                                                        <li><a href="linked-in.html" title="Linked In">Linked In</a></li>
+                                                <li><a href="guess-book.html" title="Guest Book">Guest Book</a></li>
+                                                <li><a href="about.html" title="About">About</a></li>
+                                                <li><a href="rss.html" title="RSS">RSS</a></li>
+                                            </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="content">
+
+
+<div class="row">
+    <div class="span9" id="content">
+        <div class="post">
+            <div class="page-header">
+                <h1>
+                    Typecho用Markdown编辑器                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: March 18, 2012</span>
+                    <span>Category: <a href="category/Portfolio/index.html">Portfolio</a></span>
+                </h6>
+            </div>
+            <div class="entry-content"><p>在网上找了下Typecho的Markdown插件, 有两个版本, 主要区别如下</p><ul>
+<li><a href="http://www.gracecode.com/archives/3082/">明城</a>制作的Markdown插件 <br />
+<br />
+<ul>
+<li>浏览时转换Markdown=>HTML</li>
+<li>数据库保存Markdown文本</li>
+</ul></li>
+<li><a href="http://forum.typecho.org/topic.php?id=1218">ichuan</a>制作的Markdown4TE <br />
+<br />
+<ul>
+<li>保存文章时转换Markdown=>HTML</li>
+<li>数据库保存HTML文本</li>
+</ul></li>
+</ul><p>这两种实现都各有利弊, 我个人倾向于ichuan的做法.<br />原因无外乎, 能保持Typecho文章数据的一致性, 以前存HTML现在还是存HTML, 只是编辑的方式变了.</p><p><hr /></p><p>但ichuan的插件在用的时候不是那么顺利. 因为js放置的位置好像有些问题, 编辑器和预览99%的时候加载失败(Chrome 17). 预览界面的CSS定义也有些问题.</p><p>于是自己动手丰衣足食, 把成果po出来给和我碰到同样问题的朋友们.</p><ul>
+<li>保留了原插件的保存和读取部分</li>
+<li>重新构造了编辑器部分 <br />
+<br />
+<ul>
+<li>使用了和Stack Oveflow一样的最新<a href="http://code.google.com/p/pagedown/">PageDown编辑器</a></li>
+<li>编辑器带实时效果预览</li>
+<li>完整定义了各种格式的预览效果</li>
+</ul></li>
+</ul><p>Mar 19/2012 v0.2.1</p><ul>
+<li>修复了无法插入附件的BUG</li>
+</ul><p><!--more--></p><h3>下载</h3><blockquote><p><a href="https://github.com/gregwym/Markdown4TE/zipball/master">https://github.com/gregwym/Markdown4TE/zipball/master</a></p></blockquote><h3>Github</h3><blockquote><p><a href="https://github.com/gregwym/Markdown4TE">https://github.com/gregwym/Markdown4TE</a></p></blockquote><h3>有图有真相</h3><blockquote><p><a href="https://github.com/gregwym/Markdown4TE/raw/master/Markdown_Screenshot.png"><img src="https://github.com/gregwym/Markdown4TE/raw/master/Markdown_Screenshot.png" alt="Markdown编辑器截图" /></a></p></blockquote><p><hr /></p><h2>效果展示部分</h2><h1>H1</h1><h2>H2</h2><h3>H3</h3><p><strong>strong text</strong><br /><em>emphasized text</em><br /><strong><em>strong &amp; emphasized text</em></strong></p><p><hr /></p><p><a href="http://dolast.com">enter link description here</a></p><blockquote><p>Blockquote</p></blockquote><pre><code>enter code here
+</code></pre><ol>
+<li><p>List item</p><br />
+<br />
+<ul>
+<li>List item</li>
+</ul></li>
+</ol></div>
+            <div class="entry-tags">
+                Labels: 
+                <span class="label label-info">
+                    <a href="tag/typecho/index.html">typecho</a></span> <span class="label label-info"><a href="tag/markdown/index.html">markdown</a></span> <span class="label label-info"><a href="tag/plugin/index.html">plugin</a></span> <span class="label label-info"><a href="tag/editor/index.html">editor</a>                </span>
+            </div>
+        </div>
+        <hr class="soften" />
+        <div id="comments">
+                                    <h3>47 comments &raquo;</h3>
+            
+            <ol class="comment-list"><li id="comment-533" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/17948ba5d78626f5d9eb0ff010e8df92?s=32&amp;r=X&amp;d=" alt="CzBiX" width="32" height="32" />        <cite class="fn"><a href="http://czbix.tk" rel="external nofollow">CzBiX</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-533">March 19th, 2012 at 07:22 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>很少写文章,还没有接触Markdown</p>    </div>
+    <div class="comment-reply">
+        <a href="typecho-markdown-editor.html%3FreplyTo=533.html#respond-post-90" rel="nofollow" onclick="return TypechoComment.reply('comment-533', 533);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-536" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-536">March 19th, 2012 at 08:32 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>Markdown是个好东西啊...`</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-537" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/17948ba5d78626f5d9eb0ff010e8df92?s=32&amp;r=X&amp;d=" alt="CzBiX" width="32" height="32" />        <cite class="fn"><a href="http://czbix.tk" rel="external nofollow">CzBiX</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-537">March 19th, 2012 at 08:34 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>这点我绝对认同</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-544" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/53a1a553658671768bbac0fd067fd981?s=32&amp;r=X&amp;d=" alt="letonode" width="32" height="32" />        <cite class="fn"><a href="http://www.letonlife.com" rel="external nofollow">letonode</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-544">March 23rd, 2012 at 03:34 am</a>
+            </div>
+    <div class="comment-content">
+    <p>这个好。<br>
+自己本来也准备改造的，现在看来不用了。<br>
+主题也一并拿走。</p>    </div>
+    <div class="comment-reply">
+        <a href="typecho-markdown-editor.html%3FreplyTo=544.html#respond-post-90" rel="nofollow" onclick="return TypechoComment.reply('comment-544', 544);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-547" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-547">March 23rd, 2012 at 03:49 am</a>
+            </div>
+    <div class="comment-content">
+    <p>哈哈`非常荣幸. 我准备晚些把这俩东西都扔到Github上去, 如果有问题欢迎提bug.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-548" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/324a91b40a7cbe7ca6afbabf5dc68096?s=32&amp;r=X&amp;d=" alt="ethanchen" width="32" height="32" />        <cite class="fn">ethanchen</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-548">March 26th, 2012 at 11:46 am</a>
+            </div>
+    <div class="comment-content">
+    <p>刚装完typecho,拿来试试.  评论称呼加星啊，同学。</p>    </div>
+    <div class="comment-reply">
+        <a href="typecho-markdown-editor.html%3FreplyTo=548.html#respond-post-90" rel="nofollow" onclick="return TypechoComment.reply('comment-548', 548);">回复</a>    </div>
+    </li>
+<li id="comment-549" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/324a91b40a7cbe7ca6afbabf5dc68096?s=32&amp;r=X&amp;d=" alt="ethanchen" width="32" height="32" />        <cite class="fn">ethanchen</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-549">March 26th, 2012 at 11:50 am</a>
+            </div>
+    <div class="comment-content">
+    <p>启用插件的时候500错误</p><p>基于 Typecho 0.8 | 10.8.15 构建</p>    </div>
+    <div class="comment-reply">
+        <a href="typecho-markdown-editor.html%3FreplyTo=549.html#respond-post-90" rel="nofollow" onclick="return TypechoComment.reply('comment-549', 549);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-550" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-550">March 26th, 2012 at 08:27 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>我重新搭个环境测试下...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-553" class="comment-body comment-child comment-level-odd comment-even comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-553">March 26th, 2012 at 10:04 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>解决了, 是文件夹名字的问题...改成Markdown就可以了. 已经把插件移到对应的位置, 重新Commit了. 谢谢</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-570" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/1cbb917200502ffbbe8279468874c3e6?s=32&amp;r=X&amp;d=" alt="nmc" width="32" height="32" />        <cite class="fn">nmc</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-570">April 2nd, 2012 at 01:34 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>IE下编辑器不生效？</p>    </div>
+    <div class="comment-reply">
+        <a href="typecho-markdown-editor.html%3FreplyTo=570.html#respond-post-90" rel="nofollow" onclick="return TypechoComment.reply('comment-570', 570);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-572" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-572">April 3rd, 2012 at 10:17 am</a>
+            </div>
+    <div class="comment-content">
+    <p>确实不兼容.<br>
+IE在js里对"class" "for"这样的词做了保留, 但用mootool定义新的页面元素必须要用到class属性. 所以要想兼容, 就得改用jQuery.<br>
+实在需要的话, 晚些我改改吧. mootools对IE的兼容实在有点差.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-578" class="comment-body comment-child comment-level-odd comment-even comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-578">April 3rd, 2012 at 10:39 am</a>
+            </div>
+    <div class="comment-content">
+    <p>不过只是辅助工具栏和预览不生效, 编辑还是没有问题的. 不影响编辑和发布效果.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-571" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/2b5a1f368875fd237f4cdf6884a6501c?s=32&amp;r=X&amp;d=" alt="暮春" width="32" height="32" />        <cite class="fn"><a href="http://www.luili.net" rel="external nofollow">暮春</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-571">April 2nd, 2012 at 10:31 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>这几天论坛上又出了一个类似的，比知道比这个如何</p>    </div>
+    <div class="comment-reply">
+        <a href="typecho-markdown-editor.html%3FreplyTo=571.html#respond-post-90" rel="nofollow" onclick="return TypechoComment.reply('comment-571', 571);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-573" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-573">April 3rd, 2012 at 10:23 am</a>
+            </div>
+    <div class="comment-content">
+    <p>啊哈`你刚刚发的那个QQ编辑器? 不同风格嘛...Markdown还是更Geek一些.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-574" class="comment-body comment-child comment-level-odd comment-even comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-574">April 3rd, 2012 at 10:31 am</a>
+            </div>
+    <div class="comment-content">
+    <p>哦...`看到你说的那个了. 我没用过, 但他是基于明城的版本修改的, 而我是用ichuan的修改的.<br>
+这两种实现方式的不同之处我在文章开头解释了. 我个人喜欢后者.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-576" class="comment-body comment-child comment-level-odd comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/2b5a1f368875fd237f4cdf6884a6501c?s=32&amp;r=X&amp;d=" alt="暮春" width="32" height="32" />        <cite class="fn"><a href="http://www.luili.net" rel="external nofollow">暮春</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-576">April 3rd, 2012 at 10:32 am</a>
+            </div>
+    <div class="comment-content">
+    <p>如果我用的话 我也喜欢后者</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-656" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/60f9cf818a2b554f62d07450a1f1b146?s=32&amp;r=X&amp;d=" alt="测试" width="32" height="32" />        <cite class="fn"><a href="http://ces.com" rel="external nofollow">测试</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-656">August 27th, 2012 at 01:11 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>测试下看看样式 谢谢啦</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-575" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/2b5a1f368875fd237f4cdf6884a6501c?s=32&amp;r=X&amp;d=" alt="暮春" width="32" height="32" />        <cite class="fn"><a href="http://www.luili.net" rel="external nofollow">暮春</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-575">April 3rd, 2012 at 10:31 am</a>
+            </div>
+    <div class="comment-content">
+    <p>恩，我发的！很多不会用Markdown，虽然我不用编辑器！你看现在用wp的人，不就是觉得wp资源多，傻瓜呗！你有精力可以做下啊！</p>    </div>
+    <div class="comment-reply">
+        <a href="typecho-markdown-editor.html%3FreplyTo=575.html#respond-post-90" rel="nofollow" onclick="return TypechoComment.reply('comment-575', 575);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-577" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-577">April 3rd, 2012 at 10:36 am</a>
+            </div>
+    <div class="comment-content">
+    <p>好的, 我留个链接, 有空时候做一下.<br>
+http://forum.typecho.org/topic.php?id=2475</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-579" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/2b5a1f368875fd237f4cdf6884a6501c?s=32&amp;r=X&amp;d=" alt="暮春" width="32" height="32" />        <cite class="fn"><a href="http://www.luili.net" rel="external nofollow">暮春</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-579">April 3rd, 2012 at 10:40 am</a>
+            </div>
+    <div class="comment-content">
+    <p>typecho因为没有自带编辑器一直被人误解，这个QQ版的感觉还不错，估计以后用的人会很多！</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-580" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-580">April 3rd, 2012 at 10:47 am</a>
+            </div>
+    <div class="comment-content">
+    <p>其实Typecho本身对文章文本有一定的处理...`只是处理的方式比较诡异= =. 我有很长时间都把它的处理过程屏蔽掉, 然后直接写html, 直到改用Markdown.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-581" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/2b5a1f368875fd237f4cdf6884a6501c?s=32&amp;r=X&amp;d=" alt="暮春" width="32" height="32" />        <cite class="fn"><a href="http://www.luili.net" rel="external nofollow">暮春</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-581">April 3rd, 2012 at 10:53 am</a>
+            </div>
+    <div class="comment-content">
+    <p>哈哈  也发现那个诡异的问题了 尤其是more标签的问题</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-584" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/8a81e3e5b9bda5b65d9dc64e093e1531?s=32&amp;r=X&amp;d=" alt="蚂蚱" width="32" height="32" />        <cite class="fn">蚂蚱</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-584">April 4th, 2012 at 06:19 am</a>
+            </div>
+    <div class="comment-content">
+    <p>哈哈，我找到的也是这两个</p>    </div>
+    <div class="comment-reply">
+        <a href="typecho-markdown-editor.html%3FreplyTo=584.html#respond-post-90" rel="nofollow" onclick="return TypechoComment.reply('comment-584', 584);">回复</a>    </div>
+    </li>
+<li id="comment-585" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/f21272f24e8ba4545e3722a5fa2b19b2?s=32&amp;r=X&amp;d=" alt="飞天舞" width="32" height="32" />        <cite class="fn"><a href="http://weburls.net/" rel="external nofollow">飞天舞</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-585">April 4th, 2012 at 07:40 am</a>
+            </div>
+    <div class="comment-content">
+    <p>代码发出来好像要被过滤，还不大搞得懂用法。</p>    </div>
+    <div class="comment-reply">
+        <a href="typecho-markdown-editor.html%3FreplyTo=585.html#respond-post-90" rel="nofollow" onclick="return TypechoComment.reply('comment-585', 585);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-587" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-587">April 5th, 2012 at 12:56 am</a>
+            </div>
+    <div class="comment-content">
+    <p>行前缩进4个空格, 就是代码. 注意代码段之前要空一行. 在预览里可以看出效果.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-594" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/f21272f24e8ba4545e3722a5fa2b19b2?s=32&amp;r=X&amp;d=" alt="飞天舞" width="32" height="32" />        <cite class="fn"><a href="http://weburls.net" rel="external nofollow">飞天舞</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-594">April 15th, 2012 at 08:24 am</a>
+            </div>
+    <div class="comment-content">
+    <p>原来是这样，挺好用的编辑器，对了，高亮采用什么呢？</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-599" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-599">April 16th, 2012 at 08:47 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>我这个主题自带的Google Code Prettify</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-611" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/a568825a2c2882d553ea3e17849017fd?s=32&amp;r=X&amp;d=" alt="所谓刚子" width="32" height="32" />        <cite class="fn"><a href="http://www.cgrabbit.com" rel="external nofollow">所谓刚子</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-611">May 10th, 2012 at 02:03 am</a>
+            </div>
+    <div class="comment-content">
+    <p>学习学习！</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-593" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/70bec75394c6154665a816268e2ee409?s=32&amp;r=X&amp;d=" alt="sprityaoyao" width="32" height="32" />        <cite class="fn"><a href="http://www.sprityaoyao.org" rel="external nofollow">sprityaoyao</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-593">April 13th, 2012 at 09:14 am</a>
+            </div>
+    <div class="comment-content">
+    <p>我一直不明白，typecho为什么后台要做的那么不友好呢</p>    </div>
+    <div class="comment-reply">
+        <a href="typecho-markdown-editor.html%3FreplyTo=593.html#respond-post-90" rel="nofollow" onclick="return TypechoComment.reply('comment-593', 593);">回复</a>    </div>
+    </li>
+<li id="comment-602" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/8273773061e8bd51a785c5f033312e14?s=32&amp;r=X&amp;d=" alt="selftown" width="32" height="32" />        <cite class="fn"><a href="http://selftown.com/twitter/" rel="external nofollow">selftown</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-602">May 2nd, 2012 at 10:08 am</a>
+            </div>
+    <div class="comment-content">
+    <p>如果可以快捷的输入  _blank  属性就好了，感觉想要新窗口打开页面，还只能输入html代码。可以实现可视化么？</p>    </div>
+    <div class="comment-reply">
+        <a href="typecho-markdown-editor.html%3FreplyTo=602.html#respond-post-90" rel="nofollow" onclick="return TypechoComment.reply('comment-602', 602);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-603" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-603">May 2nd, 2012 at 10:56 am</a>
+            </div>
+    <div class="comment-content">
+    <p>Markdown本身好像没有这样的特性...不用html, 直接可视化应该是不可行. 我自己的解决方案是, 在theme里给文章内容里的所有链接都+_blank属性.<br><pre>$('.entry-content a').attr('target','_blank');
+</pre>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-604" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/8273773061e8bd51a785c5f033312e14?s=32&amp;r=X&amp;d=" alt="selftown" width="32" height="32" />        <cite class="fn"><a href="http://selftown.com/twitter/" rel="external nofollow">selftown</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-604">May 2nd, 2012 at 10:58 am</a>
+            </div>
+    <div class="comment-content">
+    <p>这样，会不会使侧栏的链接也会新窗口打开呢？</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-605" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-605">May 2nd, 2012 at 11:01 am</a>
+            </div>
+    <div class="comment-content">
+    <p>侧栏不在.entry-content里...不会被影响 (不同的theme用的tag可能不一样)</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-606" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/8273773061e8bd51a785c5f033312e14?s=32&amp;r=X&amp;d=" alt="selftown" width="32" height="32" />        <cite class="fn"><a href="http://selftown.com/twitter/" rel="external nofollow">selftown</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-606">May 2nd, 2012 at 11:10 am</a>
+            </div>
+    <div class="comment-content">
+    <p>那可以具体的帮我看看这个要放在我博客的css哪段代码上呢？</p>    </div>
+    <div class="comment-reply">
+        <a href="typecho-markdown-editor.html%3FreplyTo=606.html#respond-post-90" rel="nofollow" onclick="return TypechoComment.reply('comment-606', 606);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-607" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-607">May 2nd, 2012 at 11:12 am</a>
+            </div>
+    <div class="comment-content">
+    <p>这是jQuery的javascript, 具体可以看我博客的源码.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-608" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/8273773061e8bd51a785c5f033312e14?s=32&amp;r=X&amp;d=" alt="selftown" width="32" height="32" />        <cite class="fn"><a href="http://selftown.com/twitter/" rel="external nofollow">selftown</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-608">May 2nd, 2012 at 11:17 am</a>
+            </div>
+    <div class="comment-content">
+    <p>这个完全就是外行了，完全没思路，不会弄了</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-612" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/fd126aa64db6755fe66749e7870b9c9c?s=32&amp;r=X&amp;d=" alt="Dianso" width="32" height="32" />        <cite class="fn"><a href="http://014.cc" rel="external nofollow">Dianso</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-612">May 14th, 2012 at 03:27 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>Markdown我咋就不适应呢。。。</p>    </div>
+    <div class="comment-reply">
+        <a href="typecho-markdown-editor.html%3FreplyTo=612.html#respond-post-90" rel="nofollow" onclick="return TypechoComment.reply('comment-612', 612);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-613" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-613">May 15th, 2012 at 11:13 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>适应了就非他莫属了, 哈哈</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-644" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/bc9631fdccdb1edbe04f633bbb9edf88?s=32&amp;r=X&amp;d=" alt="hpcex" width="32" height="32" />        <cite class="fn">hpcex</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-644">August 20th, 2012 at 08:01 am</a>
+            </div>
+    <div class="comment-content">
+    <p>我装了这个markdown插件，出现这个错误，奇怪啊。<br>
+Notice: Undefined index: linkID in d:\APMXE5\htdocs\te\usr\plugins\Markdown\markdownify\markdownify.php on line 412</p>    </div>
+    <div class="comment-reply">
+        <a href="typecho-markdown-editor.html%3FreplyTo=644.html#respond-post-90" rel="nofollow" onclick="return TypechoComment.reply('comment-644', 644);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-645" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-645">August 20th, 2012 at 09:54 am</a>
+            </div>
+    <div class="comment-content">
+    <p>em`markdownify不是我写的, 你可以去http://milianw.de/projects/markdownify/下载个最新版本的文件替换下试试. 这个问题应该和你的运行环境有关, Windows/PHP版本之类的.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-646" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/bc9631fdccdb1edbe04f633bbb9edf88?s=32&amp;r=X&amp;d=" alt="hpcex" width="32" height="32" />        <cite class="fn">hpcex</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-646">August 20th, 2012 at 10:09 am</a>
+            </div>
+    <div class="comment-content">
+    <p>好的 谢谢</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-659" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/a568825a2c2882d553ea3e17849017fd?s=32&amp;r=X&amp;d=" alt="所谓刚子" width="32" height="32" />        <cite class="fn"><a href="http://www.cgrabbit.info" rel="external nofollow">所谓刚子</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-659">September 11th, 2012 at 07:32 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>这个太深奥了。。折腾不明白</p>    </div>
+    <div class="comment-reply">
+        <a href="typecho-markdown-editor.html%3FreplyTo=659.html#respond-post-90" rel="nofollow" onclick="return TypechoComment.reply('comment-659', 659);">回复</a>    </div>
+    </li>
+<li id="comment-666" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/2556b70f20c9575ce39f60415ee7bafd?s=32&amp;r=X&amp;d=" alt="锋速软件" width="32" height="32" />        <cite class="fn"><a href="http://fengsu3.net" rel="external nofollow">锋速软件</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-666">December 10th, 2012 at 10:24 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>楼主我添加之后,为啥前台没有效果呢...<br>
+帮忙看一下可以么..<br>
+http://fengsu3.net/archives/47.html</p>    </div>
+    <div class="comment-reply">
+        <a href="typecho-markdown-editor.html%3FreplyTo=666.html#respond-post-90" rel="nofollow" onclick="return TypechoComment.reply('comment-666', 666);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-667" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-667">December 10th, 2012 at 10:56 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>你页面的源代码里是有效果的, 但你的CSS第18行里, 把h1, h2, h3, h4, code, pre这些tag的效果都给清除了, 所以看不出来. 调整一下你的CSS吧</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-668" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/2556b70f20c9575ce39f60415ee7bafd?s=32&amp;r=X&amp;d=" alt="锋速软件" width="32" height="32" />        <cite class="fn"><a href="http://fengsu3.net" rel="external nofollow">锋速软件</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-668">December 10th, 2012 at 11:35 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>code标签好像也失效了..</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-710" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/409b548607075945357b2d3f5e5e201f?s=32&amp;r=X&amp;d=" alt="Joker_Qyou" width="32" height="32" />        <cite class="fn"><a href="http://mynook.info/" rel="external nofollow">Joker_Qyou</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-710">June 3rd, 2013 at 02:15 am</a>
+            </div>
+    <div class="comment-content">
+    <p>提一个个人的建议。可以增加一个全屏编辑功能，进入全屏的时候提供一个实时预览，预览窗口放到右边，和编辑窗口对半平分整个屏幕。<br>
+主要是现在这样文章写长了的话还要滚动到下面去看预览。</p>    </div>
+    <div class="comment-reply">
+        <a href="typecho-markdown-editor.html%3FreplyTo=710.html#respond-post-90" rel="nofollow" onclick="return TypechoComment.reply('comment-710', 710);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-715" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="typecho-markdown-editor.html#comment-715">June 3rd, 2013 at 10:47 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>嗯`写长文章的时候确实比较麻烦. 只是很久没弄博客, 不太有精力改这个插件. 等新版Typecho发布, 应该就用不到这个啦! 期待ing...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+</ol>            
+            <div class="pagination">
+                            </div>
+            
+                        
+                        <div id="respond-post-90" class="respond">
+            
+            <div class="cancel-comment-reply">
+            <a id="cancel-comment-reply-link" href="typecho-markdown-editor.html#respond-post-90" rel="nofollow" onclick="return TypechoComment.cancelReply();">取消回复</a>            </div>
+            
+            <form class="form-horizontal" method="post" action="http://blog.gregwym.info/typecho-markdown-editor.html/comment?parent=570" id="comment_form">
+                <fieldset>
+                    <legend>Add new comment &raquo;</legend>
+                                        <div class="control-group">
+                        <label class="control-label" for="author">Nick name</label>
+                        <div class="controls">
+                            <input type="text" name="author" id="author" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="mail">E-mail<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" name="mail" id="mail" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Web</label>
+                        <div class="controls">
+                            <input type="text" name="url" id="url" class="input-large" value="" />
+                        </div>
+                    </div>
+                                        <div class="control-group">
+                        <label class="control-label" for="url">Comment</label>
+                        <div class="controls">
+                            <textarea class="input-xlarge" name="text" rows="3"></textarea>
+                            <p class="help-block">Enter your comment here...</p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Captcha</label>
+                        <div class="controls">
+                            <img src="action/captcha" alt="captcha" onclick="this.src = this.src + '?' + Math.random()" style="cursor: pointer" title="点击图片刷新验证码" /><br /><input type="text" class="captcha" name="captcha_code" /> <strong>请输入验证码</strong>							                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Submit comment</button>
+                    </div>
+                </fieldset>
+            </form>
+            </div>
+            
+
+        </div>    </div><!-- end #content-->
+    <div class="span3" id="sidebar">
+    <div class="widget_search">
+        <form method="post" id="searchform" class="form-search">
+            <input type="text" class="span2" name="s" id="s" />
+            <button type="submit" class="btn" id="searchsubmit">Search</button>
+        </form>
+    </div>
+    
+        
+                    <div class="widget">
+            <h3>Related Posts</h3>
+                        <ul>
+                            <li><a href="Trapecho-boostrap-based-typecho-theme.html" title="Trapecho - 基于Bootstrap的Typecho主题">Trapecho - 基于Bootstrap的Typecho主题</a></li>
+                            <li><a href="shuo-shuo-typecho`.html" title="说说Typecho`">说说Typecho`</a></li>
+                        </ul>
+        </div>
+            
+    
+        <div class="widget">
+        <h3>Recent Comments</h3>
+        <ul>
+                                    <li><a href="github-you-should-have-told-me-earlier.html#comment-952">payday loans</a>: wfxqtdq</li>
+                        <li><a href="Trapecho-boostrap-based-typecho-theme.html#comment-936">地铁线路图网</a>: 我也在用typecho，小巧玲珑，稍微改了以下默认模板，站现在简洁速度也不错，点击我的昵称可以访问。</li>
+                        <li><a href="about.html#comment-930">ramble</a>: 博客 ，请问如何显示显示文章前3段的摘要  不打乱格式</li>
+                        <li><a href="about.html#comment-874">清源</a>: 看来暂时只能看着用了，google的高亮的比较不明显。</li>
+                        <li><a href="about.html#comment-870">清源</a>: 大哥呀，主题这几天我看着感觉用中文书写标题字体太大了，正文的字体也太小了，估计还是适合用英文，不知道...</li>
+                    </ul>
+    </div>
+        
+        <div class="widget">
+    		<h3>Labels</h3>
+        <ul>
+                                    <a href="tag/algorithm/index.html" class="size-20">algorithm</a>
+                        <a href="tag/review/index.html" class="size-20">review</a>
+                        <a href="tag/cs240/index.html" class="size-10">cs240</a>
+                        <a href="tag/server/index.html" class="size-10">server</a>
+                        <a href="tag/VPS/index.html" class="size-10">VPS</a>
+                        <a href="tag/code/index.html" class="size-5">code</a>
+                        <a href="tag/database/index.html" class="size-5">database</a>
+                        <a href="tag/cs348/index.html" class="size-5">cs348</a>
+                        <a href="tag/typecho/index.html" class="size-5">typecho</a>
+                        <a href="tag/nginx/index.html" class="size-5">nginx</a>
+                        <a href="tag/search/index.html" class="size-5">search</a>
+                        <a href="tag/GUI/index.html" class="size-5">GUI</a>
+                        <a href="tag/linux/index.html" class="size-5">linux</a>
+                        <a href="tag/java/index.html" class="size-5">java</a>
+                        <a href="tag/DNS/index.html" class="size-5">DNS</a>
+                        <a href="tag/blog/index.html" class="size-5">blog</a>
+                        <a href="tag/apple/index.html" class="size-5">apple</a>
+                        <a href="tag/cs241/index.html" class="size-5">cs241</a>
+                        <a href="tag/compiler/index.html" class="size-5">compiler</a>
+                        <a href="tag/sql/index.html" class="size-5">sql</a>
+                    </ul>
+		</div>
+    
+    
+        <div class="widget">
+        <h3>Archives</h3>
+        <ul>
+            <li><a href="2013/09/index.html">September 2013</a></li>
+<li><a href="2012/12/index.html">December 2012</a></li>
+<li><a href="2012/11/index.html">November 2012</a></li>
+<li><a href="2012/08/index.html">August 2012</a></li>
+<li><a href="2012/06/index.html">June 2012</a></li>
+<li><a href="2012/04/index.html">April 2012</a></li>
+<li><a href="2012/03/index.html">March 2012</a></li>
+<li><a href="2012/02/index.html">February 2012</a></li>
+<li><a href="2011/12/index.html">December 2011</a></li>
+<li><a href="2011/11/index.html">November 2011</a></li>
+<li><a href="2011/10/index.html">October 2011</a></li>
+<li><a href="2011/06/index.html">June 2011</a></li>
+<li><a href="2011/05/index.html">May 2011</a></li>
+<li><a href="2011/04/index.html">April 2011</a></li>
+<li><a href="2011/03/index.html">March 2011</a></li>
+        </ul>
+    </div>
+    
+    
+        <div class="widget">
+        <h3>Others</h3>
+        <ul>
+                        <li class="last"><a href="http://blog.gregwym.info/admin/login.php">Login</a></li>
+                        <li><a href="http://validator.w3.org/check/referer">Valid XHTML</a></li>
+        </ul>
+    </div>
+    
+    </div><!-- end #sidebar -->
+    
+</div>
+<footer>
+    <p>
+        Powered by <a href="http://typecho.org/">Typecho</a>. 
+        <a href="http://dolast.com/pages/trapecho">Trapecho</a> theme by <a href="index.html">咳嗽di小鱼</a>. 
+        Hosting on <a href="https://www.digitalocean.com/?refcode=b846692d6a3a">Digital Ocean</a>
+    </p>
+</footer><!-- end #footer -->
+
+</div>
+</div>
+
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/jquery-1.7.1.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/bootstrap.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/prettify.js"></script>
+<script type="text/javascript">
+    // fix navbar on scroll
+    var $win = $(window)
+      , $nav = $('.navbar')
+      , navTop = $('.navbar').length && $('.navbar').offset().top - 10
+      , isFixed = 0
+
+    processScroll()
+
+    $win.on('scroll', processScroll)
+
+    function processScroll() {
+      var i, scrollTop = $win.scrollTop()
+      if (scrollTop >= navTop && !isFixed) {
+        isFixed = 1
+        $nav.addClass('navbar-fixed-top')
+      } else if (scrollTop <= navTop && isFixed) {
+        isFixed = 0
+        $nav.removeClass('navbar-fixed-top')
+      }
+    }
+    
+    $('.page-navigator li:not(:has(a))').html('<a>...</a>');
+    $('.page-navigator .current').addClass('active');
+    
+        $('pre').addClass('prettyprint linenums');
+        $('.entry-content a').attr('target','_blank');
+</script>
+</body>
+</html>
+

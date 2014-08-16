@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+xmlns:content="http://purl.org/rss/1.0/modules/content/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+xmlns:atom="http://www.w3.org/2005/Atom"
+xmlns:wfw="http://wellformedweb.org/CommentAPI/">
+<channel>
+<title>某储备粮的“学习笔记” - matching</title>
+<link>http://blog.gregwym.info/tag/matching/</link>
+<atom:link href="http://blog.gregwym.info/feed/tag/matching/" rel="self" type="application/rss+xml" />
+<language>zh-CN</language>
+<description></description>
+<lastBuildDate>Sat, 09 Apr 2011 06:12:41 +0800</lastBuildDate>
+<pubDate>Sat, 09 Apr 2011 06:12:41 +0800</pubDate>
+<item>
+<title>CS 240复习总结之八: Tries &amp; String Matching</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-ba--tries-and-string-matching.html</link>
+<guid>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-ba--tries-and-string-matching.html</guid>
+<pubDate>Sat, 09 Apr 2011 06:12:41 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[Tries单词查找树 Tries (Radix Tree):    左0右1  item只存在leaf上  Prefix-free: 任意一个key不能有其他key是他的前缀(比如: 1101和110...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<h3>Tries</h3><blockquote><h4>单词查找树 Tries (Radix Tree):</h4><ul>
+  <li><a href="http://blog.gregwym.info/usr/uploads/2011/04/3261964289.png" title="tries.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/3261964289.png" alt="tries.png" width=100% /></a></li>
+  <li>左0右1</li>
+  <li>item只存在leaf上</li>
+  <li>Prefix-free: 任意一个key不能有其他key是他的前缀(比如: 1101和11011不能共存)</li>
+  <li>Search: 逐位执行BS</li>
+  <li>Insert: 逐位执行BS</li>
+  <li>如果找到某leaf与insert的item不等, insert fail. (现存item是新item的prefix)</li>
+  <li>如果在某个node搜索结束, insert fail. (新item是其他key的prefix)</li>
+  <li><p>如果无路可走了, 开路出来.</p></li>
+  <li><p>Delete: Search到对应item以后, 删除这个leaf以及其他无用的node.</p></li>
+  </ul><h4>Compressed Tries (Patricia Tries):</h4><ul>
+  <li><a href="http://blog.gregwym.info/usr/uploads/2011/04/852552282.png" title="compressed_trie.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/852552282.png" alt="compressed_trie.png" width=100% /></a></li>
+  <li>相比普通Tries, compressed tries去除了额外的node(只有一个child的node). 其他基本相同.</li>
+  <li><p>每个node中增加了下一层Search中, 需要检测的位数</p></li>
+  </ul><h4>Multiway Tries:</h4><ul>
+  <li><a href="http://blog.gregwym.info/usr/uploads/2011/04/11477952.png" title="multiway_tries.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/11477952.png" alt="multiway_tries.png" width=60% /></a></li>
+  <li>以特定alphabet集合为基础, 建立的Tries</li>
+  <li>通过$ sigh以允许prefix存在</li>
+  <li>不是Binary Tree</li>
+  <li>同样可以compress, 与Compressed Tries方法相同</li>
+  </ul></blockquote><h3>String Matching 要match的string为T, pattern为P</h3><blockquote><h4>Brute-force Algorithm</h4><ol>
+  <li>从前往后依次比对P的首字母</li>
+  <li>如发现与首字母匹配, 则继续比对剩下的字符直到P结尾</li>
+  <li>如P未结尾时出现不匹配, 则回到与首字母匹配位置的<strong>下一个</strong>, 继续比对首字母</li>
+  <li><p>如T结尾, 则无匹配</p></li>
+  </ol><h4>Boyer-Moore Algorithm</h4><ol>
+  <li>将T和P右对齐</li>
+  <li>从P的结尾开始, 依次向前与T比对</li>
+  <li>如遇到不匹配, 检查T该位置的字符是否在P中出现过 <br />
+  <br />
+  <ul>
+  <li>如出现过, 则将该字符在P中最后出现的位置, 与T对齐</li>
+  <li>如没出现过, 则讲P向后shift一个P的长度</li>
+  <li>重复第二步</li>
+  </ul></li>
+  <li><p>如T结尾, 则无匹配</p></li>
+  </ol><h4>KMP Algorithm</h4><ol>
+  <li>建立KMP Failure Array 位于j点的F(j)值等于P[1..j]的结尾与P的开头所重叠的字符位数 <a href="http://blog.gregwym.info/usr/uploads/2011/04/910986324.png" title="KMP.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/910986324.png" alt="KMP.png" width=60% /></a></li>
+  <li>将T和P左对齐</li>
+  <li>从P的开头开始, 依次向后与T比对</li>
+  <li>如遇到P[i]不匹配, P向后shift[i - F(i-1)]位, 且 i 值assign为F(i-1)</li>
+  <li><p>如T结尾, 则无匹配</p></li>
+  </ol><h4>Suffix Tree (Trie) 与前几个Algorithm相反, 此Algorithm是为了在同一个T中寻找不同P而建立的.</h4><p><br />Post-condition: T长度为n, i值为从0到n-1<br />1.  将所有T[i..n]依次insert进Compressed trie<br />
+  2.  因为<a target="_blank" href="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-ba--tries-and-string-matching.html">Compressed trie的性质 (prefix-free)</a>, 如果某一个T[i..n]是已有node的prefix, 则不会被insert<br />
+  3.  每个node和leaf中, 保存对应的i和n值<br />
+  4.  在Compressed trie中搜索, 将P与每个node进行比对. (长度以P为准)<br />
+  5.  如果遇到node长度小于P长度, 则无匹配.</p></blockquote><p>= =&#96;最后一个Module后天再说...每天都看Algorithm会死人的&#96;明天收拾251</p><p>更多CS 240总结请看: <a target="_blank" href="http://blog.gregwym.info/tag/cs240/">http://blog.gregwym.info/tag/cs240/</a></p>
+]]></content:encoded>
+<slash:comments>2</slash:comments>
+<comments>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-ba--tries-and-string-matching.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/cs-240-fu-xi-zong-jie-zhi-ba--tries-and-string-matching.html</wfw:commentRss>
+</item>
+</channel>
+</rss>

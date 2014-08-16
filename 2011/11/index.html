@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>2011年11月 - 某储备粮的“学习笔记”</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 使用url函数转换相关路径 -->
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/style.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/prettify.css" />
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="http://blog.gregwym.info/2011/11/images/favicon.ico">
+<link rel="apple-touch-icon" href="http://blog.gregwym.info/2011/11/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="http://blog.gregwym.info/2011/11/images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="http://blog.gregwym.info/2011/11/images/apple-touch-icon-114x114.png">
+
+<!-- 通过自有函数输出HTML头部信息 -->
+<meta name="description" content="by 咳嗽di小鱼" />
+<meta name="keywords" content="咳嗽di小鱼, 网络, 编程, 开发, 笔记, 前端, 服务器, 算法, Linux, cs, uw, html, css, php, js, java, c, c++, algorithm, web" />
+<meta name="generator" content="Typecho 0.9/13.12.12" />
+<meta name="template" content="trapecho" />
+<link rel="pingback" href="../../action/xmlrpc.html" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="../../action/xmlrpc%3Frsd.html" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="../../action/xmlrpc%3Fwlw.html" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="../../feed/2011/11/index.html" />
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="../../feed/rss/2011/11/index.html" />
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="../../feed/atom/2011/11/index.html" />
+</head>
+
+<body onload="prettyPrint()">
+
+<div class="container">
+
+<header class="jumbotron" id="overview">
+        <h1>某储备粮的“学习笔记” </h1>
+    <p class="lead">by 咳嗽di小鱼</p>
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                
+                <a class="brand" href="../../index.html">
+                    Trapecho
+                </a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="../../index.html">Home</a></li>
+                        <li class="divider-vertical"></li>
+                                                                        <li><a href="../../category/sum-up/index.html" title="Sum Up">Sum Up</a></li>
+                                                <li><a href="../../category/code-dump/index.html" title="Code Dump">Code Dump</a></li>
+                                                <li><a href="../../category/network/index.html" title="Network">Network</a></li>
+                                                <li><a href="../../category/jotting/index.html" title="Jotting">Jotting</a></li>
+                                                <li><a href="../../category/Portfolio/index.html" title="Portfolio">Portfolio</a></li>
+                                                <li class="divider-vertical"></li>
+                                                                        <li><a href="../../linked-in.html" title="Linked In">Linked In</a></li>
+                                                <li><a href="../../guess-book.html" title="Guest Book">Guest Book</a></li>
+                                                <li><a href="../../about.html" title="About">About</a></li>
+                                                <li><a href="../../rss.html" title="RSS">RSS</a></li>
+                                            </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="content">
+
+
+<div class="row">
+    <div class="span9" id="content">
+                        <div class="post">
+            <div class="page-header">
+                <h1>
+                    <a href="../../jiang-chrome-sou-suo-mo-ren-ding-wei-dao-google-com.html">将Chrome搜索默认定位到google.com</a> 
+                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: November 25, 2011</span>
+                    <span>Category: <a href="../../category/jotting/index.html">Jotting</a></span>
+                    <a href="../../jiang-chrome-sou-suo-mo-ren-ding-wei-dao-google-com.html#comments">No Comments</a>
+                </h6>
+            </div>
+            <div class="entry-content"><p>不同系统, 配置文件的位置不太一样.</p><p>Windows在<br /><em>%USERPROFILE%\Local Settings\Application Data\Google\Chrome\User Data</em></p><p>Mac OS X在<br /><em>~/Library/Application Support/Google/Chrome/</em></p><p>Linux在<br /><em>$HOME/?.config/google-chrome</em></p><p>用编辑器打开Local State这个文件, 找到以下两行</p><blockquote><p>"last&#95;known&#95;google<em>url": "http://www.google.&#42;&#42;&#42;/",<br />"last&#95;prompted&#95;google</em>url": "http://www.google.&#42;&#42;&#42;/",</p></blockquote><p>将它们改为：</p><blockquote><p>"last&#95;known&#95;google<em>url": "http://www.google.com/",<br />"last&#95;prompted&#95;google</em>url": "http://www.google.com/",</p></blockquote><p>打开Chrome以后随便搜索个东西...他会提示你正在使用google.com, 要不要更换到google.&#42;**|.<br />选择继续使用, 大功告成! 嘿嘿</p></div>
+        </div>
+        <hr class="soften" />
+                <div class="post">
+            <div class="page-header">
+                <h1>
+                    <a href="../../os161-memory-management.html">OS161 Memory Management</a> 
+                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: November 20, 2011</span>
+                    <span>Category: <a href="../../category/sum-up/index.html">Sum Up</a></span>
+                    <a href="../../os161-memory-management.html#comments">19 Comments</a>
+                </h6>
+            </div>
+            <div class="entry-content"><p>这次Assignment除了Physical Memory Management, 其他几个部分都相互关联. 所以在设计完成前几部分的时候, 最好将所有需要解决的问题都搞明白, 然后统一设计Address Space的结构.</p><h2>TLB Management</h2><p>和TLB有关的, 需要解决的问题有这么几个:</p><ol>
+<li>Context Switch的时候, 如果不是两个不同的thread, 则不需要flush TLB</li>
+<li>当TLB被占满的时候, 要替换最老的TLB entry</li>
+<li>TLB内保存read-only信息</li>
+</ol><p>然后一个一个说…</p><ol>
+<li>只要检查上一次flush TLB时候的thread, 和现在的是不是同一个thread即可</li>
+<li>这部分这次Assignment已经把code写好大半了…`你需要做的就是把tlb&#95;get&#95;rr_victim return回来的那个entry替换掉</li>
+<li>理解MIPS TLB的每个flag bits的用处, 然后把read-only flag放在对应的位置.<br />当程序试图写入一个read-only的memory时候, vm&#95;fault拿到的faulttype是VM&#95;FAULT_READONLY.<br /><strong>Don't PANIC!!!</strong></li>
+</ol><p>TLB基本就这么多= =||`没啥东西…</p><p class="more"><a href="../../os161-memory-management.html" title="OS161 Memory Management">Read more...</a></p></div>
+        </div>
+        <hr class="soften" />
+                <div class="post">
+            <div class="page-header">
+                <h1>
+                    <a href="../../db2-shu-ju-ku-dao-chu-he-dao-ru.html">db2 数据库导出和导入</a> 
+                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: November 3, 2011</span>
+                    <span>Category: <a href="../../category/jotting/index.html">Jotting</a></span>
+                    <a href="../../db2-shu-ju-ku-dao-chu-he-dao-ru.html#comments">No Comments</a>
+                </h6>
+            </div>
+            <div class="entry-content"><pre><code>Db2=&gt;CONNECT TO db_name 
+Db2=&gt;EXPORT TO absolute_file_path OF DEL SELECT * FROM "table_name"
+Db2=&gt;IMPORT FROM absolute_file_path OF DEL INSERT_UPDATE INTO "table_name"
+</code></pre></div>
+        </div>
+        <hr class="soften" />
+                
+        <div class="pagination">
+                    </div>
+    </div><!-- end #content-->
+    <div class="span3" id="sidebar">
+    <div class="widget_search">
+        <form method="post" id="searchform" class="form-search">
+            <input type="text" class="span2" name="s" id="s" />
+            <button type="submit" class="btn" id="searchsubmit">Search</button>
+        </form>
+    </div>
+    
+        
+    
+    
+        <div class="widget">
+        <h3>Recent Comments</h3>
+        <ul>
+                                    <li><a href="../../github-you-should-have-told-me-earlier.html#comment-952">payday loans</a>: wfxqtdq</li>
+                        <li><a href="../../Trapecho-boostrap-based-typecho-theme.html#comment-936">地铁线路图网</a>: 我也在用typecho，小巧玲珑，稍微改了以下默认模板，站现在简洁速度也不错，点击我的昵称可以访问。</li>
+                        <li><a href="../../about.html#comment-930">ramble</a>: 博客 ，请问如何显示显示文章前3段的摘要  不打乱格式</li>
+                        <li><a href="../../about.html#comment-874">清源</a>: 看来暂时只能看着用了，google的高亮的比较不明显。</li>
+                        <li><a href="../../about.html#comment-870">清源</a>: 大哥呀，主题这几天我看着感觉用中文书写标题字体太大了，正文的字体也太小了，估计还是适合用英文，不知道...</li>
+                    </ul>
+    </div>
+        
+        <div class="widget">
+    		<h3>Labels</h3>
+        <ul>
+                                    <a href="../../tag/algorithm/index.html" class="size-20">algorithm</a>
+                        <a href="../../tag/review/index.html" class="size-20">review</a>
+                        <a href="../../tag/cs240/index.html" class="size-10">cs240</a>
+                        <a href="../../tag/server/index.html" class="size-10">server</a>
+                        <a href="../../tag/VPS/index.html" class="size-10">VPS</a>
+                        <a href="../../tag/code/index.html" class="size-5">code</a>
+                        <a href="../../tag/database/index.html" class="size-5">database</a>
+                        <a href="../../tag/cs348/index.html" class="size-5">cs348</a>
+                        <a href="../../tag/typecho/index.html" class="size-5">typecho</a>
+                        <a href="../../tag/nginx/index.html" class="size-5">nginx</a>
+                        <a href="../../tag/search/index.html" class="size-5">search</a>
+                        <a href="../../tag/GUI/index.html" class="size-5">GUI</a>
+                        <a href="../../tag/linux/index.html" class="size-5">linux</a>
+                        <a href="../../tag/java/index.html" class="size-5">java</a>
+                        <a href="../../tag/DNS/index.html" class="size-5">DNS</a>
+                        <a href="../../tag/blog/index.html" class="size-5">blog</a>
+                        <a href="../../tag/apple/index.html" class="size-5">apple</a>
+                        <a href="../../tag/cs241/index.html" class="size-5">cs241</a>
+                        <a href="../../tag/compiler/index.html" class="size-5">compiler</a>
+                        <a href="../../tag/sql/index.html" class="size-5">sql</a>
+                    </ul>
+		</div>
+    
+    
+        <div class="widget">
+        <h3>Archives</h3>
+        <ul>
+            <li><a href="../../2013/09/index.html">September 2013</a></li>
+<li><a href="../../2012/12/index.html">December 2012</a></li>
+<li><a href="../../2012/11/index.html">November 2012</a></li>
+<li><a href="../../2012/08/index.html">August 2012</a></li>
+<li><a href="../../2012/06/index.html">June 2012</a></li>
+<li><a href="../../2012/04/index.html">April 2012</a></li>
+<li><a href="../../2012/03/index.html">March 2012</a></li>
+<li><a href="../../2012/02/index.html">February 2012</a></li>
+<li><a href="../12/index.html">December 2011</a></li>
+<li><a href="index.html">November 2011</a></li>
+<li><a href="../10/index.html">October 2011</a></li>
+<li><a href="../06/index.html">June 2011</a></li>
+<li><a href="../05/index.html">May 2011</a></li>
+<li><a href="../04/index.html">April 2011</a></li>
+<li><a href="../03/index.html">March 2011</a></li>
+        </ul>
+    </div>
+    
+    
+        <div class="widget">
+        <h3>Others</h3>
+        <ul>
+                        <li class="last"><a href="http://blog.gregwym.info/admin/login.php">Login</a></li>
+                        <li><a href="http://validator.w3.org/check/referer">Valid XHTML</a></li>
+        </ul>
+    </div>
+    
+    </div><!-- end #sidebar -->
+    
+</div>
+<footer>
+    <p>
+        Powered by <a href="http://typecho.org/">Typecho</a>. 
+        <a href="http://dolast.com/pages/trapecho">Trapecho</a> theme by <a href="../../index.html">咳嗽di小鱼</a>. 
+        Hosting on <a href="https://www.digitalocean.com/?refcode=b846692d6a3a">Digital Ocean</a>
+    </p>
+</footer><!-- end #footer -->
+
+</div>
+</div>
+
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/jquery-1.7.1.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/bootstrap.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/prettify.js"></script>
+<script type="text/javascript">
+    // fix navbar on scroll
+    var $win = $(window)
+      , $nav = $('.navbar')
+      , navTop = $('.navbar').length && $('.navbar').offset().top - 10
+      , isFixed = 0
+
+    processScroll()
+
+    $win.on('scroll', processScroll)
+
+    function processScroll() {
+      var i, scrollTop = $win.scrollTop()
+      if (scrollTop >= navTop && !isFixed) {
+        isFixed = 1
+        $nav.addClass('navbar-fixed-top')
+      } else if (scrollTop <= navTop && isFixed) {
+        isFixed = 0
+        $nav.removeClass('navbar-fixed-top')
+      }
+    }
+    
+    $('.page-navigator li:not(:has(a))').html('<a>...</a>');
+    $('.page-navigator .current').addClass('active');
+    
+        $('pre').addClass('prettyprint linenums');
+        $('.entry-content a').attr('target','_blank');
+</script>
+</body>
+</html>

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+xmlns:thr="http://purl.org/syndication/thread/1.0"
+xml:lang="zh-CN"
+xml:base="http://blog.gregwym.info/tag/sql/"
+>
+<title type="text">某储备粮的“学习笔记” - sql</title>
+<subtitle type="text"></subtitle>
+<updated>2011-11-04T03:48:05+08:00</updated>
+<generator uri="http://typecho.org/" version="0.9/13.12.12">Typecho</generator>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/tag/sql/" />
+<id>http://blog.gregwym.info/feed/atom/tag/sql/</id>
+<link rel="self" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/tag/sql/" />
+<entry>
+<title type="html"><![CDATA[db2 数据库导出和导入]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/db2-shu-ju-ku-dao-chu-he-dao-ru.html" />
+<id>http://blog.gregwym.info/db2-shu-ju-ku-dao-chu-he-dao-ru.html</id>
+<updated>2011-11-04T03:48:05+08:00</updated>
+<published>2011-11-04T03:48:05+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[Db2=&amp;gt;CONNECT TO db_name Db2=&amp;gt;EXPORT TO absolute_file_path OF DEL SELECT * FROM &quot;table_name&quot;Db2...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/db2-shu-ju-ku-dao-chu-he-dao-ru.html" xml:lang="zh-CN"><![CDATA[
+<pre><code>Db2=&gt;CONNECT TO db_name 
+Db2=&gt;EXPORT TO absolute_file_path OF DEL SELECT * FROM "table_name"
+Db2=&gt;IMPORT FROM absolute_file_path OF DEL INSERT_UPDATE INTO "table_name"
+</code></pre>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/db2-shu-ju-ku-dao-chu-he-dao-ru.html#comments" thr:count="0" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/db2-shu-ju-ku-dao-chu-he-dao-ru.html" thr:count="0"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[SQL语法整理]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/sql-yu-fa-zheng-li.html" />
+<id>http://blog.gregwym.info/sql-yu-fa-zheng-li.html</id>
+<updated>2011-10-17T06:00:15+08:00</updated>
+<published>2011-10-17T06:00:15+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[SELECTSELECT attribute-expression-list FROM relation-list [ WHERE condition ];attribute-expression-l...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/sql-yu-fa-zheng-li.html" xml:lang="zh-CN"><![CDATA[
+<h3>SELECT</h3><pre><code>SELECT attribute-expression-list FROM relation-list [ WHERE condition ];
+</code></pre><p>attribute-expression-list:</p><ul>
+<li>[relation-name.]attribute</li>
+<li>[relation-name.]attribute [arithmatic computation] AS another name <br />
+<br />
+<ul>
+<li>i.e., E.Salary - 40000 AS SalaryDiff</li>
+</ul></li>
+<li>CASE WHEN ... THEN ...<br />ELSE ... END <br />
+<br />
+<ul>
+<li>i.e., CASE WHEN E.Salary &lt; 40000 THEN 0<br />ELSE E.Salary - 40000 END</li>
+</ul></li>
+</ul><p>relation-list:</p><ul>
+<li>list of table names</li>
+<li>seperate by comma</li>
+</ul><p>condition:</p><ul>
+<li>arithmetic operation +, -, *, /</li>
+<li>comparisions =, &lt;>, &lt;, &lt;=, >. >=</li>
+<li>logical connectives AND, OR, NOT</li>
+<li>attribute IN (Q)</li>
+<li>attribute NOT IN (Q)</li>
+<li>attribute op SOME (Q)</li>
+<li>attribute op ALL (Q)</li>
+<li>EXISTS (Q)</li>
+<li>NOT EXISTS (Q)</li>
+<li>IS [NOT] NULL</li>
+</ul><p><!--more--></p><h3>NULL</h3><h4>AND Table</h4><table border="1" cellpadding="2" cellspacing="0" width="100%">
+  <tbody>
+    <tr>
+      <td valign="top">AND</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">FALSE</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">NULL</td>
+      
+      <td valign="top">NULL</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL<br /></td>
+    </tr>
+  </tbody>
+</table><h4>OR Table</h4><table border="1" cellpadding="2" cellspacing="0" width="100%">
+  <tbody>
+    <tr>
+      <td valign="top">OR</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">TRUE</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">NULL</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">NULL</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+  </tbody>
+</table><h4>NOT Table</h4><table border="1" cellpadding="2" cellspacing="0" width="100%">
+  <tbody>
+    <tr>
+      <td valign="top">NOT</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+    
+    <tr>
+      <td valign="top"><br /></td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+  </tbody>
+</table><h3>UNION INTERSECT EXCEPT</h3><p>(Q1 and Q2 must have same attribute-list)</p><p>Q1 UNION Q2 => Together all the tuples in Q1 and Q2<br />Q1 INTERSECT Q2 => Only tuples in both Q1 and Q2<br />Q1 EXCEPT Q2 => Tuples only in Q1 but not in Q2</p><p>ALL关键字: 允许重复<br />UNION ALL will include twice of duplicate tuples<br />INTERSECT ALL will include all possible pairs of match tuples, duplication possible<br />EXCEPT ALL will include all "not in Q2" tuples, duplication possible</p><h3>[INNER]/OUTER JOIN</h3><ol>
+<li>Inner join把两个表连接在一起, 返回两个表中相匹配的记录, 是2和3的交集</li>
+<li>Left outer join, 左侧表所有的记录都返回, 右侧匹配的记录返回, 没有匹配的返回Null</li>
+<li>Right outer join, 与Left outer join相反, 右侧的记录返回, 左侧返回匹配的记录, 没有匹配返回Null</li>
+<li>Full outer join, 2和3的并集</li>
+<li>Cross join, 两个表的笛卡儿积, 返回所有可能的值, 不允许有连接条件</li>
+</ol><h3>ORDER BY</h3><pre><code>SELECT ... ... ORDER BY attribute [DESC/ASC], attribute [DESC/ASC], ......
+</code></pre><p>Note: 如果没有指定Order, return的数据可能是任意顺序</p><h3>GROUP BY, HAVING, Aggregate expressions</h3><p>{count, sum, avg, min, max} => Aggregate expressions</p><p>Order: Group => Having => Aggregate</p><ul>
+<li>count(*): number of tuples</li>
+<li>count(E): number of tupple for which E is non-NULL</li>
+<li>count(distinct E): number of distinct non-NULL E values</li>
+<li>sum(E)</li>
+<li>sum(distinct E)</li>
+<li>avg(E)</li>
+<li>avg(distinct E)</li>
+<li>min(E)</li>
+<li>max(E)</li>
+</ul><p>Note: 没有被group by指定的attribute不能出现在SELECT的attr-list中, 除非是aggregate</p><h3>INSERT INTO</h3><pre><code>INSERT INTO relation-name [( attribute-list )] VALUE ( value-list );
+</code></pre><h3>DELETE</h3><pre><code>DELETE FROM relation-name [ WHERE condition ];
+</code></pre><h3>UPDATE</h3><pre><code>UPDATE relation-name SET attribute-assignment-list [ WHERE condition ]; 
+</code></pre><p>attribute-assignment-list:</p><ul>
+<li>pairs of assignment</li>
+<li>seperate by comma</li>
+<li>i.e., WorkDept = 'E01', Address = 'Waterloo'</li>
+</ul><h3>CREATE TABLE</h3><pre><code>CREATE TABLE relation-name ( attribute-name attribute-type [constraints-list], ... )
+</code></pre><p>attribute-type: <a href="http://www.w3school.com.cn/sql/sql_datatypes.asp">http://www.w3school.com.cn/sql/sql_datatypes.asp</a></p><p>constraints-list: (Constraints的格式在各种数据库中都不太一样, 就不列举了)</p><ul>
+<li>NOT NULL</li>
+<li>PRIMARY KEY</li>
+<li>UNIQUE</li>
+<li>FOREIGN KEY</li>
+<li>Column or Tuple CHECK</li>
+</ul><h3>CREATE VIEW</h3><pre><code>CREATE VIEW view-name AS ( SELECT ... ) 
+</code></pre><p>从View SELECT的方法和table一样</p><h3>CREATE TRIGGER</h3><pre><code>CREATE TRIGGER trigger-name 
+AFTER UPDATE OF attribute-list ON relation-name 
+REFERENCING OLD as instance-name(o) NEW as instance-name(n) 
+FOR EACH ROW ...  
+</code></pre><p>不同database语法不一</p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/sql-yu-fa-zheng-li.html#comments" thr:count="0" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/sql-yu-fa-zheng-li.html" thr:count="0"/>
+</entry>
+</feed>

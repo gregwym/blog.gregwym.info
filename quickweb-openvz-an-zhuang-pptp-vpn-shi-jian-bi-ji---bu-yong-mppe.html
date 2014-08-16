@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>Quickweb OpenVZ安装PPTP VPN实践笔记(不用MPPE) - 某储备粮的“学习笔记”</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 使用url函数转换相关路径 -->
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/style.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/prettify.css" />
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="http://blog.gregwym.info/images/favicon.ico">
+<link rel="apple-touch-icon" href="http://blog.gregwym.info/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="http://blog.gregwym.info/images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="http://blog.gregwym.info/images/apple-touch-icon-114x114.png">
+
+<!-- 通过自有函数输出HTML头部信息 -->
+<meta name="description" content="从回国之前, 一直倒腾到家`可算是把VPN搭好了...OpenVZ的VPS在内核这块实在是缺少自由, 如果是Xen这次就不会这么复杂了.废话少说.基本过程和网上其他的教程都差不多, 主要在于加密和ip..." />
+<meta name="keywords" content="VPS,server,VPN" />
+<meta name="generator" content="Typecho 0.9/13.12.12" />
+<meta name="template" content="trapecho" />
+<link rel="pingback" href="action/xmlrpc.html" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="action/xmlrpc%3Frsd.html" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="action/xmlrpc%3Fwlw.html" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="feed/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html" />
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="feed/rss/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html" />
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="feed/atom/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html" />
+<script type="text/javascript">
+//<![CDATA[
+var TypechoComment = {
+    dom : function (id) {
+        return document.getElementById(id);
+    },
+    
+    create : function (tag, attr) {
+        var el = document.createElement(tag);
+        
+        for (var key in attr) {
+            el.setAttribute(key, attr[key]);
+        }
+        
+        return el;
+    },
+
+    reply : function (cid, coid) {
+        var comment = this.dom(cid), parent = comment.parentNode,
+            response = this.dom('respond-post-62'), input = this.dom('comment-parent'),
+            form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+            textarea = response.getElementsByTagName('textarea')[0];
+
+        if (null == input) {
+            input = this.create('input', {
+                'type' : 'hidden',
+                'name' : 'parent',
+                'id'   : 'comment-parent'
+            });
+
+            form.appendChild(input);
+        }
+        
+        input.setAttribute('value', coid);
+
+        if (null == this.dom('comment-form-place-holder')) {
+            var holder = this.create('div', {
+                'id' : 'comment-form-place-holder'
+            });
+            
+            response.parentNode.insertBefore(holder, response);
+        }
+
+        comment.appendChild(response);
+        this.dom('cancel-comment-reply-link').style.display = '';
+        
+        if (null != textarea && 'text' == textarea.name) {
+            textarea.focus();
+        }
+        
+        return false;
+    },
+
+    cancelReply : function () {
+        var response = this.dom('respond-post-62'),
+        holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+        if (null != input) {
+            input.parentNode.removeChild(input);
+        }
+
+        if (null == holder) {
+            return true;
+        }
+
+        this.dom('cancel-comment-reply-link').style.display = 'none';
+        holder.parentNode.insertBefore(response, holder);
+        return false;
+    }
+}
+//]]>
+</script></head>
+
+<body onload="prettyPrint()">
+
+<div class="container">
+
+<header class="jumbotron" id="overview">
+        <h1>某储备粮的“学习笔记” </h1>
+    <p class="lead">by 咳嗽di小鱼</p>
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                
+                <a class="brand" href="index.html">
+                    Trapecho
+                </a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="index.html">Home</a></li>
+                        <li class="divider-vertical"></li>
+                                                                        <li><a href="category/sum-up/index.html" title="Sum Up">Sum Up</a></li>
+                                                <li><a href="category/code-dump/index.html" title="Code Dump">Code Dump</a></li>
+                                                <li><a href="category/network/index.html" title="Network">Network</a></li>
+                                                <li><a href="category/jotting/index.html" title="Jotting">Jotting</a></li>
+                                                <li><a href="category/Portfolio/index.html" title="Portfolio">Portfolio</a></li>
+                                                <li class="divider-vertical"></li>
+                                                                        <li><a href="linked-in.html" title="Linked In">Linked In</a></li>
+                                                <li><a href="guess-book.html" title="Guest Book">Guest Book</a></li>
+                                                <li><a href="about.html" title="About">About</a></li>
+                                                <li><a href="rss.html" title="RSS">RSS</a></li>
+                                            </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="content">
+
+
+<div class="row">
+    <div class="span9" id="content">
+        <div class="post">
+            <div class="page-header">
+                <h1>
+                    Quickweb OpenVZ安装PPTP VPN实践笔记(不用MPPE)                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: April 22, 2011</span>
+                    <span>Category: <a href="category/network/index.html">Network</a></span>
+                </h6>
+            </div>
+            <div class="entry-content"><p>从回国之前, 一直倒腾到家`可算是把VPN搭好了...<br />OpenVZ的VPS在内核这块实在是缺少自由, 如果是Xen这次就不会这么复杂了.<br />废话少说.</p><p>基本过程和网上其他的教程都差不多, 主要在于加密和ipforward的配置.</p><ol>
+<li><p>安装ppp和iptables</p><br />
+<br />
+<pre><code>yum install -y ppp iptables
+</code></pre></li>
+<li><p>安装pptpd</p><br />
+<br />
+<pre><code>wget http://poptop.sourceforge.net/yum/stable/packages/pptpd-1.3.4-2.rhel5.i386.rpm 
+rpm -ivh pptpd-1.3.4-2.rhel5.i386.rpm 
+</code></pre></li>
+</ol><p><!--more--></p><ol>
+<li><p>配置/etc/ppp/options.pptpd</p><p>这个是不使用MPPE加密的配置, 适用于母鸡kernel不支持MPPE的童鞋</p><br />
+<br />
+<pre><code>name pptpd 
+# Encryption部分全部注释掉, 不使用加密 
+# 使用chap验证 
++chap 
+#使用Google DNS 
+ms-dns 8.8.8.8 
+ms-dns 8.8.4.4 
+proxyarp 
+lock 
+nobsdcomp 
+novj 
+novjccomp 
+nologfd 
+nodeflate 
+</code></pre><br />
+<br />
+<p>这个是使用MPPE的配置, 如果你的母鸡支持, 推荐用这个</p><br />
+<br />
+<pre><code>name pptpd 
+# 禁用pap, chap, mschap 
+refuse-pap 
+refuse-chap 
+refuse-mschap 
+# 强制mschap-v2和mppe-128 
+require-mschap-v2 
+require-mppe-128 
+#使用Google DNS 
+ms-dns 8.8.8.8 
+ms-dns 8.8.4.4 
+proxyarp 
+lock 
+nobsdcomp 
+novj 
+novjccomp 
+nologfd
+</code></pre></li>
+<li><p>配置/etc/pptpd.conf</p><br />
+<br />
+<pre><code>option /etc/ppp/options.pptpd 
+# 设置ip分配方案 
+localip 172.16.36.1 
+remoteip 172.16.36.2-254 
+</code></pre></li>
+<li><p>配置/etc/ppp/chap-secrets, 设置登录帐号</p><br />
+<br />
+<pre><code># Secrets for authentication using CHAP 
+# client   server   secret   IP_addresses 
+帐号       pptpd    密码      *(表示任意IP都可以连接)
+</code></pre></li>
+<li><p>配置ip转发 /etc/sysctl.conf</p><br />
+<br />
+<pre><code>net.ipv4.ip_forward = 1
+</code></pre><br />
+<br />
+<p>在bash中执行</p><br />
+<br />
+<pre><code>sysctl -p 
+service pptpd restart 
+service iptables restart 
+iptables -t nat -A POSTROUTING -s 172.16.36.0/24 -o venet0 -j MASQUERADE 
+iptables -I FORWARD -p tcp --syn -i ppt+ -j TCPMSS --set-mss 1356 
+service iptables save 
+service iptables restart 
+chkconfig pptpd on 
+chkconfig iptables on
+</code></pre></li>
+</ol><p>这些都配置好了以后, 如果你使用了MPPE, 那就可以尝试连接了.</p><p>如果你没有使用MPPE</p><ul>
+<li>在Windows中设置VPN, 取消include windows logon domain, 选择PPTP连接,<br />Data加密选择Optional, 选择CHAP验证登录</li>
+<li>在Mac/iOS中设置VPN, 将加密设置为"无"即可 这样就可以尝试连接了</li>
+</ul><p>Note: 日志文件在/var/log/messages, 如果log中出现, "This system lacks kernel support for PPP. " 字样, 请发ticket让ISP给你打开PPP支持, 之后就应该可以正常连接了.</p><p><hr /></p><p>参考资料:<br /><a href="http://rashost.com/blog/centos5-pptpd-vpn">CentOS 5 VPS上配置pptpd作为VPN服务器</a><br /><a href="http://good784.blog.163.com/blog/static/327217152007670350514/">不带MPPE的VPN服务器端及客户端的设置笔记</a></p></div>
+            <div class="entry-tags">
+                Labels: 
+                <span class="label label-info">
+                    <a href="tag/VPS/index.html">VPS</a></span> <span class="label label-info"><a href="tag/server/index.html">server</a></span> <span class="label label-info"><a href="tag/VPN/index.html">VPN</a>                </span>
+            </div>
+        </div>
+        <hr class="soften" />
+        <div id="comments">
+                                    <h3>7 comments &raquo;</h3>
+            
+            <ol class="comment-list"><li id="comment-112" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/d2ad946411bb7848e873d0c3588bfe45?s=32&amp;r=X&amp;d=" alt="neal" width="32" height="32" />        <cite class="fn"><a href="http://neal.im" rel="external nofollow">neal</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html#comment-112">April 28th, 2011 at 03:02 am</a>
+            </div>
+    <div class="comment-content">
+    <p>这个在国内你确实就用得上了！翻山越岭还是很适用的！</p>    </div>
+    <div class="comment-reply">
+        <a href="quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html%3FreplyTo=112.html#respond-post-62" rel="nofollow" onclick="return TypechoComment.reply('comment-112', 112);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-113" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html#comment-113">April 28th, 2011 at 03:58 am</a>
+            </div>
+    <div class="comment-content">
+    <p>这一回来`差点给憋死...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-445" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/18bef0ee126a353af85df10b6fde577a?s=32&amp;r=X&amp;d=" alt="ZTvS" width="32" height="32" />        <cite class="fn">ZTvS</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html#comment-445">May 6th, 2011 at 07:46 am</a>
+            </div>
+    <div class="comment-content">
+    <p>nice~</p>    </div>
+    <div class="comment-reply">
+        <a href="quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html%3FreplyTo=445.html#respond-post-62" rel="nofollow" onclick="return TypechoComment.reply('comment-445', 445);">回复</a>    </div>
+    </li>
+<li id="comment-452" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/133e320f7b460fc73aae40420fcf2739?s=32&amp;r=X&amp;d=" alt="Yoke" width="32" height="32" />        <cite class="fn">Yoke</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html#comment-452">May 11th, 2011 at 07:50 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>为什么我配置完是619</p>    </div>
+    <div class="comment-reply">
+        <a href="quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html%3FreplyTo=452.html#respond-post-62" rel="nofollow" onclick="return TypechoComment.reply('comment-452', 452);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-456" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html#comment-456">May 15th, 2011 at 02:51 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>619说明你与你server之间的connection有问题, 检查一下防火墙之类的设置...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-457" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/133e320f7b460fc73aae40420fcf2739?s=32&amp;r=X&amp;d=" alt="Yoke" width="32" height="32" />        <cite class="fn">Yoke</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html#comment-457">May 15th, 2011 at 11:40 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>我都是一步步正确配置完了的，ppp和iptables<br>
+都设置正确了，也应用生效了，而且服务最后也重启了，重装了N次OS后重新装了N次PPTP，还是619，您指的是默认的是VPS的防火墙还是什么，我这就是quickweb的默认配置的，TUN和PP都对的，:(，弄N天了，就偶尔一次成功过，晚上再连VPN就又是619了</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-464" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/39e81821e64a6e4a14d8d5c404bd88b8?s=32&amp;r=X&amp;d=" alt="ucsir" width="32" height="32" />        <cite class="fn"><a href="http://www.ucsir.com" rel="external nofollow">ucsir</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html#comment-464">June 17th, 2011 at 09:59 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>哈哈，我还就打算学学的。你这来教程了，不错的说，爽咯。</p>    </div>
+    <div class="comment-reply">
+        <a href="quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html%3FreplyTo=464.html#respond-post-62" rel="nofollow" onclick="return TypechoComment.reply('comment-464', 464);">回复</a>    </div>
+    </li>
+</ol>            
+            <div class="pagination">
+                            </div>
+            
+                        
+                        <div id="respond-post-62" class="respond">
+            
+            <div class="cancel-comment-reply">
+            <a id="cancel-comment-reply-link" href="quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html#respond-post-62" rel="nofollow" style="display:none" onclick="return TypechoComment.cancelReply();">取消回复</a>            </div>
+            
+            <form class="form-horizontal" method="post" action="http://blog.gregwym.info/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html/comment" id="comment_form">
+                <fieldset>
+                    <legend>Add new comment &raquo;</legend>
+                                        <div class="control-group">
+                        <label class="control-label" for="author">Nick name</label>
+                        <div class="controls">
+                            <input type="text" name="author" id="author" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="mail">E-mail<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" name="mail" id="mail" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Web</label>
+                        <div class="controls">
+                            <input type="text" name="url" id="url" class="input-large" value="" />
+                        </div>
+                    </div>
+                                        <div class="control-group">
+                        <label class="control-label" for="url">Comment</label>
+                        <div class="controls">
+                            <textarea class="input-xlarge" name="text" rows="3"></textarea>
+                            <p class="help-block">Enter your comment here...</p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Captcha</label>
+                        <div class="controls">
+                            <img src="action/captcha" alt="captcha" onclick="this.src = this.src + '?' + Math.random()" style="cursor: pointer" title="点击图片刷新验证码" /><br /><input type="text" class="captcha" name="captcha_code" /> <strong>请输入验证码</strong>							                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Submit comment</button>
+                    </div>
+                </fieldset>
+            </form>
+            </div>
+            
+
+        </div>    </div><!-- end #content-->
+    <div class="span3" id="sidebar">
+    <div class="widget_search">
+        <form method="post" id="searchform" class="form-search">
+            <input type="text" class="span2" name="s" id="s" />
+            <button type="submit" class="btn" id="searchsubmit">Search</button>
+        </form>
+    </div>
+    
+        
+                    <div class="widget">
+            <h3>Related Posts</h3>
+                        <ul>
+                            <li><a href="setup-lnmp-using-yum-under-centos.html" title="CentOS下用yum搭建LNMP服务器">CentOS下用yum搭建LNMP服务器</a></li>
+                            <li><a href="linux-de-yong-hu--user--he-yong-hu-zu--group--guan-li.html" title="Linux的用户(user)和用户组(group)管理">Linux的用户(user)和用户组(group)管理</a></li>
+                            <li><a href="nginx-she-zhi-301-chong-xin-ding-xiang.html" title="Nginx设置301重新定向">Nginx设置301重新定向</a></li>
+                            <li><a href="linux-fu-wu-qi-`-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html" title="linux服务器`自动备份数据库+网页到邮箱">linux服务器`自动备份数据库+网页到邮箱</a></li>
+                            <li><a href="shuo-shuo-typecho`.html" title="说说Typecho`">说说Typecho`</a></li>
+                        </ul>
+        </div>
+            
+    
+        <div class="widget">
+        <h3>Recent Comments</h3>
+        <ul>
+                                    <li><a href="github-you-should-have-told-me-earlier.html#comment-952">payday loans</a>: wfxqtdq</li>
+                        <li><a href="Trapecho-boostrap-based-typecho-theme.html#comment-936">地铁线路图网</a>: 我也在用typecho，小巧玲珑，稍微改了以下默认模板，站现在简洁速度也不错，点击我的昵称可以访问。</li>
+                        <li><a href="about.html#comment-930">ramble</a>: 博客 ，请问如何显示显示文章前3段的摘要  不打乱格式</li>
+                        <li><a href="about.html#comment-874">清源</a>: 看来暂时只能看着用了，google的高亮的比较不明显。</li>
+                        <li><a href="about.html#comment-870">清源</a>: 大哥呀，主题这几天我看着感觉用中文书写标题字体太大了，正文的字体也太小了，估计还是适合用英文，不知道...</li>
+                    </ul>
+    </div>
+        
+        <div class="widget">
+    		<h3>Labels</h3>
+        <ul>
+                                    <a href="tag/algorithm/index.html" class="size-20">algorithm</a>
+                        <a href="tag/review/index.html" class="size-20">review</a>
+                        <a href="tag/cs240/index.html" class="size-10">cs240</a>
+                        <a href="tag/server/index.html" class="size-10">server</a>
+                        <a href="tag/VPS/index.html" class="size-10">VPS</a>
+                        <a href="tag/code/index.html" class="size-5">code</a>
+                        <a href="tag/database/index.html" class="size-5">database</a>
+                        <a href="tag/cs348/index.html" class="size-5">cs348</a>
+                        <a href="tag/typecho/index.html" class="size-5">typecho</a>
+                        <a href="tag/nginx/index.html" class="size-5">nginx</a>
+                        <a href="tag/search/index.html" class="size-5">search</a>
+                        <a href="tag/GUI/index.html" class="size-5">GUI</a>
+                        <a href="tag/linux/index.html" class="size-5">linux</a>
+                        <a href="tag/java/index.html" class="size-5">java</a>
+                        <a href="tag/DNS/index.html" class="size-5">DNS</a>
+                        <a href="tag/blog/index.html" class="size-5">blog</a>
+                        <a href="tag/apple/index.html" class="size-5">apple</a>
+                        <a href="tag/cs241/index.html" class="size-5">cs241</a>
+                        <a href="tag/compiler/index.html" class="size-5">compiler</a>
+                        <a href="tag/sql/index.html" class="size-5">sql</a>
+                    </ul>
+		</div>
+    
+    
+        <div class="widget">
+        <h3>Archives</h3>
+        <ul>
+            <li><a href="2013/09/index.html">September 2013</a></li>
+<li><a href="2012/12/index.html">December 2012</a></li>
+<li><a href="2012/11/index.html">November 2012</a></li>
+<li><a href="2012/08/index.html">August 2012</a></li>
+<li><a href="2012/06/index.html">June 2012</a></li>
+<li><a href="2012/04/index.html">April 2012</a></li>
+<li><a href="2012/03/index.html">March 2012</a></li>
+<li><a href="2012/02/index.html">February 2012</a></li>
+<li><a href="2011/12/index.html">December 2011</a></li>
+<li><a href="2011/11/index.html">November 2011</a></li>
+<li><a href="2011/10/index.html">October 2011</a></li>
+<li><a href="2011/06/index.html">June 2011</a></li>
+<li><a href="2011/05/index.html">May 2011</a></li>
+<li><a href="2011/04/index.html">April 2011</a></li>
+<li><a href="2011/03/index.html">March 2011</a></li>
+        </ul>
+    </div>
+    
+    
+        <div class="widget">
+        <h3>Others</h3>
+        <ul>
+                        <li class="last"><a href="http://blog.gregwym.info/admin/login.php">Login</a></li>
+                        <li><a href="http://validator.w3.org/check/referer">Valid XHTML</a></li>
+        </ul>
+    </div>
+    
+    </div><!-- end #sidebar -->
+    
+</div>
+<footer>
+    <p>
+        Powered by <a href="http://typecho.org/">Typecho</a>. 
+        <a href="http://dolast.com/pages/trapecho">Trapecho</a> theme by <a href="index.html">咳嗽di小鱼</a>. 
+        Hosting on <a href="https://www.digitalocean.com/?refcode=b846692d6a3a">Digital Ocean</a>
+    </p>
+</footer><!-- end #footer -->
+
+</div>
+</div>
+
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/jquery-1.7.1.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/bootstrap.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/prettify.js"></script>
+<script type="text/javascript">
+    // fix navbar on scroll
+    var $win = $(window)
+      , $nav = $('.navbar')
+      , navTop = $('.navbar').length && $('.navbar').offset().top - 10
+      , isFixed = 0
+
+    processScroll()
+
+    $win.on('scroll', processScroll)
+
+    function processScroll() {
+      var i, scrollTop = $win.scrollTop()
+      if (scrollTop >= navTop && !isFixed) {
+        isFixed = 1
+        $nav.addClass('navbar-fixed-top')
+      } else if (scrollTop <= navTop && isFixed) {
+        isFixed = 0
+        $nav.removeClass('navbar-fixed-top')
+      }
+    }
+    
+    $('.page-navigator li:not(:has(a))').html('<a>...</a>');
+    $('.page-navigator .current').addClass('active');
+    
+        $('pre').addClass('prettyprint linenums');
+        $('.entry-content a').attr('target','_blank');
+</script>
+</body>
+</html>
+

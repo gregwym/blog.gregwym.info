@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/2012/06/">
+<title>某储备粮的“学习笔记” - 2012年6月</title>
+<link>http://blog.gregwym.info/2012/06/</link>
+<description>by 咳嗽di小鱼</description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/software-architecture-CS446-midterm.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/software-architecture-CS446-midterm.html">
+<title>Software Architecture - CS 446 Midterm Outline</title>
+<link>http://blog.gregwym.info/software-architecture-CS446-midterm.html</link>
+<dc:date>2012-06-22T10:46:34+08:00</dc:date>
+<description>Software Design Process ModelsDesign as search. Design spaces. Design state, goal structure, generative design operations, early quantitative evaluations, control of design process. Basic models of design (transformational, plan/architecture driven). Relationship to other life-cycle activities.Terms
+Module: a collection of classes
+Subsystem: a collection of classes with an interface
+Design window: the time, which design decision have to be made
+Service: the operation in common purpose, offered by a subsystem
+Different Views
+Analysis focus on the problem domain 
+
+
+Analyst, end user, customer
+
+Design focus on the solution domain 
+
+
+designer, implementer
+
+Goals
+Designer 
+
+
+Specify interface of subsystems
+Usability
+Reusability
+
+Implementer 
+
+
+implementer
+Extender
+User
+
+Major Design Goals
+Behavioural Model 
+
+
+Concurrency
+Resource Handling
+Software Control
+
+Structural Model 
+
+
+Hardware/Software mapping
+Data Management
+
+Use Case Model 
+
+
+Boundary Conditions (边缘情况)
+
+Non Functional Requirements 
+
+
+Feasibility (可行性)
+
+A lot of others.Most of them involves trade off between each otherDecomposition
+High cohesion
+Low coupling
+Architecture/Design RepresentationWhat should be represented (structure, behaviour)? Informal representations of design, examples of design notations. Formal representation of design. Domain specific architecture descriptions. Role of standards, reference architectures. Design documentation.Terms
+Subsystem decomposition: identify subsystems, service, and their association in between
+Architectural style: pattern for a subsystem decomposition
+Software architecture: instance of a style. composed of components and connectors
+Components: encapsulated subsystem, provides services
+Connectors: Facilitate communication within software. Simple procedure calls or shared data accesses
+-
+Conceptual Arch
+Concrete Arch
+Evolution
+Degradation 
+
+
+Drift: add things to conceptual
+Erosion: conflict to conceptual
+Recover: determining from implementation
+
+Architectural Style
+Vocab of design elements
+Set of config rules
+Semantic interpretation
+Benefits
+Design/Code reuse
+Visualization
+Interoperability (WTH is this word…)
+Style-specific analyses
+Style Examples
+Main program and subroutines
+Object-Oriented Style
+Layered Style
+Virtual Machine Layers 
+
+
+Closed/Open Layering
+
+3/4-Tier
+Client/Server
+Peer-to-Peer
+Batch Sequential
+Pipes and Filters
+Repository
+Implicit Invocation
+Publish-Subscribe
+Event-Based
+MVC
+Interpreter
+Sservice-Oriented Arch (SOA)
+Architectural ModelArch Views and ViewpointsDifferent views should be consistent between each other.
+Logical View 
+
+
+UML component diagram
+
+Physical View
+Deployment View 
+
+
+UML deployment diagram
+
+Concurrency/Process View
+Behavioral View 
+
+
+UML collaboration diagram
+
+Metamodel意会了, 但是不知道怎么总结…主要用来保证view之间的consistencyDesign Goals
+Reduce Complexity
+Scalability
+Adaptability
+Heterogeneity
+Portability
+Dependability 
+
+
+Reliability
+Availability
+Robustness
+Fault-tolerant
+
+Detail design activities
+Identify modules 
+
+
+Data Flow Analysis (DFA)
+
+Identify control structure 
+
+
+Instantiation of modules
+Management of base processes
+
+Decide on overall control structure 
+
+
+Centralized/Decentralized control
+
+Address boundary control conditions
+Address persistent data management
+Address hardware/software mapping
+Implement concurrency
+Define access control
+...继续ing...Design Plans/ArchitectureReview of small/medium scale plans (data structures, programming language structures, concurrency). Plans/architectures for common types of software systems (translators, embedded, real-time, user interface)....未开始...</description>
+</item>
+</rdf:RDF>

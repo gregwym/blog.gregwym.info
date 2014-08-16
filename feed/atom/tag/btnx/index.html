@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+xmlns:thr="http://purl.org/syndication/thread/1.0"
+xml:lang="zh-CN"
+xml:base="http://blog.gregwym.info/tag/btnx/"
+>
+<title type="text">某储备粮的“学习笔记” - btnx</title>
+<subtitle type="text"></subtitle>
+<updated>2012-02-16T10:26:53+08:00</updated>
+<generator uri="http://typecho.org/" version="0.9/13.12.12">Typecho</generator>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/tag/btnx/" />
+<id>http://blog.gregwym.info/feed/atom/tag/btnx/</id>
+<link rel="self" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/tag/btnx/" />
+<entry>
+<title type="html"><![CDATA[在Linux下自定义多按键鼠标的功能]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/linux-extra-mouse-button-customize.html" />
+<id>http://blog.gregwym.info/linux-extra-mouse-button-customize.html</id>
+<updated>2012-02-16T10:26:53+08:00</updated>
+<published>2012-02-16T10:26:53+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[搭好Ubuntu工作环境以后, 什么都好, 就是接上鼠标以后, 很多键用不了, 比较烦. Ubuntu自带的鼠标设置非常简陋, 罗技也没给Linux做驱动, 只能自己找办法解决.btnx非常好的解决了...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/linux-extra-mouse-button-customize.html" xml:lang="zh-CN"><![CDATA[
+<p>搭好Ubuntu工作环境以后, 什么都好, 就是接上鼠标以后, 很多键用不了, 比较烦. Ubuntu自带的鼠标设置非常简陋, 罗技也没给Linux做驱动, 只能自己找办法解决.</p><p>btnx非常好的解决了这个问题, 而且还带GUI设置工具. 除了设置里没有Apply这个按钮, 让人有点琢磨不透它到底什么时候保存设置以外, 其他都还不错.<br />调整好设置以后记得点"Restart BTNX"来重启服务.</p><p>记一下安装使用时候碰到的各种问题.</p><ol>
+<li>在第一次配置的时候, 直接把btnx-config给关上了, 然后就怎么也打不开了. 具体提示的错误是什么不记得了.<br />解决方法是删除/etc/btnx/btnx&#95;manager和/etc/btnx&#95;config_Default. (如果我没记错的话...因为我删错了, 才有下文)</li>
+<li>如果你和我一样, 不幸把/etc/btnx/整个文件夹给删了, 你会发现你别管怎么删怎么装, 都没法把那个该死的/etc/btnx/events找回来.<br />解决方法是把btnx和btnx-config complete uninstall了, 然后重装.</li>
+<li><p>在设置好鼠标以后还有点神器的问题, 就是btnx的设置不会屏蔽(override)掉这个按键的默认功能.<br />举个例子, 我把鼠标上原先的"前进/后退"设置成了"Ctrl+TAB/Ctrl+Shift+TAB", 当我在浏览器里按这个按钮的时候, 我不光会切换tab, 还会让页面前进/后退...很恶心是不是?<br />解决方法是, 编辑~/.Xmodmap把这几个按钮屏蔽掉.<br />比如button 8, 9是前进后退, 那就在~/.Xmodmap里写入</p><br />
+<br />
+<pre><code>! Disable buttons 8 and 9
+pointer = 1 2 3 4 5 6 7 0 0
+</code></pre></li>
+</ol><p>参考资料:<br /><a href="http://ubuntuforums.org/showthread.php?t=918714">http://ubuntuforums.org/showthread.php?t=918714</a><br /><a href="http://unix.stackexchange.com/questions/20550/how-to-disable-the-forward-back-buttons-on-my-mouse">http://unix.stackexchange.com/questions/20550/how-to-disable-the-forward-back-buttons-on-my-mouse</a></p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/linux-extra-mouse-button-customize.html#comments" thr:count="1" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/linux-extra-mouse-button-customize.html" thr:count="1"/>
+</entry>
+</feed>

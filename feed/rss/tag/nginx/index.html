@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/tag/nginx/">
+<title>某储备粮的“学习笔记” - nginx</title>
+<link>http://blog.gregwym.info/tag/nginx/</link>
+<description></description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/setup-lnmp-using-yum-under-centos.html"/>
+<rdf:li resource="http://blog.gregwym.info/nginx-she-zhi-301-chong-xin-ding-xiang.html"/>
+<rdf:li resource="http://blog.gregwym.info/nginx-er-ji-yu-ming-zi-dong-huo-shou-dong-pi-pei-zi-mu-lu.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/setup-lnmp-using-yum-under-centos.html">
+<title>CentOS下用yum搭建LNMP服务器</title>
+<link>http://blog.gregwym.info/setup-lnmp-using-yum-under-centos.html</link>
+<dc:date>2012-04-05T22:07:00+08:00</dc:date>
+<description>CentOS下搭服务器也折腾好几次了, 每次都知道个大概, 具体repo的地址什么的还都要现找, 实在不效率, 干脆整理记录下来.yum安装比较简单快捷, 但默认配置的安全和性能方面不如LNMP一键安装包. 推荐生产环境用一键安装包如果你在国内的话, 先替换CentOS-Base.repomv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
+# 如果是CentOS 5.*
+wget http://mirrors.163.com/.help/CentOS5-Base-163.repo
+# 如果是CentOS 6.*
+wget http://mirrors.163.com/.help/CentOS6-Base-163.repo
+yum makecache
+如果之前有apache, 卸载yum remove httpd
+更新软件到最新版本yum -y update
+安装源# 如果是CentOS 5.*
+rpm -ivh http://nginx.org/packages/centos/5/noarch/RPMS/nginx-release-centos-5-0.el5.ngx.noarch.rpm
+rpm -ivh http://fedora.mirror.nexicom.net/epel/5/i386/epel-release-5-4.noarch.rpm
+rpm -ivh http://rpms.famillecollet.com/enterprise/remi-release-5.rpm
+# 如果是CentOS 6.*
+rpm -ivh http://nginx.org/packages/centos/6/noarch/RPMS/nginx-release-centos-6-0.el6.ngx.noarch.rpm
+rpm -ivh http://fedora.mirror.nexicom.net/epel/6/i386/epel-release-6-8.noarch.rpm
+rpm -ivh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+编辑启用remi源vi /etc/yum.repos.d/remi.repo
+# 将[remi]下的enabled=0改为enabled=1
+# 按esc
+# :x回车
+执行安装, 根据需要增减要安装的php模块yum install nginx mysql mysql-server php-fpm php-cli php-mysql php-gd php-imap php-ldap php-odbc php-pear php-xml php-xmlrpc php-mbstring php-mcrypt php-mssql php-snmp php-soap php-tidy
+启动nginx, php-fpm, mysqldservice nginx restart
+service php-fpm restart
+service mysqld restart
+设置自动启动chkconfig nginx on
+chkconfig php-fpm on
+chkconfig mysqld on
+mysql密码设置mysql_secure_installation
+至于目录权限管理什么的, 就不写了.niginx配置文件在/etc/nginx/nginx.confphp-fpm配置文件在/etc/php-fpm.confphp配置文件/etc/php.inimysql配置文件/etc/my.cnf参考文章:http://www.ppkj.net/2011/11/18/centos6-yum-%E6%90%AD%E5%BB%BAlinux-nginx-php-mysql-lnmp/http://www.centos.bz/2011/03/yum-install-nginx-mysql-php-fastcgi-lnmp/</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/nginx-she-zhi-301-chong-xin-ding-xiang.html">
+<title>Nginx设置301重新定向</title>
+<link>http://blog.gregwym.info/nginx-she-zhi-301-chong-xin-ding-xiang.html</link>
+<dc:date>2011-04-06T03:25:52+08:00</dc:date>
+<description>入了个新的域名, 打算做点小应用试试.原来的Nginx设定里, 子域名会自动对应子目录. 如果碰巧有人输入了我为新域名设定的目录名, 就会造成域名不统一的情况出现...所以研究了下301定向, 发现Nginx的设置真的好简单.在nginx.conf里的自动对应规则之前, 加入下边的内容server { 
+    server_name www.xxxx.com; 
+    rewrite ^(.*) http://xxxx.com$1 permanent; 
+}
+继续去整理240的内容了...</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/nginx-er-ji-yu-ming-zi-dong-huo-shou-dong-pi-pei-zi-mu-lu.html">
+<title>Nginx二级域名自动或手动匹配子目录</title>
+<link>http://blog.gregwym.info/nginx-er-ji-yu-ming-zi-dong-huo-shou-dong-pi-pei-zi-mu-lu.html</link>
+<dc:date>2011-03-31T00:23:51+08:00</dc:date>
+<description>说写就写.刚刚搞定了Nginx二级域名的自动rewrite, 只要把自动匹配的配置放在几个特殊server定义之前, 就不会相互影响, 还挺简单的.需要在nginx.conf里修改http里增加新的server部分先说说标准的二级域名rewrite怎么写:server { 
+    listen 80; 
+    server_name sub.domain.com; 
+    index index.html index.htm index.php;
+    root /***/wwwroot/sub_domain; 
+    include other.conf; 
+
+    location ~ .*\.(php|php5)?$ { 
+        fastcgi_pass unix:/tmp/php-cgi.sock; 
+        fastcgi_index index.php; 
+        include fcgi.conf; 
+    } 
+
+    location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$ { 
+        expires 30d; 
+    } 
+
+    location ~ .*\.(js|css)?$ { 
+        expires 12h; 
+    } 
+
+    access_log off; 
+}
+基本上在server_name里写上地址, root里写上对应的目录就万事大吉了然后是自动匹配的部分, 区别只在server_name和root的解析上:server_name *.domain.com; 
+set $subdomain "default"; 
+if ( $host ~* (.*)\.(.*)\.(.*)) { 
+    set $subdomain $1; 
+} 
+root /***/wwwroot/$subdomain;
+第一篇结束...哈哈注: 以上配置是以Lnmp一键安装包自动生成的配置文件为基础修改的</description>
+</item>
+</rdf:RDF>

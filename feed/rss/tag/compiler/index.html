@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/tag/compiler/">
+<title>某储备粮的“学习笔记” - compiler</title>
+<link>http://blog.gregwym.info/tag/compiler/</link>
+<description></description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/compiler-ge-ge-bu-zhou-de-han-yi.html"/>
+<rdf:li resource="http://blog.gregwym.info/lr-1--parser-example.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/compiler-ge-ge-bu-zhou-de-han-yi.html">
+<title>Compiler各个步骤的含义</title>
+<link>http://blog.gregwym.info/compiler-ge-ge-bu-zhou-de-han-yi.html</link>
+<dc:date>2011-04-19T06:15:49+08:00</dc:date>
+<description>Step1: String -> Scanning (DFA) -> Tokens Scanner又叫Lexical analyzer或Lexer.其目的在于, 将需要compile的源代码逐字读入compiler, 并将每一个符合"词汇命名规则(Lexical Syntax)"的字段转换成token存储.换句话说, 就是一遍读, 一遍看每一个单词的拼写对不对. 对的就转成token, 拼错了就输出error.作业中对应: A6 P4(某些语言的compiler在Scanning之后还包含Preprocessing, 因为不在241讨论范围内, 不做解释)Step2: Tokens -> Parsing(LL/LR) -> Intermediate Format (WLI)Parsing又叫Syntactic Analysis.其目的在于, 将token与token联系在一起, 并将他们的转换成符合一定规范的"中间格式", 一般是某种树状结构, 例如241中定义的WLI.在Parsing过程中, 如果遇到不符合某种语言的"语法规则(Grammar)"时, 则输出error. 如果语法正确, 则输出对应格式.简单说, 就是看的说的话是不是人话, 有没有缺个标点少个括号.如果不是人话那就说明你该重新学语法去了.作业中对应: A8 P4Step3: Intermediate Format -> Semantic Analysis(Context-Sensitive Analysis) ->Semantic Analysis的目的在于, 检查程序是否存在语义上的冲突. 或者说, 上下文是不是相符.比如在C中, 如果没有declare过变量int a;, 则a = 3;就不合法.再比如, 如果a declare为int, 则a = 'b';就不合法, 因为a不能为char.作业中对应: A9 A10(Optimization为代码优化, 241没有涉及, 知道即可)Step4: -> Code Generation -> Code Fragment将Intermediate Format转换为另一种格式, 比如MIPS或者二进制文件, 可与上一步同步进行.作业中对应: A9 A10, A3, A4Step5: Code Fragements -> Linking -> Executable File(Single File)将多个compile好的多个文件链接在一起, 生成一个可执行的二进制文件(或仅生成合并以后的单个文件, 但文件本身可能无法执行)作业中对应: A5 P1, P2附: 09FALL 第二题答案
+Scanning
+Parsing
+Semantic Analysis
+Parsing
+Semantic Analysis
+Linking
+Semantic Analysis
+Parsing
+1A@#SR%$#
+&#43; foo
+x
+</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/lr-1--parser-example.html">
+<title>LR(1) Parser Example</title>
+<link>http://blog.gregwym.info/lr-1--parser-example.html</link>
+<dc:date>2011-04-19T05:24:08+08:00</dc:date>
+<description>Terminal Symbols: 6个BOF, EOF, id, -, (, )Nonterminal Symbols: 3个S, expr, termStart Symbol:SProduction Rules: 5个
+		
+			0
+			S BOF expr EOF
+		
+		
+			1
+			expr term
+		
+		
+			2
+			expr expr - term
+		
+		
+			3
+			term id
+		
+		
+			4
+			term ( expr )
+		
+	Total State: 11个 (0 to 11)Total Transitions: 28个
+		
+			State
+			Symbol
+			Action
+		
+		
+			0
+			BOF
+			shift to state 6
+		
+		
+			1
+			(
+			shift to state 3
+		
+		
+			1
+			id
+			shift to state 2
+		
+		
+			1
+			term
+			shift to state 8
+		
+		
+			3
+			(
+			shift to state 3
+		
+		
+			3
+			expr
+			shift to state 7
+		
+		
+			3
+			id
+			shift to state 2
+		
+		
+			3
+			term
+			shift to state 4
+		
+		
+			6
+			(
+			shift to state 3
+		
+		
+			6
+			expr
+			shift to state 10
+		
+		
+			6
+			id
+			shift to state 2
+		
+		
+			6
+			term
+			shift to state 4
+		
+		
+			7
+			)
+			shift to state 9
+		
+		
+			7
+			-
+			shift to state 1
+		
+		
+			10
+			-
+			shift to state 1
+		
+		
+			10
+			EOF
+			shift to state 5
+		
+		
+			2
+			)
+			reduce by rule 3
+		
+		
+			2
+			-
+			reduce by rule 3
+		
+		
+			2
+			EOF
+			reduce by rule 3
+		
+		
+			4
+			)
+			reduce by rule 1
+		
+		
+			4
+			-
+			reduce by rule 1
+		
+		
+			4
+			EOF
+			reduce by rule 1
+		
+		
+			8
+			)
+			reduce by rule 2
+		
+		
+			8
+			-
+			reduce by rule 2
+		
+		
+			8
+			EOF
+			reduce by rule 2
+		
+		
+			9
+			)
+			reduce by rule 4
+		
+		
+			9
+			-
+			reduce by rule 4
+		
+		
+			9
+			EOF
+			reduce by rule 4
+		
+	String to Parse:BOF id - ( id ) - id EOFParse Step:蓝色的行是Shift, 灰色的行是ReduceReduce的次数取决于Production Rule RHS的长度当前Symbol所对应的State,
+			
+				
+				
+				
+				
+				
+				
+				
+				State Stack 
+(At EOL)
+				Description
+			
+			
+				S0
+				
+				
+				
+				
+				
+				
+				0
+				Start
+			
+			
+				BOF
+				S6
+				
+				
+				
+				
+				
+				0 6
+				S0 BOF S6
+			
+			
+				
+				id
+				S2
+				
+				
+				
+				
+				0 6 2
+				S6 id S2
+			
+			
+				
+				R3
+				-
+				
+				
+				
+				
+				0 6
+				S2 - Reduce by   rule #3 
+(replace id with term)
+			
+			
+				
+				term
+				S4
+				
+				
+				
+				
+				0 6 4
+				S6 term S4
+			
+			
+				
+				R1
+				-
+				
+				
+				
+				
+				0 6
+				S4 - Reduce by   rule #1 
+(replace term with expr)
+			
+			
+				
+				expr
+				S10
+				
+				
+				
+				
+				0 6 10
+				S6 expr S10
+			
+			
+				
+				
+				-
+				S1
+				
+				
+				
+				0 6 10 1
+				S10 - S1
+			
+			
+				
+				
+				
+				(
+				S3
+				
+				
+				0 6 10 1 3
+				S1 ( S3
+			
+			
+				
+				
+				
+				
+				id
+				S2
+				
+				0 6 10 1 3 2
+				S3 id S2
+			
+			
+				
+				
+				
+				
+				R3
+				)
+				
+				0 6 10 1 3
+				S2 ) Reduce by   rule #3 
+(replace id with term)
+			
+			
+				
+				
+				
+				
+				term
+				S4
+				
+				0 6 10 1 3 4
+				S3 term S4
+			
+			
+				
+				
+				
+				
+				R1
+				)
+				
+				0 6 10 1 3
+				S4 ) Reduce by   rule #1 
+(replace term with expr)
+			
+			
+				
+				
+				
+				
+				expr
+				S7
+				
+				0 6 10 1 3 7
+				S3 expr S7
+			
+			
+				
+				
+				
+				
+				
+				)
+				S9
+				0 6 10 1 3 7 9
+				S7 ) S9
+			
+			
+				
+				
+				
+				R4
+				R4
+				R4
+				-
+				0 6 10 1
+				S9 - Reduce by   rule #4 
+(repace &quot;( expr )&quot; with term)
+			
+			
+				
+				
+				
+				term
+				S8
+				
+				
+				0 6 10 1 8
+				S1 term S8
+			
+			
+				
+				R2
+				R2
+				R2
+				-
+				
+				
+				0 6
+				S8 - Reduce by   rule #2 
+(replace &quot;expr - term&quot; with expr)
+			
+			
+				
+				expr
+				S10
+				
+				
+				
+				
+				0 6 10
+				S6 expr S10
+			
+			
+				
+				
+				-
+				S1
+				
+				
+				
+				0 6 10 1
+				S10 - S1
+			
+			
+				
+				
+				
+				id
+				S2
+				
+				
+				0 6 10 1 2
+				S1 id S2
+			
+			
+				
+				
+				
+				R3
+				EOF
+				
+				
+				0 6 10 1
+				S2 EOF Reduce by rule #3 
+(replace id with term)
+			
+			
+				
+				
+				
+				term
+				S8
+				
+				
+				0 6 10 1 8
+				S1 term S8
+			
+			
+				
+				R2
+				R2
+				R2
+				EOF
+				
+				
+				0 6
+				S8 EOF Reduce by rule #2 
+(replace &quot;expr - term&quot; with expr)
+			
+			
+				
+				expr
+				S10
+				
+				
+				
+				
+				0 6 10
+				S6 expr S10
+			
+			
+				
+				
+				EOF
+				S5
+				
+				
+				
+				Final S5
+				S10 EOF S5
+			
+		
+原题来源: http://www.student.cs.uwaterloo.ca/~cs241/parsing/lr1.html</description>
+</item>
+</rdf:RDF>

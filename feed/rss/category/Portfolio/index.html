@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/category/Portfolio/">
+<title>某储备粮的“学习笔记” - Portfolio</title>
+<link>http://blog.gregwym.info/category/Portfolio/</link>
+<description>Portfolio</description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/kaching.html"/>
+<rdf:li resource="http://blog.gregwym.info/informatic-toolbar.html"/>
+<rdf:li resource="http://blog.gregwym.info/typecho-markdown-editor.html"/>
+<rdf:li resource="http://blog.gregwym.info/Trapecho-boostrap-based-typecho-theme.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/kaching.html">
+<title>Kaching - Express.js payment solution</title>
+<link>http://blog.gregwym.info/kaching.html</link>
+<dc:date>2013-09-01T21:57:27+08:00</dc:date>
+<description>Kaching is a simple payments solution for Express-based web app, inspired by Passport.js. Together with various strategies, Kaching provides a unified control flow to hook up with different online payment services.For now, Kaching only provides kaching-paypal to accepting payment through Paypal. More strategies are under plan.Install$ npm install kaching
+$ npm install kaching-paypal
+Examplehttps://github.com/gregwym/kaching/tree/master/exampleUsage0. Setup with KachingPaypal strategy require the client_id and client_secret offered by Paypal to operate. You can obtain them from https://developer.paypal.com/webapps/developer/applications.It use api.sandbox.paypal.com as the default paypal host address. Feel free to change it in production environment.var PaypalStrategy = require('kaching-paypal');
+var kaching = require('kaching');
+
+kaching.use(new PaypalStrategy({
+  host: '&lt;paypal_rest_api_endpoint&gt;',        // optional
+  port: '',                                  // optional
+  client_id: '&lt;paypal_client_id&gt;',
+  client_secret: '&lt;paypal_client_secret&gt;'
+}));
+1. Create a paymentUse kaching.create, specifying paypal strategy, to create a Paypal payment. The payment detail should be setup and saved in req.payment prior invoking the create middleware.After kaching created the pending payment, it replaces req.payment with the real payment object that was returned from Paypal API. Save it securely. (i.e., together with the user's order.)app.get('...', function(req, res, next) {
+  // Setup payment detail in `req.payment`.
+  req.payment = {
+    amount:{
+      total:'7.47',
+      currency:'USD'
+    },
+    redirect_urls: {
+      return_url: 'http://&lt;return_url&gt;',
+      cancel_url: 'http://&lt;cancel_url&gt;'
+    },
+    description:'Kaching paypal test transaction'
+  };
+  next();
+}, kaching.create('paypal', {
+  // Optional options
+}), function(req, res) {
+  // Now `req.payment` is the Paypal returned payment object
+  res.json(req.payment);
+});
+2. Redirect user to Paypal to approve the paymentFor most of the time, user should redirect to Paypal to complete the payment right away. You can find the page url in payment.links and do whatever you want.Or simpler, append the kaching.approve middleware after the last request handler. It will redirect the user to the payment approval page.app.get('...', function(req, res, next) {
+  ...
+}, kaching.create('paypal', {
+  ...
+}), function(req, res, next) {
+  console.log(JSON.stringify(req.payment));
+  next();
+}, kaching.approve('paypal'));
+If you want to use kaching.approve somewhere else, make sure req.payment contain a valid payment object.3. Execute the approved payment to complete the transactionUser will be redirect to return_url once the payment has been approved. Paypal will specify the payer_id in req.query.PayerID. This piece of information is required to execute and complete the payment, so save it securely.Commonly, execute the payment right after can save many trouble. Here is an example,app.get('&lt;return_route&gt;', function(req, res, next) {
+  // Prepare payment information and payerId
+  req.payment = ...;           // Fetch the payment object from anywhere it was saved.
+  req.payment.payer_id = req.query.PayerID;
+  next();
+}, kaching.execute('paypal'), function(req, res) {
+  res.json(req.payment);       // Now the payment has been completed.
+});
+Like kaching.create, kaching.execute will update req.payment to the latest. And it's up to you to deal with it.APINote: all the middleware look for the payment informations in req.payment. Make sure it is set before passing control to a middleware.PaypalStrategy(options)Construct a new strategy.var options = {
+  host: '&lt;paypal_rest_api_endpoint&gt;',        // optional
+  port: '',                                  // optional
+  client_id: '&lt;paypal_client_id&gt;',
+  client_secret: '&lt;paypal_client_secret&gt;'
+}
+PaypalStrategy#createBuild the payment creation middleware.It use req.payment as the payment_detail skeleton.req.payment = {
+  intent: '[sale | authorize]',             // default: sale
+  payment_method: '[paypal | credit_card]', // default: paypal
+  funding_instruments: {                    // required when payment_method = credit_card
+    ...   // https://developer.paypal.com/webapps/developer/docs/api/#fundinginstrument-object
+  },
+  amount: {                                 // required
+    ...   // https://developer.paypal.com/webapps/developer/docs/api/#amount-object
+  },
+  item_list: {                              // optional
+    ...   // https://developer.paypal.com/webapps/developer/docs/api/#itemlist-object
+  },
+  description: 'Payment description',       // optional
+  redirect_urls: {                          // required when payment_method = paypal
+    return_url: ...,
+    cancel_url: ...
+  }
+};
+You may notice that, things like intent, payment_method and redirect_urls are not necessarily be different for each payment. You can set the default value for them when building the middleware....
+}, kaching.create('paypal', {
+  intent: 'sale',
+  payment_method: 'paypal',
+  redirect_urls: { ... } 
+}), 
+...
+Then you can omit these fields in req.payment.PaypalStrategy#approveBuild the payment approval middleware. Mainly redirect to the approval_url in payment.links.PaypalStrategy#executeBuild the approved payment execution middleware. The middleware find the payment in req.payment and execute it with req.payment.payer_id.Credits
+Greg Wang
+LicenseThe MIT LicenseCopyright (c) 2013 Greg Wang http://gregwym.info/</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/informatic-toolbar.html">
+<title>InformaticToolbar: iOS Toolbar Enhancement Library</title>
+<link>http://blog.gregwym.info/informatic-toolbar.html</link>
+<dc:date>2012-11-05T09:08:18+08:00</dc:date>
+<description>First of all, the repo: https://github.com/gregwym/InformaticToolbarIntroRemember in the Mail App, it shows update status and sending mail progress in the bottom toolbar. I think it is a really neat way to show information, especially for those apps who use native iOS UI elements.However, I couldn't find any lib out there for this task. So I decide to invent the wheel myself.Feel free to post any issues or patch. It's my pleasure for any who like my work.What it doesInformaticToolbar is mainly an UIViewController Category which allows you to add several UIBarButtonItems set to your toolbar.The sets are defined as subclasses of ITBarItemSet. All ITBarItemSet can have a dismiss button if the target and action has been defined. If more than one set has been added, a switch button (an arrow) will be displayed on the left for user to switch between sets.For now, there are three pre-defined set:
+ITLabelBarItemSet: a textLabel and a detailTextLabel
+ITProgressBarItemSet: a textLabel and a progressBar
+ITConfirmationBarItemSet: two label and a check-mark button
+You can easily create new sets by extending ITBarItemSet yourself.Screenshot:How to useFirst: clone it to your project directorycd *your-project-location*
+git submodule add git://github.com/gregwym/InformaticToolbar.git
+Second: add to your projectYou can either add the source codes directly or
+drag and drop InformaticToolbar.xcodeproj to your project.
+In your project setting 
+
+
+In Build Phases->Target Dependencies, add InformaticToolbar (the library)
+In Build Phases->Link Binary With Libraries, add libInformaticToolbar.a
+In Build Settings, add "${PROJECT_DIR}/InformaticToolbar/" to User Header Search Paths, include the quotation marks.
+In Build Settings, set Always Search User Path to YES
+In Build Settings, set Other Linker Flags to -ObjC
+
+Third: add the headerIn any UIViewController that you want to use this lib, add #import "InformaticToolbar.h" at the front.Or easier, you can add the import to YOUR Prefix.pch file.Forth: add an item set to toolbarLet's say I want to add a Label to my toolbar, I can call the following method in an UIViewController:- (IBAction)addLabelBarItemSet:(id)sender
+{
+    ITLabelBarItemSet *labelBarItemSet = [ITLabelBarItemSet labelBarItemSetWithDismissTarget:self andAction:@selector(dismissBarItemSet:)];
+    labelBarItemSet.textLabel.text = @"This is text label. ";
+    labelBarItemSet.detailTextLabel.text = @"This is detail text label. ";
+    [self pushBarItemSet:labelBarItemSet animated:YES];
+}
+
+- (void)dismissBarItemSet:(ITBarItemSet *)sender
+{
+    [self removeBarItemSet:sender animated:YES];
+}
+Demo ProjectIn the project, there is a demo app you can tryout. ITViewController.m includes the sample usage of all three pre-defined item sets.LicenseInformaticToolbar by Greg Wang is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/typecho-markdown-editor.html">
+<title>Typecho用Markdown编辑器</title>
+<link>http://blog.gregwym.info/typecho-markdown-editor.html</link>
+<dc:date>2012-03-18T23:08:18+08:00</dc:date>
+<description>在网上找了下Typecho的Markdown插件, 有两个版本, 主要区别如下
+明城制作的Markdown插件 
+
+
+浏览时转换Markdown=>HTML
+数据库保存Markdown文本
+
+ichuan制作的Markdown4TE 
+
+
+保存文章时转换Markdown=>HTML
+数据库保存HTML文本
+
+这两种实现都各有利弊, 我个人倾向于ichuan的做法.原因无外乎, 能保持Typecho文章数据的一致性, 以前存HTML现在还是存HTML, 只是编辑的方式变了.但ichuan的插件在用的时候不是那么顺利. 因为js放置的位置好像有些问题, 编辑器和预览99%的时候加载失败(Chrome 17). 预览界面的CSS定义也有些问题.于是自己动手丰衣足食, 把成果po出来给和我碰到同样问题的朋友们.
+保留了原插件的保存和读取部分
+重新构造了编辑器部分 
+
+
+使用了和Stack Oveflow一样的最新PageDown编辑器
+编辑器带实时效果预览
+完整定义了各种格式的预览效果
+
+Mar 19/2012 v0.2.1
+修复了无法插入附件的BUG
+下载https://github.com/gregwym/Markdown4TE/zipball/masterGithubhttps://github.com/gregwym/Markdown4TE有图有真相效果展示部分H1H2H3strong textemphasized textstrong &amp; emphasized textenter link description hereBlockquoteenter code here
+
+List item
+
+
+List item
+
+</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/Trapecho-boostrap-based-typecho-theme.html">
+<title>Trapecho - 基于Bootstrap的Typecho主题</title>
+<link>http://blog.gregwym.info/Trapecho-boostrap-based-typecho-theme.html</link>
+<dc:date>2012-03-17T23:00:44+08:00</dc:date>
+<description>之前的浮云主题也用了快一年了, 有些腻味.主题本身也有很多问题, 比如代码质量不是很好, 主题的CSS对博客文章的Typography没有很规范的支持, 浮云比较吃CPU...一直想换主题却没有找到好的. 最近对Bootstrap很是痴迷, 又有了点空闲, 就顺手仿着Bootstrap官网风格做了一个Typecho的主题.自己觉得效果还不错, po出来给喜欢的朋友.设计风格
+黑白灰
+简洁明了
+特色功能
+自动吸附顶端的导航栏
+在各种设备上自适应显示 (如: iPhone/iPad)
+侧栏的新浪微博展示插件
+集成Google Code Prettify
+应用的技术
+Bootstrap + jQuery
+HTML5 + CSS3
+Responsive CSS
+下载下载我放在doLast.com上了, 点Download即可http://dolast.com/pages/trapechohttps://github.com/gregwym/Trapecho/zipball/master功能详解新浪微博
+在/admin/options-theme.php主题设置页中填入新浪微博的UID, 侧栏中就会显示新浪微博的插件.
+在设置中删除UID号码并保存, 即可关闭插件
+根据分辨率自适应布局
+如果您在看我的博客, 现在把浏览器缩小就能看出效果.
+在iPhone/iPad等移动设备上也能有很好的博客阅读体验
+支持iOS的阅读器模式
+侧栏可选项
+显示最新文章
+显示相关文章
+显示最近回复
+显示标签
+显示分类
+显示归档
+显示友情链接(需要友情链接插件)
+显示其它杂项
+Google Code Prettify
+为了统一主题风格, 也特别定义了代码的高亮方式, 如果有朋友不喜欢, 从footer.php最后删除和pre有关的几行JavaScript即可.
+使用很简单, 展示大段的代码, 使用&lt;pre&gt;将代码括住, 就会自动高亮, 语言类型自动识别.
+
+&lt;pre&gt;
+    &lt;!--你的代码放在中间--&gt;
+&lt;/pre&gt;
+
+比如,
+
+int main(){
+    cout &lt;&lt; "Welcome to Trapecho" &lt;&lt; endl;
+    return 0;
+}
+
+更多使用方法请参考, google-code-prettify README
+</description>
+</item>
+</rdf:RDF>

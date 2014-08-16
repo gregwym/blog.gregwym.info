@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/tag/linux/">
+<title>某储备粮的“学习笔记” - linux</title>
+<link>http://blog.gregwym.info/tag/linux/</link>
+<description></description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/setup-lnmp-using-yum-under-centos.html"/>
+<rdf:li resource="http://blog.gregwym.info/linux-extra-mouse-button-customize.html"/>
+<rdf:li resource="http://blog.gregwym.info/linux-de-yong-hu--user--he-yong-hu-zu--group--guan-li.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/setup-lnmp-using-yum-under-centos.html">
+<title>CentOS下用yum搭建LNMP服务器</title>
+<link>http://blog.gregwym.info/setup-lnmp-using-yum-under-centos.html</link>
+<dc:date>2012-04-05T22:07:00+08:00</dc:date>
+<description>CentOS下搭服务器也折腾好几次了, 每次都知道个大概, 具体repo的地址什么的还都要现找, 实在不效率, 干脆整理记录下来.yum安装比较简单快捷, 但默认配置的安全和性能方面不如LNMP一键安装包. 推荐生产环境用一键安装包如果你在国内的话, 先替换CentOS-Base.repomv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
+# 如果是CentOS 5.*
+wget http://mirrors.163.com/.help/CentOS5-Base-163.repo
+# 如果是CentOS 6.*
+wget http://mirrors.163.com/.help/CentOS6-Base-163.repo
+yum makecache
+如果之前有apache, 卸载yum remove httpd
+更新软件到最新版本yum -y update
+安装源# 如果是CentOS 5.*
+rpm -ivh http://nginx.org/packages/centos/5/noarch/RPMS/nginx-release-centos-5-0.el5.ngx.noarch.rpm
+rpm -ivh http://fedora.mirror.nexicom.net/epel/5/i386/epel-release-5-4.noarch.rpm
+rpm -ivh http://rpms.famillecollet.com/enterprise/remi-release-5.rpm
+# 如果是CentOS 6.*
+rpm -ivh http://nginx.org/packages/centos/6/noarch/RPMS/nginx-release-centos-6-0.el6.ngx.noarch.rpm
+rpm -ivh http://fedora.mirror.nexicom.net/epel/6/i386/epel-release-6-8.noarch.rpm
+rpm -ivh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+编辑启用remi源vi /etc/yum.repos.d/remi.repo
+# 将[remi]下的enabled=0改为enabled=1
+# 按esc
+# :x回车
+执行安装, 根据需要增减要安装的php模块yum install nginx mysql mysql-server php-fpm php-cli php-mysql php-gd php-imap php-ldap php-odbc php-pear php-xml php-xmlrpc php-mbstring php-mcrypt php-mssql php-snmp php-soap php-tidy
+启动nginx, php-fpm, mysqldservice nginx restart
+service php-fpm restart
+service mysqld restart
+设置自动启动chkconfig nginx on
+chkconfig php-fpm on
+chkconfig mysqld on
+mysql密码设置mysql_secure_installation
+至于目录权限管理什么的, 就不写了.niginx配置文件在/etc/nginx/nginx.confphp-fpm配置文件在/etc/php-fpm.confphp配置文件/etc/php.inimysql配置文件/etc/my.cnf参考文章:http://www.ppkj.net/2011/11/18/centos6-yum-%E6%90%AD%E5%BB%BAlinux-nginx-php-mysql-lnmp/http://www.centos.bz/2011/03/yum-install-nginx-mysql-php-fastcgi-lnmp/</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/linux-extra-mouse-button-customize.html">
+<title>在Linux下自定义多按键鼠标的功能</title>
+<link>http://blog.gregwym.info/linux-extra-mouse-button-customize.html</link>
+<dc:date>2012-02-16T10:26:53+08:00</dc:date>
+<description>搭好Ubuntu工作环境以后, 什么都好, 就是接上鼠标以后, 很多键用不了, 比较烦. Ubuntu自带的鼠标设置非常简陋, 罗技也没给Linux做驱动, 只能自己找办法解决.btnx非常好的解决了这个问题, 而且还带GUI设置工具. 除了设置里没有Apply这个按钮, 让人有点琢磨不透它到底什么时候保存设置以外, 其他都还不错.调整好设置以后记得点"Restart BTNX"来重启服务.记一下安装使用时候碰到的各种问题.
+在第一次配置的时候, 直接把btnx-config给关上了, 然后就怎么也打不开了. 具体提示的错误是什么不记得了.解决方法是删除/etc/btnx/btnx&#95;manager和/etc/btnx&#95;config_Default. (如果我没记错的话...因为我删错了, 才有下文)
+如果你和我一样, 不幸把/etc/btnx/整个文件夹给删了, 你会发现你别管怎么删怎么装, 都没法把那个该死的/etc/btnx/events找回来.解决方法是把btnx和btnx-config complete uninstall了, 然后重装.
+在设置好鼠标以后还有点神器的问题, 就是btnx的设置不会屏蔽(override)掉这个按键的默认功能.举个例子, 我把鼠标上原先的"前进/后退"设置成了"Ctrl+TAB/Ctrl+Shift+TAB", 当我在浏览器里按这个按钮的时候, 我不光会切换tab, 还会让页面前进/后退...很恶心是不是?解决方法是, 编辑~/.Xmodmap把这几个按钮屏蔽掉.比如button 8, 9是前进后退, 那就在~/.Xmodmap里写入
+
+! Disable buttons 8 and 9
+pointer = 1 2 3 4 5 6 7 0 0
+
+参考资料:http://ubuntuforums.org/showthread.php?t=918714http://unix.stackexchange.com/questions/20550/how-to-disable-the-forward-back-buttons-on-my-mouse</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/linux-de-yong-hu--user--he-yong-hu-zu--group--guan-li.html">
+<title>Linux的用户(user)和用户组(group)管理</title>
+<link>http://blog.gregwym.info/linux-de-yong-hu--user--he-yong-hu-zu--group--guan-li.html</link>
+<dc:date>2011-06-04T15:10:35+08:00</dc:date>
+<description>Linux的多用户权限管理还是很强大的...熟悉了各种命令之后, 对每一个用户的权利可以说是操控自如.用户(user)和用户组(group)相关的配置文件、命令或目录
+/etc/passwd 用户配置文件
+/etc/shadow 用户密码影子文件
+/etc/group 用户组配置文件
+/etc/gshadow 用户组配置影子文件
+配置文件的格式
+/etc/passwd 的每一行采用以下格式:name:password:uid:gid:comment:home:shell
+
+name       用户名
+password   密码
+uid        用户的UserID
+gid        用户所对应默认用户组的GroupID
+comment    备注
+home       用户的主目录绝对路径
+shell      用户登录的shell/任意命令的绝对路径
+
+/etc/group 的每一行采用以下格式:group&#95;name:passwd:GID:user&#95;list
+
+group_name 用户组名
+passwd     用户组密码
+GID        用户组GroupID
+user_list  该组的所有用户
+
+管理用户(user)和用户组(group)的相关命令useradd   添加用户
+passwd    为用户设置密码
+usermod   修改用户命令，可以通过usermod来修改登录名、用户的家目录等等；
+pwcov     同步用户从/etc/passwd到/etc/shadow
+pwck      pwck是校验用户配置文件/etc/passwd和/etc/shadow文件内容是否合法或完整；
+pwunconv  是pwcov 的立逆向操作，是从/etc/shadow和 /etc/passwd 创建/etc/passwd ，然后会删除 /etc/shadow 文件；
+finger    查看用户信息工具
+id        查看用户的UID、GID及所归属的用户组
+chfn      更改用户信息工具
+su        用户切换工具
+sudo      通过另一个用户来执行命令（execute a command as another user），su 是用来切换用户，然后通过切换到的用户来完成相应的任务，但sudo 能后面直接执行命令，比如sudo 不需要root 密码就可以执行root 赋与的执行只有root才能执行相应的命令；但得通过visudo 来编辑/etc/sudoers来实现；
+visudo    编辑 /etc/sudoers 的命令；也可以不用这个命令，直接用vi 来编辑 /etc/sudoers 的效果是一样的；
+groupadd  添加用户组；
+groupdel  删除用户组；
+groupmod  修改用户组信息
+groups    显示用户所属的用户组
+gpasswd   将用户从用户组中添加/移除
+grpck     校验用户组配置文件/etc/group和/etc/gshadow文件内容是否合法或完整；
+grpconv   通过/etc/group和/etc/gshadow的文件内容来同步或创建/etc/gshadow，如果/etc/gshadow 不存在则创建；
+grpunconv 通过/etc/group 和/etc/gshadow文件内容来同步或创建/etc/group，然后删除gshadow文件；
+用户管理实例useradd visitor  # 添加一个叫visitor的新用户(主用户组默认为同名) 
+passwd visitor   # 给visitor添加密码 
+groupadd theme-park  # 添加一个叫theme-park的用户组 
+groupadd city-park   # 添加一个叫city-park的用户组 
+usermod -g theme-park visitor   # 将visitor的主用户组修改为park 
+gpasswd -a visitor city-park    # 将visitor添加到city-park用户组
+参考资料:Linux 用户（user）和用户组（group）管理概述Linux 介绍和基本操作</description>
+</item>
+</rdf:RDF>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/tag/sql/">
+<title>某储备粮的“学习笔记” - sql</title>
+<link>http://blog.gregwym.info/tag/sql/</link>
+<description></description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/db2-shu-ju-ku-dao-chu-he-dao-ru.html"/>
+<rdf:li resource="http://blog.gregwym.info/sql-yu-fa-zheng-li.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/db2-shu-ju-ku-dao-chu-he-dao-ru.html">
+<title>db2 数据库导出和导入</title>
+<link>http://blog.gregwym.info/db2-shu-ju-ku-dao-chu-he-dao-ru.html</link>
+<dc:date>2011-11-04T03:48:05+08:00</dc:date>
+<description>Db2=&gt;CONNECT TO db_name 
+Db2=&gt;EXPORT TO absolute_file_path OF DEL SELECT * FROM "table_name"
+Db2=&gt;IMPORT FROM absolute_file_path OF DEL INSERT_UPDATE INTO "table_name"
+</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/sql-yu-fa-zheng-li.html">
+<title>SQL语法整理</title>
+<link>http://blog.gregwym.info/sql-yu-fa-zheng-li.html</link>
+<dc:date>2011-10-17T06:00:15+08:00</dc:date>
+<description>SELECTSELECT attribute-expression-list FROM relation-list [ WHERE condition ];
+attribute-expression-list:
+[relation-name.]attribute
+[relation-name.]attribute [arithmatic computation] AS another name 
+
+
+i.e., E.Salary - 40000 AS SalaryDiff
+
+CASE WHEN ... THEN ...ELSE ... END 
+
+
+i.e., CASE WHEN E.Salary &lt; 40000 THEN 0ELSE E.Salary - 40000 END
+
+relation-list:
+list of table names
+seperate by comma
+condition:
+arithmetic operation +, -, *, /
+comparisions =, &lt;>, &lt;, &lt;=, >. >=
+logical connectives AND, OR, NOT
+attribute IN (Q)
+attribute NOT IN (Q)
+attribute op SOME (Q)
+attribute op ALL (Q)
+EXISTS (Q)
+NOT EXISTS (Q)
+IS [NOT] NULL
+NULLAND Table
+  
+    
+      AND
+      
+      TRUE
+      
+      FALSE
+      
+      NULL
+    
+    
+    
+      TRUE
+      
+      TRUE
+      
+      FALSE
+      
+      NULL
+    
+    
+    
+      FALSE
+      
+      FALSE
+      
+      FALSE
+      
+      FALSE
+    
+    
+    
+      NULL
+      
+      NULL
+      
+      FALSE
+      
+      NULL
+    
+  
+OR Table
+  
+    
+      OR
+      
+      TRUE
+      
+      FALSE
+      
+      NULL
+    
+    
+    
+      TRUE
+      
+      TRUE
+      
+      TRUE
+      
+      TRUE
+    
+    
+    
+      FALSE
+      
+      TRUE
+      
+      FALSE
+      
+      NULL
+    
+    
+    
+      NULL
+      
+      TRUE
+      
+      NULL
+      
+      NULL
+    
+  
+NOT Table
+  
+    
+      NOT
+      
+      TRUE
+      
+      FALSE
+      
+      NULL
+    
+    
+    
+      
+      
+      FALSE
+      
+      TRUE
+      
+      NULL
+    
+  
+UNION INTERSECT EXCEPT(Q1 and Q2 must have same attribute-list)Q1 UNION Q2 => Together all the tuples in Q1 and Q2Q1 INTERSECT Q2 => Only tuples in both Q1 and Q2Q1 EXCEPT Q2 => Tuples only in Q1 but not in Q2ALL关键字: 允许重复UNION ALL will include twice of duplicate tuplesINTERSECT ALL will include all possible pairs of match tuples, duplication possibleEXCEPT ALL will include all "not in Q2" tuples, duplication possible[INNER]/OUTER JOIN
+Inner join把两个表连接在一起, 返回两个表中相匹配的记录, 是2和3的交集
+Left outer join, 左侧表所有的记录都返回, 右侧匹配的记录返回, 没有匹配的返回Null
+Right outer join, 与Left outer join相反, 右侧的记录返回, 左侧返回匹配的记录, 没有匹配返回Null
+Full outer join, 2和3的并集
+Cross join, 两个表的笛卡儿积, 返回所有可能的值, 不允许有连接条件
+ORDER BYSELECT ... ... ORDER BY attribute [DESC/ASC], attribute [DESC/ASC], ......
+Note: 如果没有指定Order, return的数据可能是任意顺序GROUP BY, HAVING, Aggregate expressions{count, sum, avg, min, max} => Aggregate expressionsOrder: Group => Having => Aggregate
+count(*): number of tuples
+count(E): number of tupple for which E is non-NULL
+count(distinct E): number of distinct non-NULL E values
+sum(E)
+sum(distinct E)
+avg(E)
+avg(distinct E)
+min(E)
+max(E)
+Note: 没有被group by指定的attribute不能出现在SELECT的attr-list中, 除非是aggregateINSERT INTOINSERT INTO relation-name [( attribute-list )] VALUE ( value-list );
+DELETEDELETE FROM relation-name [ WHERE condition ];
+UPDATEUPDATE relation-name SET attribute-assignment-list [ WHERE condition ]; 
+attribute-assignment-list:
+pairs of assignment
+seperate by comma
+i.e., WorkDept = 'E01', Address = 'Waterloo'
+CREATE TABLECREATE TABLE relation-name ( attribute-name attribute-type [constraints-list], ... )
+attribute-type: http://www.w3school.com.cn/sql/sql_datatypes.aspconstraints-list: (Constraints的格式在各种数据库中都不太一样, 就不列举了)
+NOT NULL
+PRIMARY KEY
+UNIQUE
+FOREIGN KEY
+Column or Tuple CHECK
+CREATE VIEWCREATE VIEW view-name AS ( SELECT ... ) 
+从View SELECT的方法和table一样CREATE TRIGGERCREATE TRIGGER trigger-name 
+AFTER UPDATE OF attribute-list ON relation-name 
+REFERENCING OLD as instance-name(o) NEW as instance-name(n) 
+FOR EACH ROW ...  
+不同database语法不一</description>
+</item>
+</rdf:RDF>

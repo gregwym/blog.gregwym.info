@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+xmlns:content="http://purl.org/rss/1.0/modules/content/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+xmlns:atom="http://www.w3.org/2005/Atom"
+xmlns:wfw="http://wellformedweb.org/CommentAPI/">
+<channel>
+<title>某储备粮的“学习笔记” - cs241</title>
+<link>http://blog.gregwym.info/tag/cs241/</link>
+<atom:link href="http://blog.gregwym.info/feed/tag/cs241/" rel="self" type="application/rss+xml" />
+<language>zh-CN</language>
+<description></description>
+<lastBuildDate>Tue, 19 Apr 2011 06:15:49 +0800</lastBuildDate>
+<pubDate>Tue, 19 Apr 2011 06:15:49 +0800</pubDate>
+<item>
+<title>Compiler各个步骤的含义</title>
+<link>http://blog.gregwym.info/compiler-ge-ge-bu-zhou-de-han-yi.html</link>
+<guid>http://blog.gregwym.info/compiler-ge-ge-bu-zhou-de-han-yi.html</guid>
+<pubDate>Tue, 19 Apr 2011 06:15:49 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[Step1: String -> Scanning (DFA) -> Tokens Scanner又叫Lexical analyzer或Lexer.其目的在于, 将需要compile的源代码逐字读入c...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<h3>Step1: String -> Scanning (DFA) -> Tokens Scanner又叫Lexical analyzer或Lexer.</h3><p>其目的在于, 将需要compile的源代码逐字读入compiler, 并将每一个符合"词汇命名规则(Lexical Syntax)"的字段转换成token存储.<br />换句话说, 就是一遍读, 一遍看每一个单词的拼写对不对. 对的就转成token, 拼错了就输出error.</p><p>作业中对应: <a href="http://www.student.cs.uwaterloo.ca/~cs241/a6/">A6 P4</a><br />(某些语言的compiler在Scanning之后还包含Preprocessing, 因为不在241讨论范围内, 不做解释)</p><h3>Step2: Tokens -> Parsing(LL/LR) -> Intermediate Format (<a href="http://www.student.cs.uwaterloo.ca/~cs241/wl/wli.html">WLI</a>)</h3><p>Parsing又叫Syntactic Analysis.<br />其目的在于, 将token与token联系在一起, 并将他们的转换成符合一定规范的"中间格式", 一般是某种树状结构, 例如241中定义的<a href="http://www.student.cs.uwaterloo.ca/~cs241/wl/wli.html">WLI</a>.</p><p>在Parsing过程中, 如果遇到不符合某种语言的"语法规则(Grammar)"时, 则输出error. 如果语法正确, 则输出对应格式.<br />简单说, 就是看的说的话是不是人话, 有没有缺个标点少个括号.<br />如果不是人话那就说明你该重新学语法去了.</p><p>作业中对应: <a href="http://www.student.cs.uwaterloo.ca/~cs241/a8/">A8 P4</a></p><p><!--more--></p><h3>Step3: Intermediate Format -> Semantic Analysis(Context-Sensitive Analysis) -></h3><p>Semantic Analysis的目的在于, 检查程序是否存在语义上的冲突. 或者说, 上下文是不是相符.</p><p>比如在C中, 如果没有declare过变量int a;, 则a = 3;就不合法.<br />再比如, 如果a declare为int, 则a = 'b';就不合法, 因为a不能为char.</p><p>作业中对应: <a href="http://www.student.cs.uwaterloo.ca/~cs241/a10/">A9 A10</a><br />(Optimization为代码优化, 241没有涉及, 知道即可)</p><h3>Step4: -> Code Generation -> Code Fragment</h3><p>将Intermediate Format转换为另一种格式, 比如MIPS或者二进制文件, 可与上一步同步进行.</p><p>作业中对应: <a href="http://www.student.cs.uwaterloo.ca/~cs241/a10/">A9 A10</a>, <a href="http://www.student.cs.uwaterloo.ca/~cs241/a3/">A3</a>, <a href="http://www.student.cs.uwaterloo.ca/~cs241/a4/">A4</a></p><h3>Step5: Code Fragements -> Linking -> Executable File(Single File)</h3><p>将多个compile好的多个文件链接在一起, 生成一个可执行的二进制文件(或仅生成合并以后的单个文件, 但文件本身可能无法执行)</p><p>作业中对应: <a href="http://www.student.cs.uwaterloo.ca/~cs241/a5/">A5 P1, P2</a></p><p>附: 09FALL 第二题答案</p><ol>
+<li>Scanning</li>
+<li>Parsing</li>
+<li>Semantic Analysis</li>
+<li>Parsing</li>
+<li>Semantic Analysis</li>
+<li>Linking</li>
+<li>Semantic Analysis</li>
+<li>Parsing</li>
+<li>1A@#SR%$#</li>
+<li>&#43; foo</li>
+<li>x</li>
+</ol>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/compiler-ge-ge-bu-zhou-de-han-yi.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/compiler-ge-ge-bu-zhou-de-han-yi.html</wfw:commentRss>
+</item>
+<item>
+<title>LR(1) Parser Example</title>
+<link>http://blog.gregwym.info/lr-1--parser-example.html</link>
+<guid>http://blog.gregwym.info/lr-1--parser-example.html</guid>
+<pubDate>Tue, 19 Apr 2011 05:24:08 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[Terminal Symbols: 6个BOF, EOF, id, -, (, )Nonterminal Symbols: 3个S, expr, termStart Symbol:SProductio...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>Terminal Symbols: 6个<br /><blockquote>BOF, EOF, id, -, (, )</blockquote><br />Nonterminal Symbols: 3个<br /><blockquote>S, expr, term</blockquote><br />Start Symbol:<br /><blockquote>S</blockquote><br />Production Rules: 5个<br /><blockquote><table width="100%" border="1">
+		<tr>
+			<td>0</td>
+			<td>S BOF expr EOF</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>expr term</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>expr expr - term</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>term id</td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>term ( expr )</td>
+		</tr>
+	</table></blockquote><br /><!--more--></p><p>Total State: 11个 (0 to 11)<br />Total Transitions: 28个<br /><blockquote><table width="100%"  border="1">
+		<tr>
+			<td>State</td>
+			<td>Symbol</td>
+			<td>Action</td>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>BOF</td>
+			<td>shift to state 6</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>(</td>
+			<td>shift to state 3</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>id</td>
+			<td>shift to state 2</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>term</td>
+			<td>shift to state 8</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>(</td>
+			<td>shift to state 3</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>expr</td>
+			<td>shift to state 7</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>id</td>
+			<td>shift to state 2</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>term</td>
+			<td>shift to state 4</td>
+		</tr>
+		<tr>
+			<td>6</td>
+			<td>(</td>
+			<td>shift to state 3</td>
+		</tr>
+		<tr>
+			<td>6</td>
+			<td>expr</td>
+			<td>shift to state 10</td>
+		</tr>
+		<tr>
+			<td>6</td>
+			<td>id</td>
+			<td>shift to state 2</td>
+		</tr>
+		<tr>
+			<td>6</td>
+			<td>term</td>
+			<td>shift to state 4</td>
+		</tr>
+		<tr>
+			<td>7</td>
+			<td>)</td>
+			<td>shift to state 9</td>
+		</tr>
+		<tr>
+			<td>7</td>
+			<td>-</td>
+			<td>shift to state 1</td>
+		</tr>
+		<tr>
+			<td>10</td>
+			<td>-</td>
+			<td>shift to state 1</td>
+		</tr>
+		<tr>
+			<td>10</td>
+			<td>EOF</td>
+			<td>shift to state 5</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>)</td>
+			<td>reduce by rule 3</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>-</td>
+			<td>reduce by rule 3</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>EOF</td>
+			<td>reduce by rule 3</td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>)</td>
+			<td>reduce by rule 1</td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>-</td>
+			<td>reduce by rule 1</td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>EOF</td>
+			<td>reduce by rule 1</td>
+		</tr>
+		<tr>
+			<td>8</td>
+			<td>)</td>
+			<td>reduce by rule 2</td>
+		</tr>
+		<tr>
+			<td>8</td>
+			<td>-</td>
+			<td>reduce by rule 2</td>
+		</tr>
+		<tr>
+			<td>8</td>
+			<td>EOF</td>
+			<td>reduce by rule 2</td>
+		</tr>
+		<tr>
+			<td>9</td>
+			<td>)</td>
+			<td>reduce by rule 4</td>
+		</tr>
+		<tr>
+			<td>9</td>
+			<td>-</td>
+			<td>reduce by rule 4</td>
+		</tr>
+		<tr>
+			<td>9</td>
+			<td>EOF</td>
+			<td>reduce by rule 4</td>
+		</tr>
+	</table></blockquote><br />String to Parse:<blockquote>BOF id - ( id ) - id EOF</blockquote><br /><br />Parse Step:<br />蓝色的行是Shift, 灰色的行是Reduce<br />Reduce的次数取决于Production Rule RHS的长度<br />当前Symbol所对应的State,<br /><table border="1">
+			<tr bgcolor="#F8F8F8">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>State Stack <br />
+(At EOL)</td>
+				<td>Description</td>
+			</tr>
+			<tr bgcolor="#F8F8F8">
+				<td>S0</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0</td>
+				<td>Start</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td>BOF</td>
+				<td>S6</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0 6</td>
+				<td>S0 BOF S6</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td>id</td>
+				<td>S2</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0 6 2</td>
+				<td>S6 id S2</td>
+			</tr>
+			<tr bgcolor="#EEEEEE">
+				<td></td>
+				<td>R3</td>
+				<td>-</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0 6</td>
+				<td>S2 - Reduce by   rule #3 <br />
+(replace id with term)</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td>term</td>
+				<td>S4</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0 6 4</td>
+				<td>S6 term S4</td>
+			</tr>
+			<tr bgcolor="#EEEEEE">
+				<td></td>
+				<td>R1</td>
+				<td>-</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0 6</td>
+				<td>S4 - Reduce by   rule #1 <br />
+(replace term with expr)</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td>expr</td>
+				<td>S10</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0 6 10</td>
+				<td>S6 expr S10</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td>-</td>
+				<td>S1</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0 6 10 1</td>
+				<td>S10 - S1</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>(</td>
+				<td>S3</td>
+				<td></td>
+				<td></td>
+				<td>0 6 10 1 3</td>
+				<td>S1 ( S3</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>id</td>
+				<td>S2</td>
+				<td></td>
+				<td>0 6 10 1 3 2</td>
+				<td>S3 id S2</td>
+			</tr>
+			<tr bgcolor="#EEEEEE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>R3</td>
+				<td>)</td>
+				<td></td>
+				<td>0 6 10 1 3</td>
+				<td>S2 ) Reduce by   rule #3 <br />
+(replace id with term)</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>term</td>
+				<td>S4</td>
+				<td></td>
+				<td>0 6 10 1 3 4</td>
+				<td>S3 term S4</td>
+			</tr>
+			<tr bgcolor="#EEEEEE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>R1</td>
+				<td>)</td>
+				<td></td>
+				<td>0 6 10 1 3</td>
+				<td>S4 ) Reduce by   rule #1 <br />
+(replace term with expr)</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>expr</td>
+				<td>S7</td>
+				<td></td>
+				<td>0 6 10 1 3 7</td>
+				<td>S3 expr S7</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>)</td>
+				<td>S9</td>
+				<td>0 6 10 1 3 7 9</td>
+				<td>S7 ) S9</td>
+			</tr>
+			<tr bgcolor="#EEEEEE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>R4</td>
+				<td>R4</td>
+				<td>R4</td>
+				<td>-</td>
+				<td>0 6 10 1</td>
+				<td>S9 - Reduce by   rule #4 <br />
+(repace &quot;( expr )&quot; with term)</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>term</td>
+				<td>S8</td>
+				<td></td>
+				<td></td>
+				<td>0 6 10 1 8</td>
+				<td>S1 term S8</td>
+			</tr>
+			<tr bgcolor="#EEEEEE">
+				<td></td>
+				<td>R2</td>
+				<td>R2</td>
+				<td>R2</td>
+				<td>-</td>
+				<td></td>
+				<td></td>
+				<td>0 6</td>
+				<td>S8 - Reduce by   rule #2 <br />
+(replace &quot;expr - term&quot; with expr)</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td>expr</td>
+				<td>S10</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0 6 10</td>
+				<td>S6 expr S10</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td>-</td>
+				<td>S1</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0 6 10 1</td>
+				<td>S10 - S1</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>id</td>
+				<td>S2</td>
+				<td></td>
+				<td></td>
+				<td>0 6 10 1 2</td>
+				<td>S1 id S2</td>
+			</tr>
+			<tr bgcolor="#EEEEEE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>R3</td>
+				<td>EOF</td>
+				<td></td>
+				<td></td>
+				<td>0 6 10 1</td>
+				<td>S2 EOF Reduce by rule #3 <br />
+(replace id with term)</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>term</td>
+				<td>S8</td>
+				<td></td>
+				<td></td>
+				<td>0 6 10 1 8</td>
+				<td>S1 term S8</td>
+			</tr>
+			<tr bgcolor="#EEEEEE">
+				<td></td>
+				<td>R2</td>
+				<td>R2</td>
+				<td>R2</td>
+				<td>EOF</td>
+				<td></td>
+				<td></td>
+				<td>0 6</td>
+				<td>S8 EOF Reduce by rule #2 <br />
+(replace &quot;expr - term&quot; with expr)</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td>expr</td>
+				<td>S10</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>0 6 10</td>
+				<td>S6 expr S10</td>
+			</tr>
+			<tr bgcolor="#DBECFE">
+				<td></td>
+				<td></td>
+				<td>EOF</td>
+				<td>S5</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>Final S5</td>
+				<td>S10 EOF S5</td>
+			</tr>
+		</table><br />
+</blockquote><br />原题来源: <a target="_blank" href="http://www.student.cs.uwaterloo.ca/~cs241/parsing/lr1.html">http://www.student.cs.uwaterloo.ca/~cs241/parsing/lr1.html</a><br /></p>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/lr-1--parser-example.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/lr-1--parser-example.html</wfw:commentRss>
+</item>
+</channel>
+</rss>

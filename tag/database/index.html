@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>database - 某储备粮的“学习笔记”</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 使用url函数转换相关路径 -->
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/style.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/prettify.css" />
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="http://blog.gregwym.info/tag/database/images/favicon.ico">
+<link rel="apple-touch-icon" href="http://blog.gregwym.info/tag/database/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="http://blog.gregwym.info/tag/database/images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="http://blog.gregwym.info/tag/database/images/apple-touch-icon-114x114.png">
+
+<!-- 通过自有函数输出HTML头部信息 -->
+<meta name="keywords" content="database" />
+<meta name="generator" content="Typecho 0.9/13.12.12" />
+<meta name="template" content="trapecho" />
+<link rel="pingback" href="../../action/xmlrpc.html" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="../../action/xmlrpc%3Frsd.html" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="../../action/xmlrpc%3Fwlw.html" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="../../feed/tag/database/index.html" />
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="../../feed/rss/tag/database/index.html" />
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="../../feed/atom/tag/database/index.html" />
+</head>
+
+<body onload="prettyPrint()">
+
+<div class="container">
+
+<header class="jumbotron" id="overview">
+        <h1>某储备粮的“学习笔记” </h1>
+    <p class="lead">by 咳嗽di小鱼</p>
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                
+                <a class="brand" href="../../index.html">
+                    Trapecho
+                </a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="../../index.html">Home</a></li>
+                        <li class="divider-vertical"></li>
+                                                                        <li><a href="../../category/sum-up/index.html" title="Sum Up">Sum Up</a></li>
+                                                <li><a href="../../category/code-dump/index.html" title="Code Dump">Code Dump</a></li>
+                                                <li><a href="../../category/network/index.html" title="Network">Network</a></li>
+                                                <li><a href="../../category/jotting/index.html" title="Jotting">Jotting</a></li>
+                                                <li><a href="../../category/Portfolio/index.html" title="Portfolio">Portfolio</a></li>
+                                                <li class="divider-vertical"></li>
+                                                                        <li><a href="../../linked-in.html" title="Linked In">Linked In</a></li>
+                                                <li><a href="../../guess-book.html" title="Guest Book">Guest Book</a></li>
+                                                <li><a href="../../about.html" title="About">About</a></li>
+                                                <li><a href="../../rss.html" title="RSS">RSS</a></li>
+                                            </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="content">
+
+
+<div class="row">
+    <div class="span9" id="content">
+                        <div class="post">
+            <div class="page-header">
+                <h1>
+                    <a href="../../guan-xi-mo-xing-gai-nian-zheng-li.html">关系模型概念整理 (Relational Model)</a> 
+                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: October 18, 2011</span>
+                    <span>Category: <a href="../../category/sum-up/index.html">Sum Up</a></span>
+                    <a href="../../guan-xi-mo-xing-gai-nian-zheng-li.html#comments">2 Comments</a>
+                </h6>
+            </div>
+            <div class="entry-content"><p>Definition实在不知道怎么概括= =...</p><ul>
+<li>Intention of a relation: relation definition and constrains</li>
+<li>Extention of a relation: the actual data, tuples</li>
+</ul><h3>Relation properties</h3><ul>
+<li>Set Theory <br />
+<br />
+<ul>
+<li>Attributes has order (not necessary)</li>
+<li>Value are used to identify tuples</li>
+<li>Tuples dont have order</li>
+<li>Tuples cant have duplication</li>
+</ul></li>
+<li>Attribute value are atomic</li>
+<li>Degree: How many attributes in the schema</li>
+<li>Cardinality: How many tuples in an instance</li>
+</ul><h3>Constraints</h3><ul>
+<li>Let the DBMS to ensure the entry or modification on data are legal</li>
+<li>Give applications' bug no chance to ruin the data</li>
+</ul><h3>Three Constraint Level</h3><ul>
+<li>Tuple-level <br />
+<br />
+<ul>
+<li>Domain restrictions (datatype)</li>
+<li>Attribute comparisons (好像是指check)</li>
+</ul></li>
+<li>Relation-level <br />
+<br />
+<ul>
+<li>Special type of keys <br />
+<br />
+<ul>
+<li>Superkey: 能uniquely identifies a tuple的一个or一组attribute</li>
+<li>Candidate key: Superkey的最小集, (最简单的一个or一组attribute)</li>
+<li>Primary key: 被选中, 用来identity tuples的Candidate key</li>
+</ul></li>
+</ul></li>
+<li>Database-level <br />
+<br />
+<ul>
+<li>Referential integrity <br />
+<br />
+<ul>
+<li>Foreign key: 其他relation中的primary key</li>
+<li>Referential integrity: 不允许出现和对应relation中的记录不符的情况</li>
+</ul></li>
+<li>Inclusion dependencies: = =`不懂</li>
+</ul></li>
+</ul></div>
+        </div>
+        <hr class="soften" />
+                <div class="post">
+            <div class="page-header">
+                <h1>
+                    <a href="../../shu-ju-ku-ji-chu-gai-nian-zheng-li.html">数据库基础概念整理</a> 
+                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: October 18, 2011</span>
+                    <span>Category: <a href="../../category/sum-up/index.html">Sum Up</a></span>
+                    <a href="../../shu-ju-ku-ji-chu-gai-nian-zheng-li.html#comments">No Comments</a>
+                </h6>
+            </div>
+            <div class="entry-content"><h3>Definitions</h3><ul>
+<li>Database: is a large and persistent collection of pieces of information organized in a way that facilitate efficient retrieval and modification.</li>
+<li>DBMS: is a program that manages details related to storage and access for a database.</li>
+<li>Schema: is a description of the data interface to the database.</li>
+<li>Instance: is a database that conforms to a given schema.</li>
+<li>Transaction: is an application-specified atomic and durable unit of work.</li>
+<li>View: is a relation in the external schema whose instance is determined by the instances of the relations in the conceptual schema.</li>
+<li>Trigger: is a procedure executed by the database in response to a change to the database instance</li>
+</ul><h3>Three Level Schema Architecture</h3><ul>
+<li>External schema (view): visualized data</li>
+<li>Conceptual schema: logical structure</li>
+<li>Physical schema: file/storage devices</li>
+</ul><h3>Data Independence</h3><ul>
+<li>Application access the data through an abstract data model provided by the DBMS, rather than direct access</li>
+<li>Physical: applications cant touch the storage stucture</li>
+<li>Logical: applications cant change the data organization</li>
+</ul><h3>Four Transaction Properties</h3><p>NoSQL据说就是要break these properties= =`IDK why...</p><ul>
+<li>Atomic: once the transaction happens, it happened. No intermediate stage!</li>
+<li>Consistency: transaction follows the database consitences</li>
+<li>Isolated: concurrent transactions wont effect each other</li>
+<li>Durable: transaction results permanently</li>
+</ul><h3>What DBMS do</h3><ul>
+<li>Remoce common code from applications</li>
+<li>Provide uniform access to data</li>
+<li>Guarantee data integrity</li>
+<li>manage concurrent access</li>
+<li>Protect against system failure</li>
+<li>Set access policies for data</li>
+</ul></div>
+        </div>
+        <hr class="soften" />
+                <div class="post">
+            <div class="page-header">
+                <h1>
+                    <a href="../../sql-yu-fa-zheng-li.html">SQL语法整理</a> 
+                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: October 16, 2011</span>
+                    <span>Category: <a href="../../category/sum-up/index.html">Sum Up</a></span>
+                    <a href="../../sql-yu-fa-zheng-li.html#comments">No Comments</a>
+                </h6>
+            </div>
+            <div class="entry-content"><h3>SELECT</h3><pre><code>SELECT attribute-expression-list FROM relation-list [ WHERE condition ];
+</code></pre><p>attribute-expression-list:</p><ul>
+<li>[relation-name.]attribute</li>
+<li>[relation-name.]attribute [arithmatic computation] AS another name <br />
+<br />
+<ul>
+<li>i.e., E.Salary - 40000 AS SalaryDiff</li>
+</ul></li>
+<li>CASE WHEN ... THEN ...<br />ELSE ... END <br />
+<br />
+<ul>
+<li>i.e., CASE WHEN E.Salary &lt; 40000 THEN 0<br />ELSE E.Salary - 40000 END</li>
+</ul></li>
+</ul><p>relation-list:</p><ul>
+<li>list of table names</li>
+<li>seperate by comma</li>
+</ul><p>condition:</p><ul>
+<li>arithmetic operation +, -, *, /</li>
+<li>comparisions =, &lt;>, &lt;, &lt;=, >. >=</li>
+<li>logical connectives AND, OR, NOT</li>
+<li>attribute IN (Q)</li>
+<li>attribute NOT IN (Q)</li>
+<li>attribute op SOME (Q)</li>
+<li>attribute op ALL (Q)</li>
+<li>EXISTS (Q)</li>
+<li>NOT EXISTS (Q)</li>
+<li>IS [NOT] NULL</li>
+</ul><p></p><p class="more"><a href="../../sql-yu-fa-zheng-li.html" title="SQL语法整理">Read more...</a></p></div>
+        </div>
+        <hr class="soften" />
+                <div class="post">
+            <div class="page-header">
+                <h1>
+                    <a href="../../linux-fu-wu-qi-`-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html">linux服务器`自动备份数据库+网页到邮箱</a> 
+                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: April 4, 2011</span>
+                    <span>Category: <a href="../../category/network/index.html">Network</a></span>
+                    <a href="../../linux-fu-wu-qi-`-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html#comments">1 Comment</a>
+                </h6>
+            </div>
+            <div class="entry-content"><p>我的QQ邮箱现在已经有3T容量了...<br />原来玩WordPress的时候其实就一直拿来做数据库备份, 现在容量变大几倍有余, 自然是备份的不二选择. 这可比<a href="https://www.fdcservers.net/order-1.php?plan_id=358">FDC的大容量VPS</a>划算多了, 特别是当你的网站并没有多大的时候. (书苑现在的数据库也都还没有1G...)</p><p>这个脚本来自<a href="http://www.vpsmm.com/edu/everyday-auto-backup-linux-vps.html">小夜博客</a>, 经我略加修改了一下.<br />下载: <a href="http://blog.gregwym.info/usr/uploads/2011/04/259619282.sh" title="backup_to_mail.sh">backup&#95;to&#95;mail.sh</a></p><p><hr /></p><p>很简单的一段bash script, 只需要自定义下mysql的用户名密码, 邮箱地址和要备份的目录.</p><p>然后进行下边的步骤:</p><p>首先要建立好放置备份文件的目录</p><pre><code>mkdir /home/backup
+</code></pre><p>然后安装发送邮件的程序</p><pre><code>yum install sendmail mutt
+</code></pre><p>把backup&#95;to&#95;mail.sh放到刚刚建立的目录中, 然后给脚本增加运行权限</p><pre><code>chmod a+x /home/backup/backup_to_mail.sh
+</code></pre><p>最后一步是设置定时运行, 输入</p><pre><code>crontab -e
+</code></pre><p>然后在vi编辑界面中加入下面这行文字</p><pre><code>00 00 * * * /home/backup/backup_to_mail.sh
+</code></pre><p>:x + enter就ok了.</p><p>其中00 00表示在每日00分, 00点的时候运行该脚本.</p><p>下边是脚本的内容, 以备附件失效和以后学习...</p><pre><code>#!/bin/bash
+MYSQL_USER=root                             #mysql username
+MYSQL_PASS=***********                      #mysql password
+MAIL_TO=*******@***.**                      #mailling to
+WEB_DATA=/home/wwwroot/                     #to be backup dir
+
+#define variables
+DataBakName=Data_$(date +%Y%m%d).tar.gz
+WebBakName=Web_$(date +%Y%m%d).tar.gz
+OldData=Data_$(date -d -3day +%Y%m%d).tar.gz
+OldWeb=Web_$(date -d -3day +%Y%m%d).tar.gz
+DataSubject="Backup: gregwym.info database "$(date +%Y%m%d)
+WebSubject="Backup: gregwym.info web dir "$(date +%Y%m%d)
+
+#delete data from 3days earlier
+rm -rf /home/backup/$OldData /home/backup/$OldWeb
+cd /home/backup
+
+#export database to compressed gz files
+for db in `/usr/local/mysql/bin/mysql -u$MYSQL_USER -p$MYSQL_PASS -B -N -e 'SHOW DATABASES' | xargs`; do
+    (/usr/local/mysql/bin/mysqldump --single-transaction -u$MYSQL_USER -p$MYSQL_PASS ${db} | gzip -9 - &gt; ${db}.sql.gz)
+done
+
+#compress database files
+tar zcf /home/backup/$DataBakName /home/backup/*.sql.gz
+rm -rf /home/backup/*.sql.gz
+#mail database
+echo $DataSubject | mutt -a /home/backup/$DataBakName -s "${DataSubject}" $MAIL_TO
+
+#compress backup dir
+tar zcf /home/backup/$WebBakName $WEB_DATA
+#mail dir
+echo $WebSubject | mutt -a /home/backup/$WebBakName -s "${WebSubject}" $MAIL_TO
+
+echo "bye"
+#END
+</code></pre><p>如果不希望备份网页文件, 或者希望数据库和网页分别备份的, 可以自行拆分脚本为两个文件.</p><p>如果只是想降低备份网页文件的频率, 可以将#mail dir部分替换为:</p><pre><code>if [ $(date +%A) = "Sunday" ]; then 
+    echo $WebSubject | mutt -a /home/backup/$WebBakName -s "${WebSubject}" $MAIL_TO 
+fi
+</code></pre></div>
+        </div>
+        <hr class="soften" />
+                
+        <div class="pagination">
+                    </div>
+    </div><!-- end #content-->
+    <div class="span3" id="sidebar">
+    <div class="widget_search">
+        <form method="post" id="searchform" class="form-search">
+            <input type="text" class="span2" name="s" id="s" />
+            <button type="submit" class="btn" id="searchsubmit">Search</button>
+        </form>
+    </div>
+    
+        
+    
+    
+        <div class="widget">
+        <h3>Recent Comments</h3>
+        <ul>
+                                    <li><a href="../../github-you-should-have-told-me-earlier.html#comment-952">payday loans</a>: wfxqtdq</li>
+                        <li><a href="../../Trapecho-boostrap-based-typecho-theme.html#comment-936">地铁线路图网</a>: 我也在用typecho，小巧玲珑，稍微改了以下默认模板，站现在简洁速度也不错，点击我的昵称可以访问。</li>
+                        <li><a href="../../about.html#comment-930">ramble</a>: 博客 ，请问如何显示显示文章前3段的摘要  不打乱格式</li>
+                        <li><a href="../../about.html#comment-874">清源</a>: 看来暂时只能看着用了，google的高亮的比较不明显。</li>
+                        <li><a href="../../about.html#comment-870">清源</a>: 大哥呀，主题这几天我看着感觉用中文书写标题字体太大了，正文的字体也太小了，估计还是适合用英文，不知道...</li>
+                    </ul>
+    </div>
+        
+        <div class="widget">
+    		<h3>Labels</h3>
+        <ul>
+                                    <a href="../algorithm/index.html" class="size-20">algorithm</a>
+                        <a href="../review/index.html" class="size-20">review</a>
+                        <a href="../cs240/index.html" class="size-10">cs240</a>
+                        <a href="../server/index.html" class="size-10">server</a>
+                        <a href="../VPS/index.html" class="size-10">VPS</a>
+                        <a href="../code/index.html" class="size-5">code</a>
+                        <a href="index.html" class="size-5">database</a>
+                        <a href="../cs348/index.html" class="size-5">cs348</a>
+                        <a href="../typecho/index.html" class="size-5">typecho</a>
+                        <a href="../nginx/index.html" class="size-5">nginx</a>
+                        <a href="../search/index.html" class="size-5">search</a>
+                        <a href="../GUI/index.html" class="size-5">GUI</a>
+                        <a href="../linux/index.html" class="size-5">linux</a>
+                        <a href="../java/index.html" class="size-5">java</a>
+                        <a href="../DNS/index.html" class="size-5">DNS</a>
+                        <a href="../blog/index.html" class="size-5">blog</a>
+                        <a href="../apple/index.html" class="size-5">apple</a>
+                        <a href="../cs241/index.html" class="size-5">cs241</a>
+                        <a href="../compiler/index.html" class="size-5">compiler</a>
+                        <a href="../sql/index.html" class="size-5">sql</a>
+                    </ul>
+		</div>
+    
+    
+        <div class="widget">
+        <h3>Archives</h3>
+        <ul>
+            <li><a href="../../2013/09/index.html">September 2013</a></li>
+<li><a href="../../2012/12/index.html">December 2012</a></li>
+<li><a href="../../2012/11/index.html">November 2012</a></li>
+<li><a href="../../2012/08/index.html">August 2012</a></li>
+<li><a href="../../2012/06/index.html">June 2012</a></li>
+<li><a href="../../2012/04/index.html">April 2012</a></li>
+<li><a href="../../2012/03/index.html">March 2012</a></li>
+<li><a href="../../2012/02/index.html">February 2012</a></li>
+<li><a href="../../2011/12/index.html">December 2011</a></li>
+<li><a href="../../2011/11/index.html">November 2011</a></li>
+<li><a href="../../2011/10/index.html">October 2011</a></li>
+<li><a href="../../2011/06/index.html">June 2011</a></li>
+<li><a href="../../2011/05/index.html">May 2011</a></li>
+<li><a href="../../2011/04/index.html">April 2011</a></li>
+<li><a href="../../2011/03/index.html">March 2011</a></li>
+        </ul>
+    </div>
+    
+    
+        <div class="widget">
+        <h3>Others</h3>
+        <ul>
+                        <li class="last"><a href="http://blog.gregwym.info/admin/login.php">Login</a></li>
+                        <li><a href="http://validator.w3.org/check/referer">Valid XHTML</a></li>
+        </ul>
+    </div>
+    
+    </div><!-- end #sidebar -->
+    
+</div>
+<footer>
+    <p>
+        Powered by <a href="http://typecho.org/">Typecho</a>. 
+        <a href="http://dolast.com/pages/trapecho">Trapecho</a> theme by <a href="../../index.html">咳嗽di小鱼</a>. 
+        Hosting on <a href="https://www.digitalocean.com/?refcode=b846692d6a3a">Digital Ocean</a>
+    </p>
+</footer><!-- end #footer -->
+
+</div>
+</div>
+
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/jquery-1.7.1.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/bootstrap.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/prettify.js"></script>
+<script type="text/javascript">
+    // fix navbar on scroll
+    var $win = $(window)
+      , $nav = $('.navbar')
+      , navTop = $('.navbar').length && $('.navbar').offset().top - 10
+      , isFixed = 0
+
+    processScroll()
+
+    $win.on('scroll', processScroll)
+
+    function processScroll() {
+      var i, scrollTop = $win.scrollTop()
+      if (scrollTop >= navTop && !isFixed) {
+        isFixed = 1
+        $nav.addClass('navbar-fixed-top')
+      } else if (scrollTop <= navTop && isFixed) {
+        isFixed = 0
+        $nav.removeClass('navbar-fixed-top')
+      }
+    }
+    
+    $('.page-navigator li:not(:has(a))').html('<a>...</a>');
+    $('.page-navigator .current').addClass('active');
+    
+        $('pre').addClass('prettyprint linenums');
+        $('.entry-content a').attr('target','_blank');
+</script>
+</body>
+</html>

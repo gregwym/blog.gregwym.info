@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/tag/VPN/">
+<title>某储备粮的“学习笔记” - VPN</title>
+<link>http://blog.gregwym.info/tag/VPN/</link>
+<description></description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html">
+<title>Quickweb OpenVZ安装PPTP VPN实践笔记(不用MPPE)</title>
+<link>http://blog.gregwym.info/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html</link>
+<dc:date>2011-04-22T23:56:29+08:00</dc:date>
+<description>从回国之前, 一直倒腾到家`可算是把VPN搭好了...OpenVZ的VPS在内核这块实在是缺少自由, 如果是Xen这次就不会这么复杂了.废话少说.基本过程和网上其他的教程都差不多, 主要在于加密和ipforward的配置.
+安装ppp和iptables
+
+yum install -y ppp iptables
+
+安装pptpd
+
+wget http://poptop.sourceforge.net/yum/stable/packages/pptpd-1.3.4-2.rhel5.i386.rpm 
+rpm -ivh pptpd-1.3.4-2.rhel5.i386.rpm 
+
+
+配置/etc/ppp/options.pptpd这个是不使用MPPE加密的配置, 适用于母鸡kernel不支持MPPE的童鞋
+
+name pptpd 
+# Encryption部分全部注释掉, 不使用加密 
+# 使用chap验证 
++chap 
+#使用Google DNS 
+ms-dns 8.8.8.8 
+ms-dns 8.8.4.4 
+proxyarp 
+lock 
+nobsdcomp 
+novj 
+novjccomp 
+nologfd 
+nodeflate 
+
+
+这个是使用MPPE的配置, 如果你的母鸡支持, 推荐用这个
+
+name pptpd 
+# 禁用pap, chap, mschap 
+refuse-pap 
+refuse-chap 
+refuse-mschap 
+# 强制mschap-v2和mppe-128 
+require-mschap-v2 
+require-mppe-128 
+#使用Google DNS 
+ms-dns 8.8.8.8 
+ms-dns 8.8.4.4 
+proxyarp 
+lock 
+nobsdcomp 
+novj 
+novjccomp 
+nologfd
+
+配置/etc/pptpd.conf
+
+option /etc/ppp/options.pptpd 
+# 设置ip分配方案 
+localip 172.16.36.1 
+remoteip 172.16.36.2-254 
+
+配置/etc/ppp/chap-secrets, 设置登录帐号
+
+# Secrets for authentication using CHAP 
+# client   server   secret   IP_addresses 
+帐号       pptpd    密码      *(表示任意IP都可以连接)
+
+配置ip转发 /etc/sysctl.conf
+
+net.ipv4.ip_forward = 1
+
+
+在bash中执行
+
+sysctl -p 
+service pptpd restart 
+service iptables restart 
+iptables -t nat -A POSTROUTING -s 172.16.36.0/24 -o venet0 -j MASQUERADE 
+iptables -I FORWARD -p tcp --syn -i ppt+ -j TCPMSS --set-mss 1356 
+service iptables save 
+service iptables restart 
+chkconfig pptpd on 
+chkconfig iptables on
+
+这些都配置好了以后, 如果你使用了MPPE, 那就可以尝试连接了.如果你没有使用MPPE
+在Windows中设置VPN, 取消include windows logon domain, 选择PPTP连接,Data加密选择Optional, 选择CHAP验证登录
+在Mac/iOS中设置VPN, 将加密设置为"无"即可 这样就可以尝试连接了
+Note: 日志文件在/var/log/messages, 如果log中出现, "This system lacks kernel support for PPP. " 字样, 请发ticket让ISP给你打开PPP支持, 之后就应该可以正常连接了.参考资料:CentOS 5 VPS上配置pptpd作为VPN服务器不带MPPE的VPN服务器端及客户端的设置笔记</description>
+</item>
+</rdf:RDF>

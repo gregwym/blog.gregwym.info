@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/tag/database/">
+<title>某储备粮的“学习笔记” - database</title>
+<link>http://blog.gregwym.info/tag/database/</link>
+<description></description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/guan-xi-mo-xing-gai-nian-zheng-li.html"/>
+<rdf:li resource="http://blog.gregwym.info/shu-ju-ku-ji-chu-gai-nian-zheng-li.html"/>
+<rdf:li resource="http://blog.gregwym.info/sql-yu-fa-zheng-li.html"/>
+<rdf:li resource="http://blog.gregwym.info/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/guan-xi-mo-xing-gai-nian-zheng-li.html">
+<title>关系模型概念整理 (Relational Model)</title>
+<link>http://blog.gregwym.info/guan-xi-mo-xing-gai-nian-zheng-li.html</link>
+<dc:date>2011-10-19T08:49:01+08:00</dc:date>
+<description>Definition实在不知道怎么概括= =...
+Intention of a relation: relation definition and constrains
+Extention of a relation: the actual data, tuples
+Relation properties
+Set Theory 
+
+
+Attributes has order (not necessary)
+Value are used to identify tuples
+Tuples dont have order
+Tuples cant have duplication
+
+Attribute value are atomic
+Degree: How many attributes in the schema
+Cardinality: How many tuples in an instance
+Constraints
+Let the DBMS to ensure the entry or modification on data are legal
+Give applications' bug no chance to ruin the data
+Three Constraint Level
+Tuple-level 
+
+
+Domain restrictions (datatype)
+Attribute comparisons (好像是指check)
+
+Relation-level 
+
+
+Special type of keys 
+
+
+Superkey: 能uniquely identifies a tuple的一个or一组attribute
+Candidate key: Superkey的最小集, (最简单的一个or一组attribute)
+Primary key: 被选中, 用来identity tuples的Candidate key
+
+
+Database-level 
+
+
+Referential integrity 
+
+
+Foreign key: 其他relation中的primary key
+Referential integrity: 不允许出现和对应relation中的记录不符的情况
+
+Inclusion dependencies: = =`不懂
+
+</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/shu-ju-ku-ji-chu-gai-nian-zheng-li.html">
+<title>数据库基础概念整理</title>
+<link>http://blog.gregwym.info/shu-ju-ku-ji-chu-gai-nian-zheng-li.html</link>
+<dc:date>2011-10-19T04:55:14+08:00</dc:date>
+<description>Definitions
+Database: is a large and persistent collection of pieces of information organized in a way that facilitate efficient retrieval and modification.
+DBMS: is a program that manages details related to storage and access for a database.
+Schema: is a description of the data interface to the database.
+Instance: is a database that conforms to a given schema.
+Transaction: is an application-specified atomic and durable unit of work.
+View: is a relation in the external schema whose instance is determined by the instances of the relations in the conceptual schema.
+Trigger: is a procedure executed by the database in response to a change to the database instance
+Three Level Schema Architecture
+External schema (view): visualized data
+Conceptual schema: logical structure
+Physical schema: file/storage devices
+Data Independence
+Application access the data through an abstract data model provided by the DBMS, rather than direct access
+Physical: applications cant touch the storage stucture
+Logical: applications cant change the data organization
+Four Transaction PropertiesNoSQL据说就是要break these properties= =`IDK why...
+Atomic: once the transaction happens, it happened. No intermediate stage!
+Consistency: transaction follows the database consitences
+Isolated: concurrent transactions wont effect each other
+Durable: transaction results permanently
+What DBMS do
+Remoce common code from applications
+Provide uniform access to data
+Guarantee data integrity
+manage concurrent access
+Protect against system failure
+Set access policies for data
+</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/sql-yu-fa-zheng-li.html">
+<title>SQL语法整理</title>
+<link>http://blog.gregwym.info/sql-yu-fa-zheng-li.html</link>
+<dc:date>2011-10-17T06:00:15+08:00</dc:date>
+<description>SELECTSELECT attribute-expression-list FROM relation-list [ WHERE condition ];
+attribute-expression-list:
+[relation-name.]attribute
+[relation-name.]attribute [arithmatic computation] AS another name 
+
+
+i.e., E.Salary - 40000 AS SalaryDiff
+
+CASE WHEN ... THEN ...ELSE ... END 
+
+
+i.e., CASE WHEN E.Salary &lt; 40000 THEN 0ELSE E.Salary - 40000 END
+
+relation-list:
+list of table names
+seperate by comma
+condition:
+arithmetic operation +, -, *, /
+comparisions =, &lt;>, &lt;, &lt;=, >. >=
+logical connectives AND, OR, NOT
+attribute IN (Q)
+attribute NOT IN (Q)
+attribute op SOME (Q)
+attribute op ALL (Q)
+EXISTS (Q)
+NOT EXISTS (Q)
+IS [NOT] NULL
+NULLAND Table
+  
+    
+      AND
+      
+      TRUE
+      
+      FALSE
+      
+      NULL
+    
+    
+    
+      TRUE
+      
+      TRUE
+      
+      FALSE
+      
+      NULL
+    
+    
+    
+      FALSE
+      
+      FALSE
+      
+      FALSE
+      
+      FALSE
+    
+    
+    
+      NULL
+      
+      NULL
+      
+      FALSE
+      
+      NULL
+    
+  
+OR Table
+  
+    
+      OR
+      
+      TRUE
+      
+      FALSE
+      
+      NULL
+    
+    
+    
+      TRUE
+      
+      TRUE
+      
+      TRUE
+      
+      TRUE
+    
+    
+    
+      FALSE
+      
+      TRUE
+      
+      FALSE
+      
+      NULL
+    
+    
+    
+      NULL
+      
+      TRUE
+      
+      NULL
+      
+      NULL
+    
+  
+NOT Table
+  
+    
+      NOT
+      
+      TRUE
+      
+      FALSE
+      
+      NULL
+    
+    
+    
+      
+      
+      FALSE
+      
+      TRUE
+      
+      NULL
+    
+  
+UNION INTERSECT EXCEPT(Q1 and Q2 must have same attribute-list)Q1 UNION Q2 => Together all the tuples in Q1 and Q2Q1 INTERSECT Q2 => Only tuples in both Q1 and Q2Q1 EXCEPT Q2 => Tuples only in Q1 but not in Q2ALL关键字: 允许重复UNION ALL will include twice of duplicate tuplesINTERSECT ALL will include all possible pairs of match tuples, duplication possibleEXCEPT ALL will include all "not in Q2" tuples, duplication possible[INNER]/OUTER JOIN
+Inner join把两个表连接在一起, 返回两个表中相匹配的记录, 是2和3的交集
+Left outer join, 左侧表所有的记录都返回, 右侧匹配的记录返回, 没有匹配的返回Null
+Right outer join, 与Left outer join相反, 右侧的记录返回, 左侧返回匹配的记录, 没有匹配返回Null
+Full outer join, 2和3的并集
+Cross join, 两个表的笛卡儿积, 返回所有可能的值, 不允许有连接条件
+ORDER BYSELECT ... ... ORDER BY attribute [DESC/ASC], attribute [DESC/ASC], ......
+Note: 如果没有指定Order, return的数据可能是任意顺序GROUP BY, HAVING, Aggregate expressions{count, sum, avg, min, max} => Aggregate expressionsOrder: Group => Having => Aggregate
+count(*): number of tuples
+count(E): number of tupple for which E is non-NULL
+count(distinct E): number of distinct non-NULL E values
+sum(E)
+sum(distinct E)
+avg(E)
+avg(distinct E)
+min(E)
+max(E)
+Note: 没有被group by指定的attribute不能出现在SELECT的attr-list中, 除非是aggregateINSERT INTOINSERT INTO relation-name [( attribute-list )] VALUE ( value-list );
+DELETEDELETE FROM relation-name [ WHERE condition ];
+UPDATEUPDATE relation-name SET attribute-assignment-list [ WHERE condition ]; 
+attribute-assignment-list:
+pairs of assignment
+seperate by comma
+i.e., WorkDept = 'E01', Address = 'Waterloo'
+CREATE TABLECREATE TABLE relation-name ( attribute-name attribute-type [constraints-list], ... )
+attribute-type: http://www.w3school.com.cn/sql/sql_datatypes.aspconstraints-list: (Constraints的格式在各种数据库中都不太一样, 就不列举了)
+NOT NULL
+PRIMARY KEY
+UNIQUE
+FOREIGN KEY
+Column or Tuple CHECK
+CREATE VIEWCREATE VIEW view-name AS ( SELECT ... ) 
+从View SELECT的方法和table一样CREATE TRIGGERCREATE TRIGGER trigger-name 
+AFTER UPDATE OF attribute-list ON relation-name 
+REFERENCING OLD as instance-name(o) NEW as instance-name(n) 
+FOR EACH ROW ...  
+不同database语法不一</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html">
+<title>linux服务器`自动备份数据库+网页到邮箱</title>
+<link>http://blog.gregwym.info/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html</link>
+<dc:date>2011-04-05T10:11:48+08:00</dc:date>
+<description>我的QQ邮箱现在已经有3T容量了...原来玩WordPress的时候其实就一直拿来做数据库备份, 现在容量变大几倍有余, 自然是备份的不二选择. 这可比FDC的大容量VPS划算多了, 特别是当你的网站并没有多大的时候. (书苑现在的数据库也都还没有1G...)这个脚本来自小夜博客, 经我略加修改了一下.下载: backup&#95;to&#95;mail.sh很简单的一段bash script, 只需要自定义下mysql的用户名密码, 邮箱地址和要备份的目录.然后进行下边的步骤:首先要建立好放置备份文件的目录mkdir /home/backup
+然后安装发送邮件的程序yum install sendmail mutt
+把backup&#95;to&#95;mail.sh放到刚刚建立的目录中, 然后给脚本增加运行权限chmod a+x /home/backup/backup_to_mail.sh
+最后一步是设置定时运行, 输入crontab -e
+然后在vi编辑界面中加入下面这行文字00 00 * * * /home/backup/backup_to_mail.sh
+:x + enter就ok了.其中00 00表示在每日00分, 00点的时候运行该脚本.下边是脚本的内容, 以备附件失效和以后学习...#!/bin/bash
+MYSQL_USER=root                             #mysql username
+MYSQL_PASS=***********                      #mysql password
+MAIL_TO=*******@***.**                      #mailling to
+WEB_DATA=/home/wwwroot/                     #to be backup dir
+
+#define variables
+DataBakName=Data_$(date +%Y%m%d).tar.gz
+WebBakName=Web_$(date +%Y%m%d).tar.gz
+OldData=Data_$(date -d -3day +%Y%m%d).tar.gz
+OldWeb=Web_$(date -d -3day +%Y%m%d).tar.gz
+DataSubject="Backup: gregwym.info database "$(date +%Y%m%d)
+WebSubject="Backup: gregwym.info web dir "$(date +%Y%m%d)
+
+#delete data from 3days earlier
+rm -rf /home/backup/$OldData /home/backup/$OldWeb
+cd /home/backup
+
+#export database to compressed gz files
+for db in `/usr/local/mysql/bin/mysql -u$MYSQL_USER -p$MYSQL_PASS -B -N -e 'SHOW DATABASES' | xargs`; do
+    (/usr/local/mysql/bin/mysqldump --single-transaction -u$MYSQL_USER -p$MYSQL_PASS ${db} | gzip -9 - &gt; ${db}.sql.gz)
+done
+
+#compress database files
+tar zcf /home/backup/$DataBakName /home/backup/*.sql.gz
+rm -rf /home/backup/*.sql.gz
+#mail database
+echo $DataSubject | mutt -a /home/backup/$DataBakName -s "${DataSubject}" $MAIL_TO
+
+#compress backup dir
+tar zcf /home/backup/$WebBakName $WEB_DATA
+#mail dir
+echo $WebSubject | mutt -a /home/backup/$WebBakName -s "${WebSubject}" $MAIL_TO
+
+echo "bye"
+#END
+如果不希望备份网页文件, 或者希望数据库和网页分别备份的, 可以自行拆分脚本为两个文件.如果只是想降低备份网页文件的频率, 可以将#mail dir部分替换为:if [ $(date +%A) = "Sunday" ]; then 
+    echo $WebSubject | mutt -a /home/backup/$WebBakName -s "${WebSubject}" $MAIL_TO 
+fi
+</description>
+</item>
+</rdf:RDF>

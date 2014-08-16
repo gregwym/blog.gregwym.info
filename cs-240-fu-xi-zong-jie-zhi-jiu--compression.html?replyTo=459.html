@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>CS 240复习总结之九: Compression - 某储备粮的“学习笔记”</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 使用url函数转换相关路径 -->
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/style.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/prettify.css" />
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="http://blog.gregwym.info/images/favicon.ico">
+<link rel="apple-touch-icon" href="http://blog.gregwym.info/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="http://blog.gregwym.info/images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="http://blog.gregwym.info/images/apple-touch-icon-114x114.png">
+
+<!-- 通过自有函数输出HTML头部信息 -->
+<meta name="description" content="概念就不说了, 啥压缩比啊, logical/Physical compression, Lossy/Lossless的.Run-Length Encoding (RLE)思路: 将连续的0或1用位数..." />
+<meta name="keywords" content="algorithm,cs240,review,compression" />
+<meta name="generator" content="Typecho 0.9/13.12.12" />
+<meta name="template" content="trapecho" />
+<link rel="pingback" href="action/xmlrpc.html" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="action/xmlrpc%3Frsd.html" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="action/xmlrpc%3Fwlw.html" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="feed/cs-240-fu-xi-zong-jie-zhi-jiu--compression.html" />
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="feed/rss/cs-240-fu-xi-zong-jie-zhi-jiu--compression.html" />
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="feed/atom/cs-240-fu-xi-zong-jie-zhi-jiu--compression.html" />
+<script type="text/javascript">
+//<![CDATA[
+var TypechoComment = {
+    dom : function (id) {
+        return document.getElementById(id);
+    },
+    
+    create : function (tag, attr) {
+        var el = document.createElement(tag);
+        
+        for (var key in attr) {
+            el.setAttribute(key, attr[key]);
+        }
+        
+        return el;
+    },
+
+    reply : function (cid, coid) {
+        var comment = this.dom(cid), parent = comment.parentNode,
+            response = this.dom('respond-post-58'), input = this.dom('comment-parent'),
+            form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+            textarea = response.getElementsByTagName('textarea')[0];
+
+        if (null == input) {
+            input = this.create('input', {
+                'type' : 'hidden',
+                'name' : 'parent',
+                'id'   : 'comment-parent'
+            });
+
+            form.appendChild(input);
+        }
+        
+        input.setAttribute('value', coid);
+
+        if (null == this.dom('comment-form-place-holder')) {
+            var holder = this.create('div', {
+                'id' : 'comment-form-place-holder'
+            });
+            
+            response.parentNode.insertBefore(holder, response);
+        }
+
+        comment.appendChild(response);
+        this.dom('cancel-comment-reply-link').style.display = '';
+        
+        if (null != textarea && 'text' == textarea.name) {
+            textarea.focus();
+        }
+        
+        return false;
+    },
+
+    cancelReply : function () {
+        var response = this.dom('respond-post-58'),
+        holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+        if (null != input) {
+            input.parentNode.removeChild(input);
+        }
+
+        if (null == holder) {
+            return true;
+        }
+
+        this.dom('cancel-comment-reply-link').style.display = 'none';
+        holder.parentNode.insertBefore(response, holder);
+        return false;
+    }
+}
+//]]>
+</script></head>
+
+<body onload="prettyPrint()">
+
+<div class="container">
+
+<header class="jumbotron" id="overview">
+        <h1>某储备粮的“学习笔记” </h1>
+    <p class="lead">by 咳嗽di小鱼</p>
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                
+                <a class="brand" href="index.html">
+                    Trapecho
+                </a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="index.html">Home</a></li>
+                        <li class="divider-vertical"></li>
+                                                                        <li><a href="category/sum-up/index.html" title="Sum Up">Sum Up</a></li>
+                                                <li><a href="category/code-dump/index.html" title="Code Dump">Code Dump</a></li>
+                                                <li><a href="category/network/index.html" title="Network">Network</a></li>
+                                                <li><a href="category/jotting/index.html" title="Jotting">Jotting</a></li>
+                                                <li><a href="category/Portfolio/index.html" title="Portfolio">Portfolio</a></li>
+                                                <li class="divider-vertical"></li>
+                                                                        <li><a href="linked-in.html" title="Linked In">Linked In</a></li>
+                                                <li><a href="guess-book.html" title="Guest Book">Guest Book</a></li>
+                                                <li><a href="about.html" title="About">About</a></li>
+                                                <li><a href="rss.html" title="RSS">RSS</a></li>
+                                            </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="content">
+
+
+<div class="row">
+    <div class="span9" id="content">
+        <div class="post">
+            <div class="page-header">
+                <h1>
+                    CS 240复习总结之九: Compression                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: April 11, 2011</span>
+                    <span>Category: <a href="category/sum-up/index.html">Sum Up</a></span>
+                </h6>
+            </div>
+            <div class="entry-content"><p>概念就不说了, 啥压缩比啊, logical/Physical compression, Lossy/Lossless的.<br /><br /><h3>Run-Length Encoding (RLE)</h3>思路: 将连续的0或1用位数表示, 缩减重复段所占的位置<br /><ul>
+<li>第一位表示由0或者1开头</li>
+<li>之后用prefix-free integer encoding表示每一个Run的长度<ul>
+<li>后x位表示这个run的binary长度</li>
+<li>前x-1位填零, 为unary表示后x位的长度减一</li>
+</ul></li>
+</ul><br /><br /><h3>Huffman Coding</h3><br />
+思路: 用特殊的binary编码表, 省略ASCII/UTF-8编码中无用字符所占用的位置<br /><ul>
+<li>用binary trie表示字典中的所有字符</li>
+<li>将文本依照trie转成binary</li>
+</ul><br />
+如何建立压缩比最好的trie<br /><ul>
+<li>将每个字符存入独立的trie中</li>
+<li>确定每个字符的出现次数(频率), 一个trie的比重(weight)即为trie中字符的频率和</li>
+<li>将weight最小的两个trie合并成一个新trie</li>
+<li>重复上一步直到只剩下一个trie</li>
+</ul><br /><!--more--></p><h3>MTF</h3><br /><ul>
+<li>用字典中, 字符的index表示字符</li>
+<li>使用动态字典, 将出现过的字符移到字典开头, 以减小下次出现时该字符的index值</li>
+<li>MTF本身不能达到压缩的目的, 需配合prefix-free integer encoding或者huffman</li>
+</ul><br /><br /><h3>LZW</h3><br />
+思路: 给出现过的字符组assign编码, 在重复出现时以一个编码代表整个字符组<br /><ul>
+<li>字典编码使用固定长度k, 字典总共有2<sup>k</sup>个entry</li>
+<li>字典由所有单字符开头, 剩余entry留空</li>
+<li>从第二个encode的字符[组]开始, 将其首字符与上一个encode的字符[组], 组成一个新的字符组, 并存入字典中</li>
+<li>当这个字符组合再次出现的时候, 即可用一个编码代表整个字符组</li>
+</ul><br /><br /><h3>BWT</h3><br />
+思路: 不知道!!!!!!! 他tm就是work了`!!!不知道为什么!!!!<br />Encode方法:<br /><ul>
+<li>将整个string S写成各种cyclic shift, 用$表示string结尾</li>
+<li>比如abcd$可以写成abcd$, bcd$a, cd$ab, d$abc, $abcd</li>
+<li>将所有cyclic shift排序</li>
+<li>将排序后的所有cyclic shift的最后一位按顺序组合成新的string, 既是Encoded的string C</li>
+</ul><br />
+Decode方法:<br /><ul>
+<li>给Encoded的string C的每一个字符一个序号, 从0到n-1</li>
+<li>将字符和序号一起排序. 排序后的序号提取为Array N</li>
+<li>for(i = N[N[0]], i != N[0], i = N[i]) print(C[i]);</li>
+</ul><br />
+BWT本身不进行压缩, 而是将string转化成更容易被MTF压缩的Encoded string.<br />BWT以后, 执行MTF即可达到极佳的英文字符压缩比.<br /><br />更多CS 240总结请看: <a target="_blank" href="tag/cs240/index.html">http://blog.gregwym.info/tag/cs240/</a><br /></p></div>
+            <div class="entry-tags">
+                Labels: 
+                <span class="label label-info">
+                    <a href="tag/algorithm/index.html">algorithm</a></span> <span class="label label-info"><a href="tag/cs240/index.html">cs240</a></span> <span class="label label-info"><a href="tag/review/index.html">review</a></span> <span class="label label-info"><a href="tag/compression/index.html">compression</a>                </span>
+            </div>
+        </div>
+        <hr class="soften" />
+        <div id="comments">
+                                    <h3>30 comments &raquo;</h3>
+            
+            <ol class="comment-list"><li id="comment-86" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/17948ba5d78626f5d9eb0ff010e8df92?s=32&amp;r=X&amp;d=" alt="CzBiX" width="32" height="32" />        <cite class="fn"><a href="http://czbix.tk" rel="external nofollow">CzBiX</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-86">April 13th, 2011 at 09:04 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>整个博客全是算法什么的?<br>
+太猛了.<br>
+这个是压缩的基本算法吧,转了.</p>    </div>
+    <div class="comment-reply">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html%3FreplyTo=86.html#respond-post-58" rel="nofollow" onclick="return TypechoComment.reply('comment-86', 86);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-87" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-87">April 13th, 2011 at 09:17 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>额`...我正在期末考试, 这个是复习总结= =`<br>
+博客主要是随手记一些平时瞎折腾时候碰到的问题, 省的以后再用的时候找不到, 哈哈<br>
+欢迎转载</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-88" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/17948ba5d78626f5d9eb0ff010e8df92?s=32&amp;r=X&amp;d=" alt="CzBiX" width="32" height="32" />        <cite class="fn"><a href="http://czbix.tk" rel="external nofollow">CzBiX</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-88">April 13th, 2011 at 09:37 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>虽然自己不可能写个压缩算法出来,但是学了这个对程序设计绝对有用,呵</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-91" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-91">April 13th, 2011 at 09:53 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>对啊, 所以虽然这门课学的有点头疼, 可还是好好复习整理一下, 以后用的时候就方便了.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-93" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/17948ba5d78626f5d9eb0ff010e8df92?s=32&amp;r=X&amp;d=" alt="CzBiX" width="32" height="32" />        <cite class="fn"><a href="http://czbix.tk" rel="external nofollow">CzBiX</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-93">April 13th, 2011 at 10:01 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>课程名是?</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-94" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-94">April 13th, 2011 at 10:03 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>CS 240: Data Structures and Data Management<br>
+http://www.student.cs.uwaterloo.ca/~cs240/w11/</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-98" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/17948ba5d78626f5d9eb0ff010e8df92?s=32&amp;r=X&amp;d=" alt="CzBiX" width="32" height="32" />        <cite class="fn"><a href="http://czbix.tk" rel="external nofollow">CzBiX</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-98">April 13th, 2011 at 10:19 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>滑铁卢大学 留学 Android IT专业 日本动漫<br>
+呵呵,留字后面,我和你一样..</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-99" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-99">April 13th, 2011 at 10:23 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>哈哈`大家都是技术宅...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-100" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/17948ba5d78626f5d9eb0ff010e8df92?s=32&amp;r=X&amp;d=" alt="CzBiX" width="32" height="32" />        <cite class="fn"><a href="http://czbix.tk" rel="external nofollow">CzBiX</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-100">April 13th, 2011 at 10:41 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>晚上9点啦,你几点睡?</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-101" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-101">April 13th, 2011 at 10:43 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>其实是11点40了...`<br>
+还在复习, 准备睡了...这两天依然在考试</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-102" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/17948ba5d78626f5d9eb0ff010e8df92?s=32&amp;r=X&amp;d=" alt="CzBiX" width="32" height="32" />        <cite class="fn"><a href="http://czbix.tk" rel="external nofollow">CzBiX</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-102">April 13th, 2011 at 10:49 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>加拿大不是GMT-8么?夏令时再-1,<br>
+15个小时的时差,错在哪里了?</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-103" class="comment-body comment-child comment-level-odd comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/17948ba5d78626f5d9eb0ff010e8df92?s=32&amp;r=X&amp;d=" alt="CzBiX" width="32" height="32" />        <cite class="fn"><a href="http://czbix.tk" rel="external nofollow">CzBiX</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-103">April 13th, 2011 at 10:51 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>哦,加拿大是多时区的...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-104" class="comment-body comment-child comment-level-odd comment-even comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-104">April 13th, 2011 at 10:51 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>西岸是-8, 我是东岸 -5.<br>
+夏令时+1, 现在是-4`</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-105" class="comment-body comment-child comment-level-odd comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/17948ba5d78626f5d9eb0ff010e8df92?s=32&amp;r=X&amp;d=" alt="CzBiX" width="32" height="32" />        <cite class="fn"><a href="http://czbix.tk" rel="external nofollow">CzBiX</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-105">April 13th, 2011 at 10:56 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>还是错了...<br>
+Whatever,不早了,不打扰你休息了.Have a nice dream!</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-106" class="comment-body comment-child comment-level-odd comment-even comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-106">April 13th, 2011 at 11:09 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>thx`night</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-107" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/39e81821e64a6e4a14d8d5c404bd88b8?s=32&amp;r=X&amp;d=" alt="ucsir" width="32" height="32" />        <cite class="fn"><a href="http://ucsir.com" rel="external nofollow">ucsir</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-107">April 16th, 2011 at 09:07 am</a>
+            </div>
+    <div class="comment-content">
+    <p>强悍的你们。</p>    </div>
+    <div class="comment-reply">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html%3FreplyTo=107.html#respond-post-58" rel="nofollow" onclick="return TypechoComment.reply('comment-107', 107);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-108" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-108">April 16th, 2011 at 09:51 am</a>
+            </div>
+    <div class="comment-content">
+    <p>啊哈`晚上好...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-109" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/17948ba5d78626f5d9eb0ff010e8df92?s=32&amp;r=X&amp;d=" alt="CzBiX" width="32" height="32" />        <cite class="fn"><a href="http://czbix.tk" rel="external nofollow">CzBiX</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-109">April 21st, 2011 at 10:51 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>- -<br>
+不用显摆时差吧</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-110" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-110">April 22nd, 2011 at 12:01 am</a>
+            </div>
+    <div class="comment-content">
+    <p>= =...`回家了</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-459" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/b328e32056393f1e5705eb4b91dd4b40?s=32&amp;r=X&amp;d=" alt="ixwebhosting" width="32" height="32" />        <cite class="fn"><a href="http://ixwebhosting.us" rel="external nofollow">ixwebhosting</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-459">May 19th, 2011 at 12:52 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>技术盲的路过！</p>    </div>
+    <div class="comment-reply">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html%3FreplyTo=459.html#respond-post-58" rel="nofollow" onclick="return TypechoComment.reply('comment-459', 459);">回复</a>    </div>
+    </li>
+<li id="comment-626" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/25640591830c71978d694fce26ee9b31?s=32&amp;r=X&amp;d=" alt="Cherry" width="32" height="32" />        <cite class="fn">Cherry</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-626">July 24th, 2012 at 09:34 am</a>
+            </div>
+    <div class="comment-content">
+    <p>这学期学的240好痛苦。。 感谢分享！<br>
+另外想请教一下三年级除了cs341还建议选什么其他的课吗？<br>
+谢谢！</p>    </div>
+    <div class="comment-reply">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html%3FreplyTo=626.html#respond-post-58" rel="nofollow" onclick="return TypechoComment.reply('comment-626', 626);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-628" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-628">July 24th, 2012 at 10:59 am</a>
+            </div>
+    <div class="comment-content">
+    <p>341 350是必修吧? 348肯定要上. 349不推荐, 如果想上最好有和各种概念搏斗的心理准备. 343要上, 不过好像要求350. 370, 371这些我没上过.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-632" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/25640591830c71978d694fce26ee9b31?s=32&amp;r=X&amp;d=" alt="Cherry" width="32" height="32" />        <cite class="fn">Cherry</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-632">July 31st, 2012 at 01:23 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>348一定有用么？ 我看下学期的348的老师好差呃。。 担心学不到东西。。cs360学长推荐么？</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-633" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-633">July 31st, 2012 at 07:57 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>348肯定要上. 老师不是一个口音很诡异的香港人的话, 应该问题不大= =...CS360没听周围人上过.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-634" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/25640591830c71978d694fce26ee9b31?s=32&amp;r=X&amp;d=" alt="Cherry" width="32" height="32" />        <cite class="fn">Cherry</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-634">August 6th, 2012 at 06:56 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>额偏偏这学期好像就是内个香港人。。评分好低额。。叫Edward Chan 。。 这个老师的可以上么？</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-635" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-635">August 7th, 2012 at 02:59 am</a>
+            </div>
+    <div class="comment-content">
+    <p>你可以先选上，听两节课，他的口音保证你听的如痴如醉，云里雾里的。(悄悄话: 想真的学明白database的话，就别上他的课了...)</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-637" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/25640591830c71978d694fce26ee9b31?s=32&amp;r=X&amp;d=" alt="Cherry" width="32" height="32" />        <cite class="fn">Cherry</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-637">August 10th, 2012 at 05:29 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>懂了。。 下学期好像有两个老师教。。另外一个老师好像挺好的。但是是第一次教这个课。 如果我去另外一个老师的section行不行呀？ 会不会是内个很差的香港老师来出题呢？</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-639" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-639">August 11th, 2012 at 03:19 am</a>
+            </div>
+    <div class="comment-content">
+    <p>这就说不准了...哈哈</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-638" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/25640591830c71978d694fce26ee9b31?s=32&amp;r=X&amp;d=" alt="Cherry" width="32" height="32" />        <cite class="fn">Cherry</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-638">August 10th, 2012 at 05:30 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>下学期除了348没其他课可以上了诶。。</p>    </div>
+    <div class="comment-reply">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html%3FreplyTo=638.html#respond-post-58" rel="nofollow" onclick="return TypechoComment.reply('comment-638', 638);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-640" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#comment-640">August 11th, 2012 at 03:19 am</a>
+            </div>
+    <div class="comment-content">
+    <p>先报上试一下吧`</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+</ol>            
+            <div class="pagination">
+                            </div>
+            
+                        
+                        <div id="respond-post-58" class="respond">
+            
+            <div class="cancel-comment-reply">
+            <a id="cancel-comment-reply-link" href="cs-240-fu-xi-zong-jie-zhi-jiu--compression.html#respond-post-58" rel="nofollow" onclick="return TypechoComment.cancelReply();">取消回复</a>            </div>
+            
+            <form class="form-horizontal" method="post" action="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-jiu--compression.html/comment?parent=459" id="comment_form">
+                <fieldset>
+                    <legend>Add new comment &raquo;</legend>
+                                        <div class="control-group">
+                        <label class="control-label" for="author">Nick name</label>
+                        <div class="controls">
+                            <input type="text" name="author" id="author" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="mail">E-mail<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" name="mail" id="mail" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Web</label>
+                        <div class="controls">
+                            <input type="text" name="url" id="url" class="input-large" value="" />
+                        </div>
+                    </div>
+                                        <div class="control-group">
+                        <label class="control-label" for="url">Comment</label>
+                        <div class="controls">
+                            <textarea class="input-xlarge" name="text" rows="3"></textarea>
+                            <p class="help-block">Enter your comment here...</p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Captcha</label>
+                        <div class="controls">
+                            <img src="action/captcha" alt="captcha" onclick="this.src = this.src + '?' + Math.random()" style="cursor: pointer" title="点击图片刷新验证码" /><br /><input type="text" class="captcha" name="captcha_code" /> <strong>请输入验证码</strong>							                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Submit comment</button>
+                    </div>
+                </fieldset>
+            </form>
+            </div>
+            
+
+        </div>    </div><!-- end #content-->
+    <div class="span3" id="sidebar">
+    <div class="widget_search">
+        <form method="post" id="searchform" class="form-search">
+            <input type="text" class="span2" name="s" id="s" />
+            <button type="submit" class="btn" id="searchsubmit">Search</button>
+        </form>
+    </div>
+    
+        
+                    <div class="widget">
+            <h3>Related Posts</h3>
+                        <ul>
+                            <li><a href="cs-341-algorithm-brief-review.html" title="CS 341 Algorithm 复习小记">CS 341 Algorithm 复习小记</a></li>
+                            <li><a href="cs-240-fu-xi-zong-jie-zhi-ba--tries-and-string-matching.html" title="CS 240复习总结之八: Tries & String Matching">CS 240复习总结之八: Tries & String Matching</a></li>
+                            <li><a href="cs-240-fu-xi-zong-jie-zhi-qi--range-search-query.html" title="CS 240复习总结之七: Range Search Query">CS 240复习总结之七: Range Search Query</a></li>
+                            <li><a href="cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html" title="CS 240复习总结之六: Dictionary Tricks">CS 240复习总结之六: Dictionary Tricks</a></li>
+                            <li><a href="cs-240-fu-xi-zong-jie-zhi-wu--hashing.html" title="CS 240复习总结之五: Hashing">CS 240复习总结之五: Hashing</a></li>
+                        </ul>
+        </div>
+            
+    
+        <div class="widget">
+        <h3>Recent Comments</h3>
+        <ul>
+                                    <li><a href="github-you-should-have-told-me-earlier.html#comment-952">payday loans</a>: wfxqtdq</li>
+                        <li><a href="Trapecho-boostrap-based-typecho-theme.html#comment-936">地铁线路图网</a>: 我也在用typecho，小巧玲珑，稍微改了以下默认模板，站现在简洁速度也不错，点击我的昵称可以访问。</li>
+                        <li><a href="about.html#comment-930">ramble</a>: 博客 ，请问如何显示显示文章前3段的摘要  不打乱格式</li>
+                        <li><a href="about.html#comment-874">清源</a>: 看来暂时只能看着用了，google的高亮的比较不明显。</li>
+                        <li><a href="about.html#comment-870">清源</a>: 大哥呀，主题这几天我看着感觉用中文书写标题字体太大了，正文的字体也太小了，估计还是适合用英文，不知道...</li>
+                    </ul>
+    </div>
+        
+        <div class="widget">
+    		<h3>Labels</h3>
+        <ul>
+                                    <a href="tag/algorithm/index.html" class="size-20">algorithm</a>
+                        <a href="tag/review/index.html" class="size-20">review</a>
+                        <a href="tag/cs240/index.html" class="size-10">cs240</a>
+                        <a href="tag/server/index.html" class="size-10">server</a>
+                        <a href="tag/VPS/index.html" class="size-10">VPS</a>
+                        <a href="tag/code/index.html" class="size-5">code</a>
+                        <a href="tag/database/index.html" class="size-5">database</a>
+                        <a href="tag/cs348/index.html" class="size-5">cs348</a>
+                        <a href="tag/typecho/index.html" class="size-5">typecho</a>
+                        <a href="tag/nginx/index.html" class="size-5">nginx</a>
+                        <a href="tag/search/index.html" class="size-5">search</a>
+                        <a href="tag/GUI/index.html" class="size-5">GUI</a>
+                        <a href="tag/linux/index.html" class="size-5">linux</a>
+                        <a href="tag/java/index.html" class="size-5">java</a>
+                        <a href="tag/DNS/index.html" class="size-5">DNS</a>
+                        <a href="tag/blog/index.html" class="size-5">blog</a>
+                        <a href="tag/apple/index.html" class="size-5">apple</a>
+                        <a href="tag/cs241/index.html" class="size-5">cs241</a>
+                        <a href="tag/compiler/index.html" class="size-5">compiler</a>
+                        <a href="tag/sql/index.html" class="size-5">sql</a>
+                    </ul>
+		</div>
+    
+    
+        <div class="widget">
+        <h3>Archives</h3>
+        <ul>
+            <li><a href="2013/09/index.html">September 2013</a></li>
+<li><a href="2012/12/index.html">December 2012</a></li>
+<li><a href="2012/11/index.html">November 2012</a></li>
+<li><a href="2012/08/index.html">August 2012</a></li>
+<li><a href="2012/06/index.html">June 2012</a></li>
+<li><a href="2012/04/index.html">April 2012</a></li>
+<li><a href="2012/03/index.html">March 2012</a></li>
+<li><a href="2012/02/index.html">February 2012</a></li>
+<li><a href="2011/12/index.html">December 2011</a></li>
+<li><a href="2011/11/index.html">November 2011</a></li>
+<li><a href="2011/10/index.html">October 2011</a></li>
+<li><a href="2011/06/index.html">June 2011</a></li>
+<li><a href="2011/05/index.html">May 2011</a></li>
+<li><a href="2011/04/index.html">April 2011</a></li>
+<li><a href="2011/03/index.html">March 2011</a></li>
+        </ul>
+    </div>
+    
+    
+        <div class="widget">
+        <h3>Others</h3>
+        <ul>
+                        <li class="last"><a href="http://blog.gregwym.info/admin/login.php">Login</a></li>
+                        <li><a href="http://validator.w3.org/check/referer">Valid XHTML</a></li>
+        </ul>
+    </div>
+    
+    </div><!-- end #sidebar -->
+    
+</div>
+<footer>
+    <p>
+        Powered by <a href="http://typecho.org/">Typecho</a>. 
+        <a href="http://dolast.com/pages/trapecho">Trapecho</a> theme by <a href="index.html">咳嗽di小鱼</a>. 
+        Hosting on <a href="https://www.digitalocean.com/?refcode=b846692d6a3a">Digital Ocean</a>
+    </p>
+</footer><!-- end #footer -->
+
+</div>
+</div>
+
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/jquery-1.7.1.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/bootstrap.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/prettify.js"></script>
+<script type="text/javascript">
+    // fix navbar on scroll
+    var $win = $(window)
+      , $nav = $('.navbar')
+      , navTop = $('.navbar').length && $('.navbar').offset().top - 10
+      , isFixed = 0
+
+    processScroll()
+
+    $win.on('scroll', processScroll)
+
+    function processScroll() {
+      var i, scrollTop = $win.scrollTop()
+      if (scrollTop >= navTop && !isFixed) {
+        isFixed = 1
+        $nav.addClass('navbar-fixed-top')
+      } else if (scrollTop <= navTop && isFixed) {
+        isFixed = 0
+        $nav.removeClass('navbar-fixed-top')
+      }
+    }
+    
+    $('.page-navigator li:not(:has(a))').html('<a>...</a>');
+    $('.page-navigator .current').addClass('active');
+    
+        $('pre').addClass('prettyprint linenums');
+        $('.entry-content a').attr('target','_blank');
+</script>
+</body>
+</html>
+

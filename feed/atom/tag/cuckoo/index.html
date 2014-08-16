@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+xmlns:thr="http://purl.org/syndication/thread/1.0"
+xml:lang="zh-CN"
+xml:base="http://blog.gregwym.info/tag/cuckoo/"
+>
+<title type="text">某储备粮的“学习笔记” - cuckoo</title>
+<subtitle type="text"></subtitle>
+<updated>2011-04-07T07:11:34+08:00</updated>
+<generator uri="http://typecho.org/" version="0.9/13.12.12">Typecho</generator>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/tag/cuckoo/" />
+<id>http://blog.gregwym.info/feed/atom/tag/cuckoo/</id>
+<link rel="self" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/tag/cuckoo/" />
+<entry>
+<title type="html"><![CDATA[CS 240复习总结之五: Hashing]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-wu--hashing.html" />
+<id>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-wu--hashing.html</id>
+<updated>2011-04-07T07:11:34+08:00</updated>
+<published>2011-04-07T07:11:34+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[Direct Addressingkey和地址直接对应与Counting Sort同理Runtime: Θ(1), Space: Θ(n)浪费空间, 且只能用于intHashingHash ...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-wu--hashing.html" xml:lang="zh-CN"><![CDATA[
+<blockquote><h4>Direct Addressing</h4><br /><ul>
+<li>key和地址直接对应</li>
+<li>与Counting Sort同理</li>
+<li>Runtime: Θ(1), Space: Θ(n)</li>
+<li>浪费空间, 且只能用于int</li>
+</ul></blockquote><br /><h3>Hashing</h3><br /><blockquote>Hash Function<br /><ul>
+<li>将key经过function运算以后, 得到对应的hash value</li>
+<li>Hash function的好坏决定于数据的性质, 不同的数据适用不同的function</li>
+<li>好的Hash funtion, 高效, 与数据规律无关联, 依赖于key的所有部分</li>
+</ul><br />
+冲突解决方案(Collision Resolution)<br />Basic concept:<br /><ul>
+<li>Buckets: 多个item共存</li>
+<li>Open Addressing: 一个item对应多个位置</li>
+<li>Load Balance: α = n/M (n: item数量, M: hash table大小)</li>
+</ul></blockquote><br /><blockquote>方案一: Chaining (Buckets)<br /><ul>
+<li>将新的item放入对应位置, 并link到原来位置所存放的item</li>
+<li>缺点: 大量数据会导致大量重复, 效率降低</li>
+</ul><br />方案二: Linear Probing<br /><ul>
+<li>如果要insert的位置非空, 则将item放入下一个位置. 重复这一条直到insert成功/回到原位置(insert失败)</li>
+<li>某个item被delete以后, 该位置须标记为deleted, 不能再使用</li>
+<li>缺点: 大量数据后会有明显的效率降低, deleted以后会有空间浪费, 增加M以后rehash可以解决部分问题, 但cost很高.</li>
+</ul><br />方案三:  Double Hashing<br /><ul>
+<li>在Linear Probing基础上增加一个与h1独立的functions h2.</li>
+<li>如果要insert的位置非空, hash value = [原hash value + h2(k)] % M. 重复这一条直到insert成功/回到原位置(insert失败)</li>
+<li>缺点: 与Linear Probing相同, 只是increment由1变为了h2的结果, 所以降低了第二次insert的失败概率.</li>
+</ul><br />方案四: Cuckoo Hasing<br /><ol>
+<li>有两个相互独立的hash functions, h1和h2</li>
+<li>将item insert到h1(k)中</li>
+<li>如果原来h1(k)的位置并不为空, 将原item重新insert到与h1(k)值不同的hash value中去</li>
+<li>如出现loop的情况, insert失败, rehash</li>
+</ol><br /><ul style="margin-top: -12px;"><li>优点: iterm只能出现在h1(k)或者h2(k)中, search效率高.</li></ul></blockquote><br /><del>继续编辑中...</del><br />谁能告诉我, 咱们学Extendible Hashing了么`? 貌似没有吧...<br /><br />更多CS 240总结请看: <a target="_blank" href="http://blog.gregwym.info/tag/cs240/">http://blog.gregwym.info/tag/cs240/</a></p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-wu--hashing.html#comments" thr:count="3" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/cs-240-fu-xi-zong-jie-zhi-wu--hashing.html" thr:count="3"/>
+</entry>
+</feed>

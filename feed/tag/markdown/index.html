@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+xmlns:content="http://purl.org/rss/1.0/modules/content/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+xmlns:atom="http://www.w3.org/2005/Atom"
+xmlns:wfw="http://wellformedweb.org/CommentAPI/">
+<channel>
+<title>某储备粮的“学习笔记” - markdown</title>
+<link>http://blog.gregwym.info/tag/markdown/</link>
+<atom:link href="http://blog.gregwym.info/feed/tag/markdown/" rel="self" type="application/rss+xml" />
+<language>zh-CN</language>
+<description></description>
+<lastBuildDate>Sun, 18 Mar 2012 23:08:18 +0800</lastBuildDate>
+<pubDate>Sun, 18 Mar 2012 23:08:18 +0800</pubDate>
+<item>
+<title>Typecho用Markdown编辑器</title>
+<link>http://blog.gregwym.info/typecho-markdown-editor.html</link>
+<guid>http://blog.gregwym.info/typecho-markdown-editor.html</guid>
+<pubDate>Sun, 18 Mar 2012 23:08:18 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[在网上找了下Typecho的Markdown插件, 有两个版本, 主要区别如下明城制作的Markdown插件 浏览时转换Markdown=>HTML数据库保存Markdown文本ichuan制作的Ma...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>在网上找了下Typecho的Markdown插件, 有两个版本, 主要区别如下</p><ul>
+<li><a href="http://www.gracecode.com/archives/3082/">明城</a>制作的Markdown插件 <br />
+<br />
+<ul>
+<li>浏览时转换Markdown=>HTML</li>
+<li>数据库保存Markdown文本</li>
+</ul></li>
+<li><a href="http://forum.typecho.org/topic.php?id=1218">ichuan</a>制作的Markdown4TE <br />
+<br />
+<ul>
+<li>保存文章时转换Markdown=>HTML</li>
+<li>数据库保存HTML文本</li>
+</ul></li>
+</ul><p>这两种实现都各有利弊, 我个人倾向于ichuan的做法.<br />原因无外乎, 能保持Typecho文章数据的一致性, 以前存HTML现在还是存HTML, 只是编辑的方式变了.</p><p><hr /></p><p>但ichuan的插件在用的时候不是那么顺利. 因为js放置的位置好像有些问题, 编辑器和预览99%的时候加载失败(Chrome 17). 预览界面的CSS定义也有些问题.</p><p>于是自己动手丰衣足食, 把成果po出来给和我碰到同样问题的朋友们.</p><ul>
+<li>保留了原插件的保存和读取部分</li>
+<li>重新构造了编辑器部分 <br />
+<br />
+<ul>
+<li>使用了和Stack Oveflow一样的最新<a href="http://code.google.com/p/pagedown/">PageDown编辑器</a></li>
+<li>编辑器带实时效果预览</li>
+<li>完整定义了各种格式的预览效果</li>
+</ul></li>
+</ul><p>Mar 19/2012 v0.2.1</p><ul>
+<li>修复了无法插入附件的BUG</li>
+</ul><p><!--more--></p><h3>下载</h3><blockquote><p><a href="https://github.com/gregwym/Markdown4TE/zipball/master">https://github.com/gregwym/Markdown4TE/zipball/master</a></p></blockquote><h3>Github</h3><blockquote><p><a href="https://github.com/gregwym/Markdown4TE">https://github.com/gregwym/Markdown4TE</a></p></blockquote><h3>有图有真相</h3><blockquote><p><a href="https://github.com/gregwym/Markdown4TE/raw/master/Markdown_Screenshot.png"><img src="https://github.com/gregwym/Markdown4TE/raw/master/Markdown_Screenshot.png" alt="Markdown编辑器截图" /></a></p></blockquote><p><hr /></p><h2>效果展示部分</h2><h1>H1</h1><h2>H2</h2><h3>H3</h3><p><strong>strong text</strong><br /><em>emphasized text</em><br /><strong><em>strong &amp; emphasized text</em></strong></p><p><hr /></p><p><a href="http://dolast.com">enter link description here</a></p><blockquote><p>Blockquote</p></blockquote><pre><code>enter code here
+</code></pre><ol>
+<li><p>List item</p><br />
+<br />
+<ul>
+<li>List item</li>
+</ul></li>
+</ol>
+]]></content:encoded>
+<slash:comments>47</slash:comments>
+<comments>http://blog.gregwym.info/typecho-markdown-editor.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/typecho-markdown-editor.html</wfw:commentRss>
+</item>
+</channel>
+</rss>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+xmlns:thr="http://purl.org/syndication/thread/1.0"
+xml:lang="zh-CN"
+xml:base="http://blog.gregwym.info/os161-system-calls-implementation-notes.html"
+>
+<title type="text">某储备粮的“学习笔记” - OS161 System Calls Implementation Notes 的评论</title>
+<subtitle type="text">这篇文章的目的是记录CS350 Assignment2中, 我编写各种System Calls时所采用的思路. 实际coding的时候, 同一种System Call的实现方式很可能不止一种, 但殊途...</subtitle>
+<updated>2012-03-31T09:40:25+08:00</updated>
+<generator uri="http://typecho.org/" version="0.9/13.12.12">Typecho</generator>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/os161-system-calls-implementation-notes.html" />
+<id>http://blog.gregwym.info/feed/atom/os161-system-calls-implementation-notes.html</id>
+<link rel="self" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/os161-system-calls-implementation-notes.html" />
+<entry>
+<title type="html"><![CDATA[咳嗽di小鱼]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-564" />
+<id>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-564</id>
+<updated>2012-03-31T09:40:25+08:00</updated>
+<published>2012-03-31T09:40:25+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[我记得, fork过程中应该是splhigh的吧?]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-564" xml:lang="zh-CN"><![CDATA[
+<p>我记得, fork过程中应该是splhigh的吧?</p>
+]]></content>
+</entry>
+<entry>
+<title type="html"><![CDATA[xiaov]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-563" />
+<id>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-563</id>
+<updated>2012-03-31T09:07:59+08:00</updated>
+<published>2012-03-31T09:07:59+08:00</published>
+<author>
+    <name>xiaov</name>
+    <uri></uri>
+</author>
+<summary type="html"><![CDATA[你好，请问在实现fork的过程中，需要使用同步原语来控制同步吗？]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-563" xml:lang="zh-CN"><![CDATA[
+<p>你好，请问在实现fork的过程中，需要使用同步原语来控制同步吗？</p>
+]]></content>
+</entry>
+<entry>
+<title type="html"><![CDATA[咳嗽di小鱼]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-558" />
+<id>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-558</id>
+<updated>2012-03-29T12:34:32+08:00</updated>
+<published>2012-03-29T12:34:32+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[as_create是创建一个address space, 代表的是process运行时可以使用的内存. 是用户空间. 但as这个strcutre本身是kmalloc出来的, 存在在内核空间里.]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-558" xml:lang="zh-CN"><![CDATA[
+<p>as_create是创建一个address space, 代表的是process运行时可以使用的内存. 是用户空间. 但as这个strcutre本身是kmalloc出来的, 存在在内核空间里.</p>
+]]></content>
+</entry>
+<entry>
+<title type="html"><![CDATA[xiaov]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-557" />
+<id>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-557</id>
+<updated>2012-03-29T02:20:19+08:00</updated>
+<published>2012-03-29T02:20:19+08:00</published>
+<author>
+    <name>xiaov</name>
+    <uri></uri>
+</author>
+<summary type="html"><![CDATA[麻烦问一下，做fork拷贝addrspace的时候，会调用到as_copy方法，as_copy之中又会调as_create,问题是如何这个as_create开辟出来的地址空间是属于用户空间，还是内核空间？]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-557" xml:lang="zh-CN"><![CDATA[
+<p>麻烦问一下，做fork拷贝addrspace的时候，会调用到as_copy方法，as_copy之中又会调as_create,问题是如何这个as_create开辟出来的地址空间是属于用户空间，还是内核空间？</p>
+]]></content>
+</entry>
+<entry>
+<title type="html"><![CDATA[saintnoah]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-556" />
+<id>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-556</id>
+<updated>2012-03-27T11:53:53+08:00</updated>
+<published>2012-03-27T11:53:53+08:00</published>
+<author>
+    <name>saintnoah</name>
+    <uri></uri>
+</author>
+<summary type="html"><![CDATA[嗯 有道理 多谢：）]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-556" xml:lang="zh-CN"><![CDATA[
+<p>嗯 有道理 多谢：）</p>
+]]></content>
+</entry>
+<entry>
+<title type="html"><![CDATA[咳嗽di小鱼]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-555" />
+<id>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-555</id>
+<updated>2012-03-27T11:20:08+08:00</updated>
+<published>2012-03-27T11:20:08+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[使用array.h里的array可以规范数据存储, 访问, 删除的方式, 帮助你管理Array的内存使用, 省时省力省bug. 用[], 必要时size不可变, 还涉及kmalloc的内存管理问题, 平添很多不必要的麻烦.]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-555" xml:lang="zh-CN"><![CDATA[
+<p>使用array.h里的array可以规范数据存储, 访问, 删除的方式, 帮助你管理Array的内存使用, 省时省力省bug. 用[], 必要时size不可变, 还涉及kmalloc的内存管理问题, 平添很多不必要的麻烦.</p>
+]]></content>
+</entry>
+<entry>
+<title type="html"><![CDATA[saintnoah]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-554" />
+<id>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-554</id>
+<updated>2012-03-27T11:14:48+08:00</updated>
+<published>2012-03-27T11:14:48+08:00</published>
+<author>
+    <name>saintnoah</name>
+    <uri></uri>
+</author>
+<summary type="html"><![CDATA[是的 就想请教这个 为什么需要用array.h里的array而不能用[]?]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-554" xml:lang="zh-CN"><![CDATA[
+<p>是的 就想请教这个 为什么需要用array.h里的array而不能用[]?</p>
+]]></content>
+</entry>
+<entry>
+<title type="html"><![CDATA[咳嗽di小鱼]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-552" />
+<id>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-552</id>
+<updated>2012-03-27T10:05:35+08:00</updated>
+<published>2012-03-27T10:05:35+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[我的意思是, 所有我文中提到的&quot;array&quot;, 都是&quot;kernel/include/array.h&quot;这个array, 而不是[]这个array.]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-552" xml:lang="zh-CN"><![CDATA[
+<p>我的意思是, 所有我文中提到的"array", 都是"kernel/include/array.h"这个array, 而不是[]这个array.</p>
+]]></content>
+</entry>
+<entry>
+<title type="html"><![CDATA[saintnoah]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-551" />
+<id>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-551</id>
+<updated>2012-03-27T09:55:00+08:00</updated>
+<published>2012-03-27T09:55:00+08:00</published>
+<author>
+    <name>saintnoah</name>
+    <uri></uri>
+</author>
+<summary type="html"><![CDATA[请问为什么 说“所有array都是struct array, OS161中自带的kernel array lib”?这里的filetable声明为一个结构体指针数组可以吗？]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-551" xml:lang="zh-CN"><![CDATA[
+<p>请问为什么 说“所有array都是struct array, OS161中自带的kernel array lib”?</p><p>这里的filetable声明为一个结构体指针数组可以吗？</p>
+]]></content>
+</entry>
+<entry>
+<title type="html"><![CDATA[Dennis]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-513" />
+<id>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-513</id>
+<updated>2012-03-03T11:51:34+08:00</updated>
+<published>2012-03-03T11:51:34+08:00</published>
+<author>
+    <name>Dennis</name>
+    <uri></uri>
+</author>
+<summary type="html"><![CDATA[感谢greg]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-513" xml:lang="zh-CN"><![CDATA[
+<p>感谢greg</p>
+]]></content>
+</entry>
+</feed>

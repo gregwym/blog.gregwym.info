@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/">
+<title>某储备粮的“学习笔记”</title>
+<link>http://blog.gregwym.info/</link>
+<description>by 咳嗽di小鱼</description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/kaching.html"/>
+<rdf:li resource="http://blog.gregwym.info/github-you-should-have-told-me-earlier.html"/>
+<rdf:li resource="http://blog.gregwym.info/informatic-toolbar.html"/>
+<rdf:li resource="http://blog.gregwym.info/having-some-changes.html"/>
+<rdf:li resource="http://blog.gregwym.info/software-architecture-CS446-midterm.html"/>
+<rdf:li resource="http://blog.gregwym.info/setup-lnmp-using-yum-under-centos.html"/>
+<rdf:li resource="http://blog.gregwym.info/typecho-markdown-editor.html"/>
+<rdf:li resource="http://blog.gregwym.info/Trapecho-boostrap-based-typecho-theme.html"/>
+<rdf:li resource="http://blog.gregwym.info/read-file-into-string.html"/>
+<rdf:li resource="http://blog.gregwym.info/linux-extra-mouse-button-customize.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/kaching.html">
+<title>Kaching - Express.js payment solution</title>
+<link>http://blog.gregwym.info/kaching.html</link>
+<dc:date>2013-09-01T21:57:27+08:00</dc:date>
+<description>Kaching is a simple payments solution for Express-based web app, inspired by Passport.js. Together with various strategies, Kaching provides a unified control flow to hook up with different online payment services.For now, Kaching only provides kaching-paypal to accepting payment through Paypal. More strategies are under plan.Install$ npm install kaching
+$ npm install kaching-paypal
+Examplehttps://github.com/gregwym/kaching/tree/master/exampleUsage0. Setup with KachingPaypal strategy require the client_id and client_secret offered by Paypal to operate. You can obtain them from https://developer.paypal.com/webapps/developer/applications.It use api.sandbox.paypal.com as the default paypal host address. Feel free to change it in production environment.var PaypalStrategy = require('kaching-paypal');
+var kaching = require('kaching');
+
+kaching.use(new PaypalStrategy({
+  host: '&lt;paypal_rest_api_endpoint&gt;',        // optional
+  port: '',                                  // optional
+  client_id: '&lt;paypal_client_id&gt;',
+  client_secret: '&lt;paypal_client_secret&gt;'
+}));
+1. Create a paymentUse kaching.create, specifying paypal strategy, to create a Paypal payment. The payment detail should be setup and saved in req.payment prior invoking the create middleware.After kaching created the pending payment, it replaces req.payment with the real payment object that was returned from Paypal API. Save it securely. (i.e., together with the user's order.)app.get('...', function(req, res, next) {
+  // Setup payment detail in `req.payment`.
+  req.payment = {
+    amount:{
+      total:'7.47',
+      currency:'USD'
+    },
+    redirect_urls: {
+      return_url: 'http://&lt;return_url&gt;',
+      cancel_url: 'http://&lt;cancel_url&gt;'
+    },
+    description:'Kaching paypal test transaction'
+  };
+  next();
+}, kaching.create('paypal', {
+  // Optional options
+}), function(req, res) {
+  // Now `req.payment` is the Paypal returned payment object
+  res.json(req.payment);
+});
+2. Redirect user to Paypal to approve the paymentFor most of the time, user should redirect to Paypal to complete the payment right away. You can find the page url in payment.links and do whatever you want.Or simpler, append the kaching.approve middleware after the last request handler. It will redirect the user to the payment approval page.app.get('...', function(req, res, next) {
+  ...
+}, kaching.create('paypal', {
+  ...
+}), function(req, res, next) {
+  console.log(JSON.stringify(req.payment));
+  next();
+}, kaching.approve('paypal'));
+If you want to use kaching.approve somewhere else, make sure req.payment contain a valid payment object.3. Execute the approved payment to complete the transactionUser will be redirect to return_url once the payment has been approved. Paypal will specify the payer_id in req.query.PayerID. This piece of information is required to execute and complete the payment, so save it securely.Commonly, execute the payment right after can save many trouble. Here is an example,app.get('&lt;return_route&gt;', function(req, res, next) {
+  // Prepare payment information and payerId
+  req.payment = ...;           // Fetch the payment object from anywhere it was saved.
+  req.payment.payer_id = req.query.PayerID;
+  next();
+}, kaching.execute('paypal'), function(req, res) {
+  res.json(req.payment);       // Now the payment has been completed.
+});
+Like kaching.create, kaching.execute will update req.payment to the latest. And it's up to you to deal with it.APINote: all the middleware look for the payment informations in req.payment. Make sure it is set before passing control to a middleware.PaypalStrategy(options)Construct a new strategy.var options = {
+  host: '&lt;paypal_rest_api_endpoint&gt;',        // optional
+  port: '',                                  // optional
+  client_id: '&lt;paypal_client_id&gt;',
+  client_secret: '&lt;paypal_client_secret&gt;'
+}
+PaypalStrategy#createBuild the payment creation middleware.It use req.payment as the payment_detail skeleton.req.payment = {
+  intent: '[sale | authorize]',             // default: sale
+  payment_method: '[paypal | credit_card]', // default: paypal
+  funding_instruments: {                    // required when payment_method = credit_card
+    ...   // https://developer.paypal.com/webapps/developer/docs/api/#fundinginstrument-object
+  },
+  amount: {                                 // required
+    ...   // https://developer.paypal.com/webapps/developer/docs/api/#amount-object
+  },
+  item_list: {                              // optional
+    ...   // https://developer.paypal.com/webapps/developer/docs/api/#itemlist-object
+  },
+  description: 'Payment description',       // optional
+  redirect_urls: {                          // required when payment_method = paypal
+    return_url: ...,
+    cancel_url: ...
+  }
+};
+You may notice that, things like intent, payment_method and redirect_urls are not necessarily be different for each payment. You can set the default value for them when building the middleware....
+}, kaching.create('paypal', {
+  intent: 'sale',
+  payment_method: 'paypal',
+  redirect_urls: { ... } 
+}), 
+...
+Then you can omit these fields in req.payment.PaypalStrategy#approveBuild the payment approval middleware. Mainly redirect to the approval_url in payment.links.PaypalStrategy#executeBuild the approved payment execution middleware. The middleware find the payment in req.payment and execute it with req.payment.payer_id.Credits
+Greg Wang
+LicenseThe MIT LicenseCopyright (c) 2013 Greg Wang http://gregwym.info/</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/github-you-should-have-told-me-earlier.html">
+<title>Github, you should have told me earlier...</title>
+<link>http://blog.gregwym.info/github-you-should-have-told-me-earlier.html</link>
+<dc:date>2012-12-22T14:26:35+08:00</dc:date>
+<description>Back to the time it worksIn my last release of doGRT, I was proudly announcing the AUTO UPDATE feature. The feature which would let my user updates the schedule data without update the entire app from the App Store. I spent quite a bit of time to implement this feature, and put the schedule data on a place that I thought will never let me down - Github.Seriously, it was working like a charm. At least during the time I was testing it. Unfortunately, the feature died before anyone can actually try it out.What happened?Right before the schedule season change, Github put out a blog post saying "Goodbye, Uploads". At the main while, they replaced the Downloads Section with Tags and completely disabled the upload.So what does that mean?Even tho Github will keep the downloads page for 90 days, I cannot upload any new file to it. Cannot upload means I cannot tell my app "A newer version of schedule is available, go download it!!!!"How sad is that`T_TGithub, can't you tell me this a bit earlier? or allow upload for extra 90 days? sighWhat I'm going to do?First, I wanna say sorry to doGRT users. If it is not the case, you guys would have the hot and fresh holiday schedule in your hand now. This situation should have been avoided if I have left enough flexibility in my implementation.Of course, I'm going to fix it! Going to release a quick fix version with Winter schedule first.The more feature I'm working on:
+Day picker: Look up schedules for a specific day, so you can plan ahead.
+Bus reminder: Remind you to catch/get off at a curtain bus stop
+GRT Twitter message intergration
+Feel free to @gregwym on twitter about your suggestions. Or you can email me through the feedback button in the app.Merry Christmas,Greg</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/informatic-toolbar.html">
+<title>InformaticToolbar: iOS Toolbar Enhancement Library</title>
+<link>http://blog.gregwym.info/informatic-toolbar.html</link>
+<dc:date>2012-11-05T09:08:18+08:00</dc:date>
+<description>First of all, the repo: https://github.com/gregwym/InformaticToolbarIntroRemember in the Mail App, it shows update status and sending mail progress in the bottom toolbar. I think it is a really neat way to show information, especially for those apps who use native iOS UI elements.However, I couldn't find any lib out there for this task. So I decide to invent the wheel myself.Feel free to post any issues or patch. It's my pleasure for any who like my work.What it doesInformaticToolbar is mainly an UIViewController Category which allows you to add several UIBarButtonItems set to your toolbar.The sets are defined as subclasses of ITBarItemSet. All ITBarItemSet can have a dismiss button if the target and action has been defined. If more than one set has been added, a switch button (an arrow) will be displayed on the left for user to switch between sets.For now, there are three pre-defined set:
+ITLabelBarItemSet: a textLabel and a detailTextLabel
+ITProgressBarItemSet: a textLabel and a progressBar
+ITConfirmationBarItemSet: two label and a check-mark button
+You can easily create new sets by extending ITBarItemSet yourself.Screenshot:How to useFirst: clone it to your project directorycd *your-project-location*
+git submodule add git://github.com/gregwym/InformaticToolbar.git
+Second: add to your projectYou can either add the source codes directly or
+drag and drop InformaticToolbar.xcodeproj to your project.
+In your project setting 
+
+
+In Build Phases->Target Dependencies, add InformaticToolbar (the library)
+In Build Phases->Link Binary With Libraries, add libInformaticToolbar.a
+In Build Settings, add "${PROJECT_DIR}/InformaticToolbar/" to User Header Search Paths, include the quotation marks.
+In Build Settings, set Always Search User Path to YES
+In Build Settings, set Other Linker Flags to -ObjC
+
+Third: add the headerIn any UIViewController that you want to use this lib, add #import "InformaticToolbar.h" at the front.Or easier, you can add the import to YOUR Prefix.pch file.Forth: add an item set to toolbarLet's say I want to add a Label to my toolbar, I can call the following method in an UIViewController:- (IBAction)addLabelBarItemSet:(id)sender
+{
+    ITLabelBarItemSet *labelBarItemSet = [ITLabelBarItemSet labelBarItemSetWithDismissTarget:self andAction:@selector(dismissBarItemSet:)];
+    labelBarItemSet.textLabel.text = @"This is text label. ";
+    labelBarItemSet.detailTextLabel.text = @"This is detail text label. ";
+    [self pushBarItemSet:labelBarItemSet animated:YES];
+}
+
+- (void)dismissBarItemSet:(ITBarItemSet *)sender
+{
+    [self removeBarItemSet:sender animated:YES];
+}
+Demo ProjectIn the project, there is a demo app you can tryout. ITViewController.m includes the sample usage of all three pre-defined item sets.LicenseInformaticToolbar by Greg Wang is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/having-some-changes.html">
+<title>Having Some Changes</title>
+<link>http://blog.gregwym.info/having-some-changes.html</link>
+<dc:date>2012-08-15T04:01:20+08:00</dc:date>
+<description>As you can see, I changed the entire blog into english, except the posts I wrote before and the blog title. It doesn't mean I will not write in Chinese any more. It's because I thought, in order to be standing out among the people around North America, I gotta have something the North America people can read and understand.Just finished my 3B term @ University of Waterloo. Learnt a lot, worked a lot...Things that I was or is recently working on:
+doGRT: Going to implement the iPad UI. Refactor the entire app if I have time.
+Moe FM: Refactoring the entire app. Adding bunch of new features. (Hope you guys are still waiting for it)
+CampusNav: It's the project we made for our Software Architecture class. I'm planning to push it to the App Store.
+Yodo1 SDK: Review and help improve the SDK.
+These should be able to keep me busy for my Summer, lol. Gotta stop playing around and start working now.Wish everyone has a nice summer.</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/software-architecture-CS446-midterm.html">
+<title>Software Architecture - CS 446 Midterm Outline</title>
+<link>http://blog.gregwym.info/software-architecture-CS446-midterm.html</link>
+<dc:date>2012-06-22T10:46:34+08:00</dc:date>
+<description>Software Design Process ModelsDesign as search. Design spaces. Design state, goal structure, generative design operations, early quantitative evaluations, control of design process. Basic models of design (transformational, plan/architecture driven). Relationship to other life-cycle activities.Terms
+Module: a collection of classes
+Subsystem: a collection of classes with an interface
+Design window: the time, which design decision have to be made
+Service: the operation in common purpose, offered by a subsystem
+Different Views
+Analysis focus on the problem domain 
+
+
+Analyst, end user, customer
+
+Design focus on the solution domain 
+
+
+designer, implementer
+
+Goals
+Designer 
+
+
+Specify interface of subsystems
+Usability
+Reusability
+
+Implementer 
+
+
+implementer
+Extender
+User
+
+Major Design Goals
+Behavioural Model 
+
+
+Concurrency
+Resource Handling
+Software Control
+
+Structural Model 
+
+
+Hardware/Software mapping
+Data Management
+
+Use Case Model 
+
+
+Boundary Conditions (边缘情况)
+
+Non Functional Requirements 
+
+
+Feasibility (可行性)
+
+A lot of others.Most of them involves trade off between each otherDecomposition
+High cohesion
+Low coupling
+Architecture/Design RepresentationWhat should be represented (structure, behaviour)? Informal representations of design, examples of design notations. Formal representation of design. Domain specific architecture descriptions. Role of standards, reference architectures. Design documentation.Terms
+Subsystem decomposition: identify subsystems, service, and their association in between
+Architectural style: pattern for a subsystem decomposition
+Software architecture: instance of a style. composed of components and connectors
+Components: encapsulated subsystem, provides services
+Connectors: Facilitate communication within software. Simple procedure calls or shared data accesses
+-
+Conceptual Arch
+Concrete Arch
+Evolution
+Degradation 
+
+
+Drift: add things to conceptual
+Erosion: conflict to conceptual
+Recover: determining from implementation
+
+Architectural Style
+Vocab of design elements
+Set of config rules
+Semantic interpretation
+Benefits
+Design/Code reuse
+Visualization
+Interoperability (WTH is this word…)
+Style-specific analyses
+Style Examples
+Main program and subroutines
+Object-Oriented Style
+Layered Style
+Virtual Machine Layers 
+
+
+Closed/Open Layering
+
+3/4-Tier
+Client/Server
+Peer-to-Peer
+Batch Sequential
+Pipes and Filters
+Repository
+Implicit Invocation
+Publish-Subscribe
+Event-Based
+MVC
+Interpreter
+Sservice-Oriented Arch (SOA)
+Architectural ModelArch Views and ViewpointsDifferent views should be consistent between each other.
+Logical View 
+
+
+UML component diagram
+
+Physical View
+Deployment View 
+
+
+UML deployment diagram
+
+Concurrency/Process View
+Behavioral View 
+
+
+UML collaboration diagram
+
+Metamodel意会了, 但是不知道怎么总结…主要用来保证view之间的consistencyDesign Goals
+Reduce Complexity
+Scalability
+Adaptability
+Heterogeneity
+Portability
+Dependability 
+
+
+Reliability
+Availability
+Robustness
+Fault-tolerant
+
+Detail design activities
+Identify modules 
+
+
+Data Flow Analysis (DFA)
+
+Identify control structure 
+
+
+Instantiation of modules
+Management of base processes
+
+Decide on overall control structure 
+
+
+Centralized/Decentralized control
+
+Address boundary control conditions
+Address persistent data management
+Address hardware/software mapping
+Implement concurrency
+Define access control
+...继续ing...Design Plans/ArchitectureReview of small/medium scale plans (data structures, programming language structures, concurrency). Plans/architectures for common types of software systems (translators, embedded, real-time, user interface)....未开始...</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/setup-lnmp-using-yum-under-centos.html">
+<title>CentOS下用yum搭建LNMP服务器</title>
+<link>http://blog.gregwym.info/setup-lnmp-using-yum-under-centos.html</link>
+<dc:date>2012-04-05T22:07:00+08:00</dc:date>
+<description>CentOS下搭服务器也折腾好几次了, 每次都知道个大概, 具体repo的地址什么的还都要现找, 实在不效率, 干脆整理记录下来.yum安装比较简单快捷, 但默认配置的安全和性能方面不如LNMP一键安装包. 推荐生产环境用一键安装包如果你在国内的话, 先替换CentOS-Base.repomv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
+# 如果是CentOS 5.*
+wget http://mirrors.163.com/.help/CentOS5-Base-163.repo
+# 如果是CentOS 6.*
+wget http://mirrors.163.com/.help/CentOS6-Base-163.repo
+yum makecache
+如果之前有apache, 卸载yum remove httpd
+更新软件到最新版本yum -y update
+安装源# 如果是CentOS 5.*
+rpm -ivh http://nginx.org/packages/centos/5/noarch/RPMS/nginx-release-centos-5-0.el5.ngx.noarch.rpm
+rpm -ivh http://fedora.mirror.nexicom.net/epel/5/i386/epel-release-5-4.noarch.rpm
+rpm -ivh http://rpms.famillecollet.com/enterprise/remi-release-5.rpm
+# 如果是CentOS 6.*
+rpm -ivh http://nginx.org/packages/centos/6/noarch/RPMS/nginx-release-centos-6-0.el6.ngx.noarch.rpm
+rpm -ivh http://fedora.mirror.nexicom.net/epel/6/i386/epel-release-6-8.noarch.rpm
+rpm -ivh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+编辑启用remi源vi /etc/yum.repos.d/remi.repo
+# 将[remi]下的enabled=0改为enabled=1
+# 按esc
+# :x回车
+执行安装, 根据需要增减要安装的php模块yum install nginx mysql mysql-server php-fpm php-cli php-mysql php-gd php-imap php-ldap php-odbc php-pear php-xml php-xmlrpc php-mbstring php-mcrypt php-mssql php-snmp php-soap php-tidy
+启动nginx, php-fpm, mysqldservice nginx restart
+service php-fpm restart
+service mysqld restart
+设置自动启动chkconfig nginx on
+chkconfig php-fpm on
+chkconfig mysqld on
+mysql密码设置mysql_secure_installation
+至于目录权限管理什么的, 就不写了.niginx配置文件在/etc/nginx/nginx.confphp-fpm配置文件在/etc/php-fpm.confphp配置文件/etc/php.inimysql配置文件/etc/my.cnf参考文章:http://www.ppkj.net/2011/11/18/centos6-yum-%E6%90%AD%E5%BB%BAlinux-nginx-php-mysql-lnmp/http://www.centos.bz/2011/03/yum-install-nginx-mysql-php-fastcgi-lnmp/</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/typecho-markdown-editor.html">
+<title>Typecho用Markdown编辑器</title>
+<link>http://blog.gregwym.info/typecho-markdown-editor.html</link>
+<dc:date>2012-03-18T23:08:18+08:00</dc:date>
+<description>在网上找了下Typecho的Markdown插件, 有两个版本, 主要区别如下
+明城制作的Markdown插件 
+
+
+浏览时转换Markdown=>HTML
+数据库保存Markdown文本
+
+ichuan制作的Markdown4TE 
+
+
+保存文章时转换Markdown=>HTML
+数据库保存HTML文本
+
+这两种实现都各有利弊, 我个人倾向于ichuan的做法.原因无外乎, 能保持Typecho文章数据的一致性, 以前存HTML现在还是存HTML, 只是编辑的方式变了.但ichuan的插件在用的时候不是那么顺利. 因为js放置的位置好像有些问题, 编辑器和预览99%的时候加载失败(Chrome 17). 预览界面的CSS定义也有些问题.于是自己动手丰衣足食, 把成果po出来给和我碰到同样问题的朋友们.
+保留了原插件的保存和读取部分
+重新构造了编辑器部分 
+
+
+使用了和Stack Oveflow一样的最新PageDown编辑器
+编辑器带实时效果预览
+完整定义了各种格式的预览效果
+
+Mar 19/2012 v0.2.1
+修复了无法插入附件的BUG
+下载https://github.com/gregwym/Markdown4TE/zipball/masterGithubhttps://github.com/gregwym/Markdown4TE有图有真相效果展示部分H1H2H3strong textemphasized textstrong &amp; emphasized textenter link description hereBlockquoteenter code here
+
+List item
+
+
+List item
+
+</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/Trapecho-boostrap-based-typecho-theme.html">
+<title>Trapecho - 基于Bootstrap的Typecho主题</title>
+<link>http://blog.gregwym.info/Trapecho-boostrap-based-typecho-theme.html</link>
+<dc:date>2012-03-17T23:00:44+08:00</dc:date>
+<description>之前的浮云主题也用了快一年了, 有些腻味.主题本身也有很多问题, 比如代码质量不是很好, 主题的CSS对博客文章的Typography没有很规范的支持, 浮云比较吃CPU...一直想换主题却没有找到好的. 最近对Bootstrap很是痴迷, 又有了点空闲, 就顺手仿着Bootstrap官网风格做了一个Typecho的主题.自己觉得效果还不错, po出来给喜欢的朋友.设计风格
+黑白灰
+简洁明了
+特色功能
+自动吸附顶端的导航栏
+在各种设备上自适应显示 (如: iPhone/iPad)
+侧栏的新浪微博展示插件
+集成Google Code Prettify
+应用的技术
+Bootstrap + jQuery
+HTML5 + CSS3
+Responsive CSS
+下载下载我放在doLast.com上了, 点Download即可http://dolast.com/pages/trapechohttps://github.com/gregwym/Trapecho/zipball/master功能详解新浪微博
+在/admin/options-theme.php主题设置页中填入新浪微博的UID, 侧栏中就会显示新浪微博的插件.
+在设置中删除UID号码并保存, 即可关闭插件
+根据分辨率自适应布局
+如果您在看我的博客, 现在把浏览器缩小就能看出效果.
+在iPhone/iPad等移动设备上也能有很好的博客阅读体验
+支持iOS的阅读器模式
+侧栏可选项
+显示最新文章
+显示相关文章
+显示最近回复
+显示标签
+显示分类
+显示归档
+显示友情链接(需要友情链接插件)
+显示其它杂项
+Google Code Prettify
+为了统一主题风格, 也特别定义了代码的高亮方式, 如果有朋友不喜欢, 从footer.php最后删除和pre有关的几行JavaScript即可.
+使用很简单, 展示大段的代码, 使用&lt;pre&gt;将代码括住, 就会自动高亮, 语言类型自动识别.
+
+&lt;pre&gt;
+    &lt;!--你的代码放在中间--&gt;
+&lt;/pre&gt;
+
+比如,
+
+int main(){
+    cout &lt;&lt; "Welcome to Trapecho" &lt;&lt; endl;
+    return 0;
+}
+
+更多使用方法请参考, google-code-prettify README
+</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/read-file-into-string.html">
+<title>[Java]读取文件成字符串</title>
+<link>http://blog.gregwym.info/read-file-into-string.html</link>
+<dc:date>2012-03-09T22:49:35+08:00</dc:date>
+<description>String filename = "path/file.txt";
+File file = new File(filename);
+FileInputStream fileinput = new FileInputStream(file.getAbsolutePath());
+int x = fileinput.available();
+byte b[] = new byte[x];
+fileinput.read(b);
+String string = new String(b);
+System.out.println(string);
+开始实习以后, 真的没什么自己的时间了. 学到了不少东西, 但还是老样子, 自己摸索自己成长. 长篇的理论知识整理确实重要, 但这些代码片段, 在需要的时候也是实实在在能帮上忙的东西.闲的时间少了, 估计以后这类东西会比较多吧...参考源: http://mcoffe.blogbus.com/logs/22801413.html</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/linux-extra-mouse-button-customize.html">
+<title>在Linux下自定义多按键鼠标的功能</title>
+<link>http://blog.gregwym.info/linux-extra-mouse-button-customize.html</link>
+<dc:date>2012-02-16T10:26:53+08:00</dc:date>
+<description>搭好Ubuntu工作环境以后, 什么都好, 就是接上鼠标以后, 很多键用不了, 比较烦. Ubuntu自带的鼠标设置非常简陋, 罗技也没给Linux做驱动, 只能自己找办法解决.btnx非常好的解决了这个问题, 而且还带GUI设置工具. 除了设置里没有Apply这个按钮, 让人有点琢磨不透它到底什么时候保存设置以外, 其他都还不错.调整好设置以后记得点"Restart BTNX"来重启服务.记一下安装使用时候碰到的各种问题.
+在第一次配置的时候, 直接把btnx-config给关上了, 然后就怎么也打不开了. 具体提示的错误是什么不记得了.解决方法是删除/etc/btnx/btnx&#95;manager和/etc/btnx&#95;config_Default. (如果我没记错的话...因为我删错了, 才有下文)
+如果你和我一样, 不幸把/etc/btnx/整个文件夹给删了, 你会发现你别管怎么删怎么装, 都没法把那个该死的/etc/btnx/events找回来.解决方法是把btnx和btnx-config complete uninstall了, 然后重装.
+在设置好鼠标以后还有点神器的问题, 就是btnx的设置不会屏蔽(override)掉这个按键的默认功能.举个例子, 我把鼠标上原先的"前进/后退"设置成了"Ctrl+TAB/Ctrl+Shift+TAB", 当我在浏览器里按这个按钮的时候, 我不光会切换tab, 还会让页面前进/后退...很恶心是不是?解决方法是, 编辑~/.Xmodmap把这几个按钮屏蔽掉.比如button 8, 9是前进后退, 那就在~/.Xmodmap里写入
+
+! Disable buttons 8 and 9
+pointer = 1 2 3 4 5 6 7 0 0
+
+参考资料:http://ubuntuforums.org/showthread.php?t=918714http://unix.stackexchange.com/questions/20550/how-to-disable-the-forward-back-buttons-on-my-mouse</description>
+</item>
+</rdf:RDF>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>Linux的用户(user)和用户组(group)管理 - 某储备粮的“学习笔记”</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 使用url函数转换相关路径 -->
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/style.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/prettify.css" />
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="http://blog.gregwym.info/images/favicon.ico">
+<link rel="apple-touch-icon" href="http://blog.gregwym.info/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="http://blog.gregwym.info/images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="http://blog.gregwym.info/images/apple-touch-icon-114x114.png">
+
+<!-- 通过自有函数输出HTML头部信息 -->
+<meta name="description" content="Linux的多用户权限管理还是很强大的...熟悉了各种命令之后, 对每一个用户的权利可以说是操控自如.用户(user)和用户组(group)相关的配置文件、命令或目录/etc/passwd 用户配置文..." />
+<meta name="keywords" content="VPS,server,linux" />
+<meta name="generator" content="Typecho 0.9/13.12.12" />
+<meta name="template" content="trapecho" />
+<link rel="pingback" href="action/xmlrpc.html" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="action/xmlrpc%3Frsd.html" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="action/xmlrpc%3Fwlw.html" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="feed/linux-de-yong-hu--user--he-yong-hu-zu--group--guan-li.html" />
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="feed/rss/linux-de-yong-hu--user--he-yong-hu-zu--group--guan-li.html" />
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="feed/atom/linux-de-yong-hu--user--he-yong-hu-zu--group--guan-li.html" />
+<script type="text/javascript">
+//<![CDATA[
+var TypechoComment = {
+    dom : function (id) {
+        return document.getElementById(id);
+    },
+    
+    create : function (tag, attr) {
+        var el = document.createElement(tag);
+        
+        for (var key in attr) {
+            el.setAttribute(key, attr[key]);
+        }
+        
+        return el;
+    },
+
+    reply : function (cid, coid) {
+        var comment = this.dom(cid), parent = comment.parentNode,
+            response = this.dom('respond-post-65'), input = this.dom('comment-parent'),
+            form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+            textarea = response.getElementsByTagName('textarea')[0];
+
+        if (null == input) {
+            input = this.create('input', {
+                'type' : 'hidden',
+                'name' : 'parent',
+                'id'   : 'comment-parent'
+            });
+
+            form.appendChild(input);
+        }
+        
+        input.setAttribute('value', coid);
+
+        if (null == this.dom('comment-form-place-holder')) {
+            var holder = this.create('div', {
+                'id' : 'comment-form-place-holder'
+            });
+            
+            response.parentNode.insertBefore(holder, response);
+        }
+
+        comment.appendChild(response);
+        this.dom('cancel-comment-reply-link').style.display = '';
+        
+        if (null != textarea && 'text' == textarea.name) {
+            textarea.focus();
+        }
+        
+        return false;
+    },
+
+    cancelReply : function () {
+        var response = this.dom('respond-post-65'),
+        holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+        if (null != input) {
+            input.parentNode.removeChild(input);
+        }
+
+        if (null == holder) {
+            return true;
+        }
+
+        this.dom('cancel-comment-reply-link').style.display = 'none';
+        holder.parentNode.insertBefore(response, holder);
+        return false;
+    }
+}
+//]]>
+</script></head>
+
+<body onload="prettyPrint()">
+
+<div class="container">
+
+<header class="jumbotron" id="overview">
+        <h1>某储备粮的“学习笔记” </h1>
+    <p class="lead">by 咳嗽di小鱼</p>
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                
+                <a class="brand" href="index.html">
+                    Trapecho
+                </a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="index.html">Home</a></li>
+                        <li class="divider-vertical"></li>
+                                                                        <li><a href="category/sum-up/index.html" title="Sum Up">Sum Up</a></li>
+                                                <li><a href="category/code-dump/index.html" title="Code Dump">Code Dump</a></li>
+                                                <li><a href="category/network/index.html" title="Network">Network</a></li>
+                                                <li><a href="category/jotting/index.html" title="Jotting">Jotting</a></li>
+                                                <li><a href="category/Portfolio/index.html" title="Portfolio">Portfolio</a></li>
+                                                <li class="divider-vertical"></li>
+                                                                        <li><a href="linked-in.html" title="Linked In">Linked In</a></li>
+                                                <li><a href="guess-book.html" title="Guest Book">Guest Book</a></li>
+                                                <li><a href="about.html" title="About">About</a></li>
+                                                <li><a href="rss.html" title="RSS">RSS</a></li>
+                                            </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="content">
+
+
+<div class="row">
+    <div class="span9" id="content">
+        <div class="post">
+            <div class="page-header">
+                <h1>
+                    Linux的用户(user)和用户组(group)管理                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: June 4, 2011</span>
+                    <span>Category: <a href="category/network/index.html">Network</a></span>
+                </h6>
+            </div>
+            <div class="entry-content"><p>Linux的多用户权限管理还是很强大的...熟悉了各种命令之后, 对每一个用户的权利可以说是操控自如.</p><h3>用户(user)和用户组(group)相关的配置文件、命令或目录</h3><ul>
+<li>/etc/passwd 用户配置文件</li>
+<li>/etc/shadow 用户密码影子文件</li>
+<li>/etc/group 用户组配置文件</li>
+<li>/etc/gshadow 用户组配置影子文件</li>
+</ul><p><!--more--></p><h3>配置文件的格式</h3><ul>
+<li><p>/etc/passwd 的每一行采用以下格式:<br />name:password:uid:gid:comment:home:shell</p><br />
+<br />
+<pre><code>name       用户名
+password   密码
+uid        用户的UserID
+gid        用户所对应默认用户组的GroupID
+comment    备注
+home       用户的主目录绝对路径
+shell      用户登录的shell/任意命令的绝对路径
+</code></pre></li>
+<li><p>/etc/group 的每一行采用以下格式:<br />group&#95;name:passwd:GID:user&#95;list</p><br />
+<br />
+<pre><code>group_name 用户组名
+passwd     用户组密码
+GID        用户组GroupID
+user_list  该组的所有用户
+</code></pre></li>
+</ul><h3>管理用户(user)和用户组(group)的相关命令</h3><pre><code>useradd   添加用户
+passwd    为用户设置密码
+usermod   修改用户命令，可以通过usermod来修改登录名、用户的家目录等等；
+pwcov     同步用户从/etc/passwd到/etc/shadow
+pwck      pwck是校验用户配置文件/etc/passwd和/etc/shadow文件内容是否合法或完整；
+pwunconv  是pwcov 的立逆向操作，是从/etc/shadow和 /etc/passwd 创建/etc/passwd ，然后会删除 /etc/shadow 文件；
+finger    查看用户信息工具
+id        查看用户的UID、GID及所归属的用户组
+chfn      更改用户信息工具
+su        用户切换工具
+sudo      通过另一个用户来执行命令（execute a command as another user），su 是用来切换用户，然后通过切换到的用户来完成相应的任务，但sudo 能后面直接执行命令，比如sudo 不需要root 密码就可以执行root 赋与的执行只有root才能执行相应的命令；但得通过visudo 来编辑/etc/sudoers来实现；
+visudo    编辑 /etc/sudoers 的命令；也可以不用这个命令，直接用vi 来编辑 /etc/sudoers 的效果是一样的；
+groupadd  添加用户组；
+groupdel  删除用户组；
+groupmod  修改用户组信息
+groups    显示用户所属的用户组
+gpasswd   将用户从用户组中添加/移除
+grpck     校验用户组配置文件/etc/group和/etc/gshadow文件内容是否合法或完整；
+grpconv   通过/etc/group和/etc/gshadow的文件内容来同步或创建/etc/gshadow，如果/etc/gshadow 不存在则创建；
+grpunconv 通过/etc/group 和/etc/gshadow文件内容来同步或创建/etc/group，然后删除gshadow文件；
+</code></pre><h3>用户管理实例</h3><pre><code>useradd visitor  # 添加一个叫visitor的新用户(主用户组默认为同名) 
+passwd visitor   # 给visitor添加密码 
+groupadd theme-park  # 添加一个叫theme-park的用户组 
+groupadd city-park   # 添加一个叫city-park的用户组 
+usermod -g theme-park visitor   # 将visitor的主用户组修改为park 
+gpasswd -a visitor city-park    # 将visitor添加到city-park用户组
+</code></pre><p>参考资料:<br /><a href="http://fedora.linuxsir.org/main/?q=node/91">Linux 用户（user）和用户组（group）管理概述</a><br /><a href="http://www.aka.org.cn/Lectures/002/Lecture-2.2.1/0.html">Linux 介绍和基本操作</a></p></div>
+            <div class="entry-tags">
+                Labels: 
+                <span class="label label-info">
+                    <a href="tag/VPS/index.html">VPS</a></span> <span class="label label-info"><a href="tag/server/index.html">server</a></span> <span class="label label-info"><a href="tag/linux/index.html">linux</a>                </span>
+            </div>
+        </div>
+        <hr class="soften" />
+        <div id="comments">
+                                    <h3>3 comments &raquo;</h3>
+            
+            <ol class="comment-list"><li id="comment-461" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/17948ba5d78626f5d9eb0ff010e8df92?s=32&amp;r=X&amp;d=" alt="CzBiX" width="32" height="32" />        <cite class="fn"><a href="http://czbix.tk" rel="external nofollow">CzBiX</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="linux-de-yong-hu--user--he-yong-hu-zu--group--guan-li.html#comment-461">June 5th, 2011 at 05:38 am</a>
+            </div>
+    <div class="comment-content">
+    <p>唉,仅仅只有基本操作的内容?</p>    </div>
+    <div class="comment-reply">
+        <a href="linux-de-yong-hu--user--he-yong-hu-zu--group--guan-li.html%3FreplyTo=461.html#respond-post-65" rel="nofollow" onclick="return TypechoComment.reply('comment-461', 461);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-462" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="linux-de-yong-hu--user--he-yong-hu-zu--group--guan-li.html#comment-462">June 5th, 2011 at 12:07 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>呵呵`我感觉这些命令都很浅显易懂...所以没有弄太多例子, 主要想以后用到的时候不会再忘记</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-463" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/17948ba5d78626f5d9eb0ff010e8df92?s=32&amp;r=X&amp;d=" alt="CzBiX" width="32" height="32" />        <cite class="fn"><a href="http://czbix.tk" rel="external nofollow">CzBiX</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="linux-de-yong-hu--user--he-yong-hu-zu--group--guan-li.html#comment-463">June 5th, 2011 at 10:50 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>。。。用的时候再 --help<br>
+我一直都是这样的</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+</ol>            
+            <div class="pagination">
+                            </div>
+            
+                        
+                        <div id="respond-post-65" class="respond">
+            
+            <div class="cancel-comment-reply">
+            <a id="cancel-comment-reply-link" href="linux-de-yong-hu--user--he-yong-hu-zu--group--guan-li.html#respond-post-65" rel="nofollow" onclick="return TypechoComment.cancelReply();">取消回复</a>            </div>
+            
+            <form class="form-horizontal" method="post" action="http://blog.gregwym.info/linux-de-yong-hu--user--he-yong-hu-zu--group--guan-li.html/comment?parent=461" id="comment_form">
+                <fieldset>
+                    <legend>Add new comment &raquo;</legend>
+                                        <div class="control-group">
+                        <label class="control-label" for="author">Nick name</label>
+                        <div class="controls">
+                            <input type="text" name="author" id="author" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="mail">E-mail<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" name="mail" id="mail" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Web</label>
+                        <div class="controls">
+                            <input type="text" name="url" id="url" class="input-large" value="" />
+                        </div>
+                    </div>
+                                        <div class="control-group">
+                        <label class="control-label" for="url">Comment</label>
+                        <div class="controls">
+                            <textarea class="input-xlarge" name="text" rows="3"></textarea>
+                            <p class="help-block">Enter your comment here...</p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Captcha</label>
+                        <div class="controls">
+                            <img src="action/captcha" alt="captcha" onclick="this.src = this.src + '?' + Math.random()" style="cursor: pointer" title="点击图片刷新验证码" /><br /><input type="text" class="captcha" name="captcha_code" /> <strong>请输入验证码</strong>							                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Submit comment</button>
+                    </div>
+                </fieldset>
+            </form>
+            </div>
+            
+
+        </div>    </div><!-- end #content-->
+    <div class="span3" id="sidebar">
+    <div class="widget_search">
+        <form method="post" id="searchform" class="form-search">
+            <input type="text" class="span2" name="s" id="s" />
+            <button type="submit" class="btn" id="searchsubmit">Search</button>
+        </form>
+    </div>
+    
+        
+                    <div class="widget">
+            <h3>Related Posts</h3>
+                        <ul>
+                            <li><a href="setup-lnmp-using-yum-under-centos.html" title="CentOS下用yum搭建LNMP服务器">CentOS下用yum搭建LNMP服务器</a></li>
+                            <li><a href="linux-extra-mouse-button-customize.html" title="在Linux下自定义多按键鼠标的功能">在Linux下自定义多按键鼠标的功能</a></li>
+                            <li><a href="quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html" title="Quickweb OpenVZ安装PPTP VPN实践笔记(不用MPPE)">Quickweb OpenVZ安装PPTP VPN实践笔记(不用MPPE)</a></li>
+                            <li><a href="nginx-she-zhi-301-chong-xin-ding-xiang.html" title="Nginx设置301重新定向">Nginx设置301重新定向</a></li>
+                            <li><a href="linux-fu-wu-qi-`-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html" title="linux服务器`自动备份数据库+网页到邮箱">linux服务器`自动备份数据库+网页到邮箱</a></li>
+                        </ul>
+        </div>
+            
+    
+        <div class="widget">
+        <h3>Recent Comments</h3>
+        <ul>
+                                    <li><a href="github-you-should-have-told-me-earlier.html#comment-952">payday loans</a>: wfxqtdq</li>
+                        <li><a href="Trapecho-boostrap-based-typecho-theme.html#comment-936">地铁线路图网</a>: 我也在用typecho，小巧玲珑，稍微改了以下默认模板，站现在简洁速度也不错，点击我的昵称可以访问。</li>
+                        <li><a href="about.html#comment-930">ramble</a>: 博客 ，请问如何显示显示文章前3段的摘要  不打乱格式</li>
+                        <li><a href="about.html#comment-874">清源</a>: 看来暂时只能看着用了，google的高亮的比较不明显。</li>
+                        <li><a href="about.html#comment-870">清源</a>: 大哥呀，主题这几天我看着感觉用中文书写标题字体太大了，正文的字体也太小了，估计还是适合用英文，不知道...</li>
+                    </ul>
+    </div>
+        
+        <div class="widget">
+    		<h3>Labels</h3>
+        <ul>
+                                    <a href="tag/algorithm/index.html" class="size-20">algorithm</a>
+                        <a href="tag/review/index.html" class="size-20">review</a>
+                        <a href="tag/cs240/index.html" class="size-10">cs240</a>
+                        <a href="tag/server/index.html" class="size-10">server</a>
+                        <a href="tag/VPS/index.html" class="size-10">VPS</a>
+                        <a href="tag/code/index.html" class="size-5">code</a>
+                        <a href="tag/database/index.html" class="size-5">database</a>
+                        <a href="tag/cs348/index.html" class="size-5">cs348</a>
+                        <a href="tag/typecho/index.html" class="size-5">typecho</a>
+                        <a href="tag/nginx/index.html" class="size-5">nginx</a>
+                        <a href="tag/search/index.html" class="size-5">search</a>
+                        <a href="tag/GUI/index.html" class="size-5">GUI</a>
+                        <a href="tag/linux/index.html" class="size-5">linux</a>
+                        <a href="tag/java/index.html" class="size-5">java</a>
+                        <a href="tag/DNS/index.html" class="size-5">DNS</a>
+                        <a href="tag/blog/index.html" class="size-5">blog</a>
+                        <a href="tag/apple/index.html" class="size-5">apple</a>
+                        <a href="tag/cs241/index.html" class="size-5">cs241</a>
+                        <a href="tag/compiler/index.html" class="size-5">compiler</a>
+                        <a href="tag/sql/index.html" class="size-5">sql</a>
+                    </ul>
+		</div>
+    
+    
+        <div class="widget">
+        <h3>Archives</h3>
+        <ul>
+            <li><a href="2013/09/index.html">September 2013</a></li>
+<li><a href="2012/12/index.html">December 2012</a></li>
+<li><a href="2012/11/index.html">November 2012</a></li>
+<li><a href="2012/08/index.html">August 2012</a></li>
+<li><a href="2012/06/index.html">June 2012</a></li>
+<li><a href="2012/04/index.html">April 2012</a></li>
+<li><a href="2012/03/index.html">March 2012</a></li>
+<li><a href="2012/02/index.html">February 2012</a></li>
+<li><a href="2011/12/index.html">December 2011</a></li>
+<li><a href="2011/11/index.html">November 2011</a></li>
+<li><a href="2011/10/index.html">October 2011</a></li>
+<li><a href="2011/06/index.html">June 2011</a></li>
+<li><a href="2011/05/index.html">May 2011</a></li>
+<li><a href="2011/04/index.html">April 2011</a></li>
+<li><a href="2011/03/index.html">March 2011</a></li>
+        </ul>
+    </div>
+    
+    
+        <div class="widget">
+        <h3>Others</h3>
+        <ul>
+                        <li class="last"><a href="http://blog.gregwym.info/admin/login.php">Login</a></li>
+                        <li><a href="http://validator.w3.org/check/referer">Valid XHTML</a></li>
+        </ul>
+    </div>
+    
+    </div><!-- end #sidebar -->
+    
+</div>
+<footer>
+    <p>
+        Powered by <a href="http://typecho.org/">Typecho</a>. 
+        <a href="http://dolast.com/pages/trapecho">Trapecho</a> theme by <a href="index.html">咳嗽di小鱼</a>. 
+        Hosting on <a href="https://www.digitalocean.com/?refcode=b846692d6a3a">Digital Ocean</a>
+    </p>
+</footer><!-- end #footer -->
+
+</div>
+</div>
+
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/jquery-1.7.1.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/bootstrap.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/prettify.js"></script>
+<script type="text/javascript">
+    // fix navbar on scroll
+    var $win = $(window)
+      , $nav = $('.navbar')
+      , navTop = $('.navbar').length && $('.navbar').offset().top - 10
+      , isFixed = 0
+
+    processScroll()
+
+    $win.on('scroll', processScroll)
+
+    function processScroll() {
+      var i, scrollTop = $win.scrollTop()
+      if (scrollTop >= navTop && !isFixed) {
+        isFixed = 1
+        $nav.addClass('navbar-fixed-top')
+      } else if (scrollTop <= navTop && isFixed) {
+        isFixed = 0
+        $nav.removeClass('navbar-fixed-top')
+      }
+    }
+    
+    $('.page-navigator li:not(:has(a))').html('<a>...</a>');
+    $('.page-navigator .current').addClass('active');
+    
+        $('pre').addClass('prettyprint linenums');
+        $('.entry-content a').attr('target','_blank');
+</script>
+</body>
+</html>
+

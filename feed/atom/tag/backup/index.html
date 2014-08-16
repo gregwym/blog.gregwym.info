@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+xmlns:thr="http://purl.org/syndication/thread/1.0"
+xml:lang="zh-CN"
+xml:base="http://blog.gregwym.info/tag/backup/"
+>
+<title type="text">某储备粮的“学习笔记” - backup</title>
+<subtitle type="text"></subtitle>
+<updated>2011-04-05T10:11:48+08:00</updated>
+<generator uri="http://typecho.org/" version="0.9/13.12.12">Typecho</generator>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/tag/backup/" />
+<id>http://blog.gregwym.info/feed/atom/tag/backup/</id>
+<link rel="self" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/tag/backup/" />
+<entry>
+<title type="html"><![CDATA[linux服务器`自动备份数据库+网页到邮箱]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html" />
+<id>http://blog.gregwym.info/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html</id>
+<updated>2011-04-05T10:11:48+08:00</updated>
+<published>2011-04-05T10:11:48+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[我的QQ邮箱现在已经有3T容量了...原来玩WordPress的时候其实就一直拿来做数据库备份, 现在容量变大几倍有余, 自然是备份的不二选择. 这可比FDC的大容量VPS划算多了, 特别是当你的网站...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html" xml:lang="zh-CN"><![CDATA[
+<p>我的QQ邮箱现在已经有3T容量了...<br />原来玩WordPress的时候其实就一直拿来做数据库备份, 现在容量变大几倍有余, 自然是备份的不二选择. 这可比<a href="https://www.fdcservers.net/order-1.php?plan_id=358">FDC的大容量VPS</a>划算多了, 特别是当你的网站并没有多大的时候. (书苑现在的数据库也都还没有1G...)</p><p>这个脚本来自<a href="http://www.vpsmm.com/edu/everyday-auto-backup-linux-vps.html">小夜博客</a>, 经我略加修改了一下.<br />下载: <a href="http://blog.gregwym.info/usr/uploads/2011/04/259619282.sh" title="backup_to_mail.sh">backup&#95;to&#95;mail.sh</a></p><p><hr /></p><p>很简单的一段bash script, 只需要自定义下mysql的用户名密码, 邮箱地址和要备份的目录.</p><p>然后进行下边的步骤:</p><p>首先要建立好放置备份文件的目录</p><pre><code>mkdir /home/backup
+</code></pre><p>然后安装发送邮件的程序</p><pre><code>yum install sendmail mutt
+</code></pre><p>把backup&#95;to&#95;mail.sh放到刚刚建立的目录中, 然后给脚本增加运行权限</p><pre><code>chmod a+x /home/backup/backup_to_mail.sh
+</code></pre><p>最后一步是设置定时运行, 输入</p><pre><code>crontab -e
+</code></pre><p>然后在vi编辑界面中加入下面这行文字</p><pre><code>00 00 * * * /home/backup/backup_to_mail.sh
+</code></pre><p>:x + enter就ok了.</p><p>其中00 00表示在每日00分, 00点的时候运行该脚本.</p><p>下边是脚本的内容, 以备附件失效和以后学习...</p><pre><code>#!/bin/bash
+MYSQL_USER=root                             #mysql username
+MYSQL_PASS=***********                      #mysql password
+MAIL_TO=*******@***.**                      #mailling to
+WEB_DATA=/home/wwwroot/                     #to be backup dir
+
+#define variables
+DataBakName=Data_$(date +%Y%m%d).tar.gz
+WebBakName=Web_$(date +%Y%m%d).tar.gz
+OldData=Data_$(date -d -3day +%Y%m%d).tar.gz
+OldWeb=Web_$(date -d -3day +%Y%m%d).tar.gz
+DataSubject="Backup: gregwym.info database "$(date +%Y%m%d)
+WebSubject="Backup: gregwym.info web dir "$(date +%Y%m%d)
+
+#delete data from 3days earlier
+rm -rf /home/backup/$OldData /home/backup/$OldWeb
+cd /home/backup
+
+#export database to compressed gz files
+for db in `/usr/local/mysql/bin/mysql -u$MYSQL_USER -p$MYSQL_PASS -B -N -e 'SHOW DATABASES' | xargs`; do
+    (/usr/local/mysql/bin/mysqldump --single-transaction -u$MYSQL_USER -p$MYSQL_PASS ${db} | gzip -9 - &gt; ${db}.sql.gz)
+done
+
+#compress database files
+tar zcf /home/backup/$DataBakName /home/backup/*.sql.gz
+rm -rf /home/backup/*.sql.gz
+#mail database
+echo $DataSubject | mutt -a /home/backup/$DataBakName -s "${DataSubject}" $MAIL_TO
+
+#compress backup dir
+tar zcf /home/backup/$WebBakName $WEB_DATA
+#mail dir
+echo $WebSubject | mutt -a /home/backup/$WebBakName -s "${WebSubject}" $MAIL_TO
+
+echo "bye"
+#END
+</code></pre><p>如果不希望备份网页文件, 或者希望数据库和网页分别备份的, 可以自行拆分脚本为两个文件.</p><p>如果只是想降低备份网页文件的频率, 可以将#mail dir部分替换为:</p><pre><code>if [ $(date +%A) = "Sunday" ]; then 
+    echo $WebSubject | mutt -a /home/backup/$WebBakName -s "${WebSubject}" $MAIL_TO 
+fi
+</code></pre>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html#comments" thr:count="1" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html" thr:count="1"/>
+</entry>
+</feed>

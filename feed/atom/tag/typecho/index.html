@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+xmlns:thr="http://purl.org/syndication/thread/1.0"
+xml:lang="zh-CN"
+xml:base="http://blog.gregwym.info/tag/typecho/"
+>
+<title type="text">某储备粮的“学习笔记” - typecho</title>
+<subtitle type="text"></subtitle>
+<updated>2012-03-18T23:08:18+08:00</updated>
+<generator uri="http://typecho.org/" version="0.9/13.12.12">Typecho</generator>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/tag/typecho/" />
+<id>http://blog.gregwym.info/feed/atom/tag/typecho/</id>
+<link rel="self" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/tag/typecho/" />
+<entry>
+<title type="html"><![CDATA[Typecho用Markdown编辑器]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/typecho-markdown-editor.html" />
+<id>http://blog.gregwym.info/typecho-markdown-editor.html</id>
+<updated>2012-03-18T23:08:18+08:00</updated>
+<published>2012-03-18T23:08:18+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[在网上找了下Typecho的Markdown插件, 有两个版本, 主要区别如下明城制作的Markdown插件 浏览时转换Markdown=&gt;HTML数据库保存Markdown文本ichuan制作的Ma...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/typecho-markdown-editor.html" xml:lang="zh-CN"><![CDATA[
+<p>在网上找了下Typecho的Markdown插件, 有两个版本, 主要区别如下</p><ul>
+<li><a href="http://www.gracecode.com/archives/3082/">明城</a>制作的Markdown插件 <br />
+<br />
+<ul>
+<li>浏览时转换Markdown=>HTML</li>
+<li>数据库保存Markdown文本</li>
+</ul></li>
+<li><a href="http://forum.typecho.org/topic.php?id=1218">ichuan</a>制作的Markdown4TE <br />
+<br />
+<ul>
+<li>保存文章时转换Markdown=>HTML</li>
+<li>数据库保存HTML文本</li>
+</ul></li>
+</ul><p>这两种实现都各有利弊, 我个人倾向于ichuan的做法.<br />原因无外乎, 能保持Typecho文章数据的一致性, 以前存HTML现在还是存HTML, 只是编辑的方式变了.</p><p><hr /></p><p>但ichuan的插件在用的时候不是那么顺利. 因为js放置的位置好像有些问题, 编辑器和预览99%的时候加载失败(Chrome 17). 预览界面的CSS定义也有些问题.</p><p>于是自己动手丰衣足食, 把成果po出来给和我碰到同样问题的朋友们.</p><ul>
+<li>保留了原插件的保存和读取部分</li>
+<li>重新构造了编辑器部分 <br />
+<br />
+<ul>
+<li>使用了和Stack Oveflow一样的最新<a href="http://code.google.com/p/pagedown/">PageDown编辑器</a></li>
+<li>编辑器带实时效果预览</li>
+<li>完整定义了各种格式的预览效果</li>
+</ul></li>
+</ul><p>Mar 19/2012 v0.2.1</p><ul>
+<li>修复了无法插入附件的BUG</li>
+</ul><p><!--more--></p><h3>下载</h3><blockquote><p><a href="https://github.com/gregwym/Markdown4TE/zipball/master">https://github.com/gregwym/Markdown4TE/zipball/master</a></p></blockquote><h3>Github</h3><blockquote><p><a href="https://github.com/gregwym/Markdown4TE">https://github.com/gregwym/Markdown4TE</a></p></blockquote><h3>有图有真相</h3><blockquote><p><a href="https://github.com/gregwym/Markdown4TE/raw/master/Markdown_Screenshot.png"><img src="https://github.com/gregwym/Markdown4TE/raw/master/Markdown_Screenshot.png" alt="Markdown编辑器截图" /></a></p></blockquote><p><hr /></p><h2>效果展示部分</h2><h1>H1</h1><h2>H2</h2><h3>H3</h3><p><strong>strong text</strong><br /><em>emphasized text</em><br /><strong><em>strong &amp; emphasized text</em></strong></p><p><hr /></p><p><a href="http://dolast.com">enter link description here</a></p><blockquote><p>Blockquote</p></blockquote><pre><code>enter code here
+</code></pre><ol>
+<li><p>List item</p><br />
+<br />
+<ul>
+<li>List item</li>
+</ul></li>
+</ol>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/typecho-markdown-editor.html#comments" thr:count="47" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/typecho-markdown-editor.html" thr:count="47"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[Trapecho - 基于Bootstrap的Typecho主题]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/Trapecho-boostrap-based-typecho-theme.html" />
+<id>http://blog.gregwym.info/Trapecho-boostrap-based-typecho-theme.html</id>
+<updated>2012-03-17T23:00:44+08:00</updated>
+<published>2012-03-17T23:00:44+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[之前的浮云主题也用了快一年了, 有些腻味.主题本身也有很多问题, 比如代码质量不是很好, 主题的CSS对博客文章的Typography没有很规范的支持, 浮云比较吃CPU...一直想换主题却没有找到好...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/Trapecho-boostrap-based-typecho-theme.html" xml:lang="zh-CN"><![CDATA[
+<p>之前的浮云主题也用了快一年了, 有些腻味.<br />主题本身也有很多问题, 比如代码质量不是很好, 主题的CSS对博客文章的Typography没有很规范的支持, 浮云比较吃CPU...</p><p>一直想换主题却没有找到好的. 最近对Bootstrap很是痴迷, 又有了点空闲, 就顺手仿着Bootstrap官网风格做了一个Typecho的主题.<br />自己觉得效果还不错, po出来给喜欢的朋友.</p><h2>设计风格</h2><ul>
+<li>黑白灰</li>
+<li>简洁明了</li>
+</ul><h2>特色功能</h2><ul>
+<li>自动吸附顶端的导航栏</li>
+<li>在各种设备上自适应显示 (如: iPhone/iPad)</li>
+<li>侧栏的新浪微博展示插件</li>
+<li>集成Google Code Prettify</li>
+</ul><h2>应用的技术</h2><ul>
+<li>Bootstrap + jQuery</li>
+<li>HTML5 + CSS3</li>
+<li>Responsive CSS</li>
+</ul><h3>下载</h3><p><del>下载我放在doLast.com上了, 点Download即可</del></p><blockquote><p><del><a href="http://dolast.com/pages/trapecho">http://dolast.com/pages/trapecho</a></del><br /><a href="https://github.com/gregwym/Trapecho/zipball/master">https://github.com/gregwym/Trapecho/zipball/master</a></p></blockquote><p><!--more--></p><p><hr /></p><h2>功能详解</h2><h3>新浪微博</h3><ul>
+<li>在<code>/admin/options-theme.php</code>主题设置页中填入新浪微博的UID, 侧栏中就会显示新浪微博的插件.</li>
+<li>在设置中删除UID号码并保存, 即可关闭插件</li>
+</ul><h3>根据分辨率自适应布局</h3><ul>
+<li>如果您在看我的博客, 现在把浏览器缩小就能看出效果.</li>
+<li>在iPhone/iPad等移动设备上也能有很好的博客阅读体验</li>
+<li>支持iOS的阅读器模式</li>
+</ul><h3>侧栏可选项</h3><ul>
+<li>显示最新文章</li>
+<li>显示相关文章</li>
+<li>显示最近回复</li>
+<li>显示标签</li>
+<li>显示分类</li>
+<li>显示归档</li>
+<li>显示友情链接(需要友情链接插件)</li>
+<li>显示其它杂项</li>
+</ul><h3>Google Code Prettify</h3><ul>
+<li>为了统一主题风格, 也特别定义了代码的高亮方式, 如果有朋友不喜欢, 从<code>footer.php</code>最后删除和<code>pre</code>有关的几行JavaScript即可.</li>
+<li><p>使用很简单, 展示大段的代码, 使用<code>&lt;pre&gt;</code>将代码括住, 就会自动高亮, 语言类型自动识别.</p><br />
+<br />
+<pre><code>&lt;pre&gt;
+    &lt;!--你的代码放在中间--&gt;
+&lt;/pre&gt;
+</code></pre></li>
+<li><p>比如,</p><br />
+<br />
+<pre><code>int main(){
+    cout &lt;&lt; "Welcome to Trapecho" &lt;&lt; endl;
+    return 0;
+}
+</code></pre></li>
+<li><p>更多使用方法请参考, <a href="http://google-code-prettify.googlecode.com/svn/trunk/README.html">google-code-prettify README</a></p></li>
+</ul>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/Trapecho-boostrap-based-typecho-theme.html#comments" thr:count="47" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/Trapecho-boostrap-based-typecho-theme.html" thr:count="47"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[说说Typecho`]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/shuo-shuo-typecho%60.html" />
+<id>http://blog.gregwym.info/shuo-shuo-typecho%60.html</id>
+<updated>2011-04-04T12:16:33+08:00</updated>
+<published>2011-04-04T12:16:33+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[弄完最后的物理作业本想接着把STAT也搞定`可看看有8页之多...还是先睡一觉再说吧, 这两天时差又乱套了, 要调回来.距离12点还有点时间, 换换脑子随便写点东西...高中的时候就折腾过WordPr...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/shuo-shuo-typecho%60.html" xml:lang="zh-CN"><![CDATA[
+<p>弄完最后的物理作业本想接着把STAT也搞定`可看看有8页之多...还是先睡一觉再说吧, 这两天时差又乱套了, 要调回来.<br />距离12点还有点时间, 换换脑子随便写点东西...</p><p>高中的时候就折腾过WordPress, 借朋友的空间搭了个小博`写了两句就没兴致继续下去了. 大部分时间都花在了研究各种插件上边. 但不知道为什么, WordPress一直就没有让我有强烈的归属感. 虽然它插件很多, 主题很多, 能高度定制化...可都少了点什么.</p><p>啊`是他太乱了...</p><p>添加了各种杂七杂八的插件以后, 单侧栏恐怕都塞不下了, 再配上本就没什么几篇的博文列表, 整个页面显得臃肿杂乱`主次颠倒, 自然也就没有了继续下去的动力.<br />虽然这算是我自己的客观因素...但WordPress越长越肥, 功能繁多却不实用的现状是毋庸置疑的.</p><p><hr /></p><p>不记得到底是先注意到Typecho, 还是先动了玩VPS的主意, 反正这俩分不开. 在某博看到Typecho的介绍和他简洁的风格时就决定了我肯定要抛弃WordPress了.</p><p>他实在太简单了...</p><ul>
+<li>安装只要填写管理员, 站点信息和数据库配置就万事大吉, 一步到位.</li>
+<li>一个博客需要的东西, 五脏俱全. 在添加了代码加亮, 博客友联等几个常用插件之后, 可以直接开拔.</li>
+<li>后台就是简简单单的内容+评论管理, 和外观设定.</li>
+<li>主题导入后, 自己调整些零碎也很得心应手.</li>
+<li>数据库一共只有6张表.</li>
+<li>主题文件只分, 头&#96;脚&#96;内容&#96;评论&#96;侧栏`列表...外加一张style-sheet. 从头到脚透露这简单的概念.</li>
+</ul><p>按Typecho官方说法, 一个完全重写的全新后台系统正在开发中, 实在是非常期待.<br />有想法要好好学习下Typecho的源码, 不过还是先考完试再说吧.</p><p>附个在别处看到的相关短文, 深以为然:</p><blockquote><p><a href="http://www.sinzi.org/start-typecho/">为什么放弃Wordpress使用Typecho?</a></p></blockquote><p>时间差不多了...睡觉睡觉`</p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/shuo-shuo-typecho%60.html#comments" thr:count="2" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/shuo-shuo-typecho%60.html" thr:count="2"/>
+</entry>
+</feed>

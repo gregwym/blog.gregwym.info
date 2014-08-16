@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+xmlns:thr="http://purl.org/syndication/thread/1.0"
+xml:lang="zh-CN"
+xml:base="http://blog.gregwym.info/tag/lion/"
+>
+<title type="text">某储备粮的“学习笔记” - lion</title>
+<subtitle type="text"></subtitle>
+<updated>2011-12-03T15:38:19+08:00</updated>
+<generator uri="http://typecho.org/" version="0.9/13.12.12">Typecho</generator>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/tag/lion/" />
+<id>http://blog.gregwym.info/feed/atom/tag/lion/</id>
+<link rel="self" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/tag/lion/" />
+<entry>
+<title type="html"><![CDATA[MacBook更换硬盘记 (完美迁移Lion隐藏恢复分区)]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html" />
+<id>http://blog.gregwym.info/macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html</id>
+<updated>2011-12-03T15:38:19+08:00</updated>
+<published>2011-12-03T15:38:19+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[前段时间收了个二手的MacBook, 升级到8G内存以后, 所有东西都很给力, 但原来的硬盘只有160G. 从同学那拿了个500G的硬盘, 准备换上.主分区的迁移很容易, Mac OS X的磁盘工具是...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html" xml:lang="zh-CN"><![CDATA[
+<p>前段时间收了个二手的MacBook, 升级到8G内存以后, 所有东西都很给力, 但原来的硬盘只有160G. 从同学那拿了个500G的硬盘, 准备换上.</p><p>主分区的迁移很容易, Mac OS X的磁盘工具是神器, 主分区直接恢复到新硬盘的对应分区即可. 但原机主已经装好了Lion(不知道是不是正版), Lion中增加了一个隐藏分区, 可以在系统崩溃的时候作为恢复分区. 所以希望能把隐藏分区完美移植到新硬盘上, 又保留原先Mac分区的数据, 只是扩大容量.</p><p>搜索了很多地方, 国内的各大论坛貌似都没有人研究过移植Lion恢复分区的问题, 最后还是在一个英文博客上找到了可行的方法. 翻译整理一下记录在这里, 方便碰到类似问题的朋友. 因为我自己操作的时候并没有截图, 所以直接使用原英文博客上的数据了.</p><p><!--more--></p><h3>Step1: 准备范本</h3><p>在移植隐藏分区之前, 首先需要一个隐藏分区的范本.<br />个人认为, 应该尽量避免把正在运行的系统作为复制的范本<br />我的做法是, 在换硬盘之前, 先使用"Lion 恢复磁盘助理"制作一个可以boot的恢复U盘. 从U盘boot后, 把原硬盘的恢复分区作为范本. 这样也保证了原汁原味.<br />Lion 恢复磁盘助理下载地址: <a href="http://support.apple.com/kb/DL1433?viewlocale=zh_CN">http://support.apple.com/kb/DL1433?viewlocale=zh_CN</a></p><h3>Step2: 从U盘启动</h3><p>将制作好的U盘插入电脑, 开机时按住Option选择U盘启动, 从U盘boot进入到Lion的恢复系统中.<br />将两块硬盘的其中一块放到USB硬盘盒中并接入电脑.</p><h3>Step3: 格式化新硬盘</h3><p>先进入"磁盘工具"把新硬盘整个都抹成"Mac OS扩展 (日志式)"<br />然后退出"磁盘工具"</p><h3>Step4: 收集信息</h3><p>点击"实用程序"->"终端" 进入Terminal<br />输入diskutil list, 列出系统中所有的磁盘和分区, 找出原盘和新盘的代码, 还有分区的编号.<br />例如:</p><pre><code>/dev/disk0
+   #:                       TYPE NAME              SIZE      IDENTIFIER
+   0:      GUID_partition_scheme                  *128.0 GB  disk0
+   1:                        EFI                   209.7 MB  disk0s1
+   2:                  Apple_HFS Macintosh HD      127.7 GB  disk0s2
+/dev/disk1
+   #:                       TYPE NAME              SIZE      IDENTIFIER
+   0:      GUID_partition_scheme                  *32.3 GB   disk1
+   1:                        EFI                   209.7 MB  disk1s1
+   2:                  Apple_HFS OSX               31.4 GB   disk1s2
+   3:                 Apple_Boot Recovery HD       650.0 MB  disk1s3
+</code></pre><p>其中, 记录下列信息</p><ul>
+<li>/dev/disk0是我们要操作的新硬盘, #2分区是主分区</li>
+<li>/dev/disk1是我们要作为范本的老硬盘 or U盘, #3分区是Lion恢复分区</li>
+</ul><h3>Step5: 继续收集信息</h3><p>输入diskutil info /dev/disk0s2 (新硬盘的第二个分区)</p><pre><code>Device Identifier:        disk0s2
+    Device Node:              /dev/disk0s2
+    Part of Whole:            disk0
+    Device / Media Name:      Macintosh HD
+    ...
+    Total Size:               127.7 GB (127691702272 Bytes) (exactly 249397856 512-Byte-Blocks)
+    ...
+</code></pre><p>重点在于127691702272 Bytes, 你的硬盘不一定是这个大小, 记录下来</p><p>再输入diskutil info /dev/disk1s3</p><pre><code>Device Identifier:        disk1s3
+    Device Node:              /dev/disk1s3
+    Part of Whole:            disk1
+    Device / Media Name:      Recovery HD
+    ...
+    Total Size:               650.0 MB (650002432 Bytes) (exactly 1269536 512-Byte-Blocks)
+    ...
+</code></pre><p>重点是650002432 Bytes, 你的盘可能稍微有点不一样, 记录下来.</p><p>这样我们就收集齐了移植恢复分区的所有数据.</p><h3>Step6: 调整分区大小并创建新分区</h3><p>原来的隐藏分区是650MB, 但保险起见, 防止复制分区时少copy任意数据, 我们给隐藏分区分配700MB.<br />所以主分区的新大小为 127691702272 - 700 * 1000 * 1000 = 126991702272 Bytes (请根据你实际大小进行计算)<br />调整主分区的同时, 创建新分区. 注意输入正确的分区名称和大小!!!</p><pre><code>-bash-3.2# diskutil resizeVolume /dev/disk0s2 126991702272B  jhfs+ "Recovery HD" 650002432B
+Started partitioning on disk0s2 Macintosh HD
+Verifying the disk
+Checking file system
+Performing live verification
+Checking Journaled HFS Plus volume
+Checking extents overflow file
+Checking catalog file
+Checking multi-linked files
+Checking catalog hierarchy
+Checking extended attributes file
+Checking volume bitmap
+Checking volume information
+The volume Macintosh HD appears to be OK
+Resizing
+Waiting for the disks to reappear
+Formatting disk0s3 as Mac OS Extended (Journaled) with name Recovery HD
+Initialized /dev/rdisk0s3 as a 621 MB HFS Plus volume with a 8192k journal
+Mounting disk
+Finished partitioning on disk0s2 Macintosh HD
+/dev/disk0
+   #:                       TYPE NAME             SIZE      IDENTIFIER
+   0:      GUID_partition_scheme                 *128.0 GB  disk0
+   1:                        EFI                  209.7 MB  disk0s1
+   2:                  Apple_HFS Macintosh HD     127.0 GB  disk0s2
+   3:                  Apple_HFS Recovery HD      651.1 MB  disk0s3
+</code></pre><p>新建的分区大小比我们给的数大了些, 重新resize.</p><pre><code>-bash-3.2# diskutil resizeVolume disk0s3 650002432B
+ Started partitioning on disk0s3 Recovery HD
+ Verifying the disk
+ Checking file system
+ Checking Journaled HFS Plus volume
+ Checking extents overflow file
+ Checking catalog file
+ Checking multi-linked files
+ Checking catalog hierarchy
+ Checking extended attributes file
+ Checking volume bitmap
+ Checking volume information
+ The volume Recovery HD appears to be OK
+ Resizing
+ Finished partitioning on disk0s3 Recovery HD
+ /dev/disk0
+    #:                       TYPE NAME             SIZE      IDENTIFIER
+    0:      GUID_partition_scheme                 *128.0 GB  disk0
+    1:                        EFI                  209.7 MB  disk0s1
+    2:                  Apple_HFS Macintosh HD     127.0 GB  disk0s2
+    3:                  Apple_HFS Recovery HD      650.0 MB  disk0s3
+</code></pre><p>这样就对了. 注: 这一步很重要, 如果隐藏分区大小不对, 最后会失败的!</p><h3>Step7: 复制隐藏分区数据</h3><p>将新创建的分区卸载(unmount).<br />然后用dd复制隐藏分区文件, 如下</p><pre><code>-bash-3.2# dd if=/dev/disk1s3 of=/dev/disk0s3
+    1269536+0 records in
+    1269536+0 records out
+    650002432 bytes transferred in 185.538679 secs (3503326 bytes/sec)
+</code></pre><p>dd会把原盘的隐藏分区里的内容, 一字不差的复制到新分区中, 不该失败.</p><h3>Step8: 修改隐藏分区的类型</h3><pre><code>-bash-3.2# asr adjust --target /dev/disk0s3 -settype "Apple_Boot"
+    Fsck /dev/disk0s3 ....10....20....30....40....50....60....70....80....90....100
+  Adjust completed successfully
+</code></pre><p>运行完以后检查一下结果,</p><pre><code>-bash-3.2# diskutil list
+ /dev/disk0
+    #:                       TYPE NAME             SIZE      IDENTIFIER
+    0:      GUID_partition_scheme                 *128.0 GB  disk0
+    1:                        EFI                  209.7 MB  disk0s1
+    2:                  Apple_HFS Macintosh HD     127.0 GB  disk0s2
+    3:                 Apple_Boot Recovery HD      650.0 MB  disk0s3
+ /dev/disk1
+    #:                       TYPE NAME             SIZE      IDENTIFIER
+    0:      GUID_partition_scheme                 *32.3 GB   disk1
+    1:                        EFI                  209.7 MB  disk1s1
+    2:                  Apple_HFS OSX              31.4 GB   disk1s2
+    3:                 Apple_Boot Recovery HD      650.0 MB  disk1s3
+</code></pre><p>新硬盘上的Recovery HD现在应该已经是Apple_Boot类型了.</p><p>之后通过"磁盘工具"将老硬盘的Mac分区恢复到新硬盘的Mac分区, 然后在开机时就可以通过按住option键boot进新硬盘中的系统和恢复分区了.<br />进入系统后注意设置启动磁盘, 不然再次重启时候还需要按option键.</p><p>完毕</p><p><hr /></p><p>参考源:<br /><a href="http://www.dmitry-dulepov.com/2011/09/mac-recovery-partion-revisited.html">http://www.dmitry-dulepov.com/2011/09/mac-recovery-partion-revisited.html</a></p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html#comments" thr:count="18" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html" thr:count="18"/>
+</entry>
+</feed>

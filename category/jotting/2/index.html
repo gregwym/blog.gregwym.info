@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>Jotting - 某储备粮的“学习笔记”</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 使用url函数转换相关路径 -->
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/style.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/prettify.css" />
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="http://blog.gregwym.info/category/jotting/2/images/favicon.ico">
+<link rel="apple-touch-icon" href="http://blog.gregwym.info/category/jotting/2/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="http://blog.gregwym.info/category/jotting/2/images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="http://blog.gregwym.info/category/jotting/2/images/apple-touch-icon-114x114.png">
+
+<!-- 通过自有函数输出HTML头部信息 -->
+<meta name="description" content="这个...必然就是鄙人的碎碎念啦`哈哈哈" />
+<meta name="keywords" content="Jotting" />
+<meta name="generator" content="Typecho 0.9/13.12.12" />
+<meta name="template" content="trapecho" />
+<link rel="pingback" href="../../../action/xmlrpc.html" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="../../../action/xmlrpc%3Frsd.html" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="../../../action/xmlrpc%3Fwlw.html" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="../../../feed/category/jotting/index.html" />
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="../../../feed/rss/category/jotting/index.html" />
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="../../../feed/atom/category/jotting/index.html" />
+</head>
+
+<body onload="prettyPrint()">
+
+<div class="container">
+
+<header class="jumbotron" id="overview">
+        <h1>某储备粮的“学习笔记” </h1>
+    <p class="lead">by 咳嗽di小鱼</p>
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                
+                <a class="brand" href="../../../index.html">
+                    Trapecho
+                </a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="../../../index.html">Home</a></li>
+                        <li class="divider-vertical"></li>
+                                                                        <li><a href="../../sum-up/index.html" title="Sum Up">Sum Up</a></li>
+                                                <li><a href="../../code-dump/index.html" title="Code Dump">Code Dump</a></li>
+                                                <li><a href="../../network/index.html" title="Network">Network</a></li>
+                                                <li class="active"><a href="../index.html" title="Jotting">Jotting</a></li>
+                                                <li><a href="../../Portfolio/index.html" title="Portfolio">Portfolio</a></li>
+                                                <li class="divider-vertical"></li>
+                                                                        <li><a href="../../../linked-in.html" title="Linked In">Linked In</a></li>
+                                                <li><a href="../../../guess-book.html" title="Guest Book">Guest Book</a></li>
+                                                <li><a href="../../../about.html" title="About">About</a></li>
+                                                <li><a href="../../../rss.html" title="RSS">RSS</a></li>
+                                            </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="content">
+
+
+<div class="row">
+    <div class="span9" id="content">
+                        <div class="post">
+            <div class="page-header">
+                <h1>
+                    <a href="../../../db2-shu-ju-ku-dao-chu-he-dao-ru.html">db2 数据库导出和导入</a> 
+                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: November 3, 2011</span>
+                    <span>Category: <a href="../index.html">Jotting</a></span>
+                    <a href="../../../db2-shu-ju-ku-dao-chu-he-dao-ru.html#comments">No Comments</a>
+                </h6>
+            </div>
+            <div class="entry-content"><pre><code>Db2=&gt;CONNECT TO db_name 
+Db2=&gt;EXPORT TO absolute_file_path OF DEL SELECT * FROM "table_name"
+Db2=&gt;IMPORT FROM absolute_file_path OF DEL INSERT_UPDATE INTO "table_name"
+</code></pre></div>
+        </div>
+        <hr class="soften" />
+                <div class="post">
+            <div class="page-header">
+                <h1>
+                    <a href="../../../zhe-bei-zi-xie-de-di-yi-ge-gei-ren-yong-de-cheng-xu.html">这辈子写的第一个给人用的程序...</a> 
+                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: June 23, 2011</span>
+                    <span>Category: <a href="../index.html">Jotting</a></span>
+                    <a href="../../../zhe-bei-zi-xie-de-di-yi-ge-gei-ren-yong-de-cheng-xu.html#comments">4 Comments</a>
+                </h6>
+            </div>
+            <div class="entry-content"><p>埋头写了3整天的code&#96;...不用Interface Builder写GUI真是自虐啊&#96;<br />不过结果还是不错的`啊哈哈哈</p><p>写的是个Twitter-like Web Service的客户端, 网页端在这里<br /><a href="https://hci-courses.cs.uwaterloo.ca/channelw/">https://hci-courses.cs.uwaterloo.ca/channelw/</a><br />不是开放注册, 但可以邀请...有人想玩玩看的话, 可以留言回复哈`<br />Post上来得瑟一下</p><p>Java运行文件下载:<br /><a href="http://blog.gregwym.info/usr/uploads/2011/06/797283141.jar" title="mikrocalendar.jar">mikrocalendar.jar</a></p><p>截图如下:<br /><img src="http://blog.gregwym.info/usr/uploads/2011/06/3407415072.jpg" alt="Channel W 截图" /></p></div>
+        </div>
+        <hr class="soften" />
+                <div class="post">
+            <div class="page-header">
+                <h1>
+                    <a href="../../../virtualbox---zhu-ji-yu-xu-ni-ji-zhi-jian-gong-xiang-wen-jian-jia.html">Virtualbox - 主机与虚拟机之间共享文件夹</a> 
+                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: May 15, 2011</span>
+                    <span>Category: <a href="../index.html">Jotting</a></span>
+                    <a href="../../../virtualbox---zhu-ji-yu-xu-ni-ji-zhi-jian-gong-xiang-wen-jian-jia.html#comments">1 Comment</a>
+                </h6>
+            </div>
+            <div class="entry-content"><p>此文章特指Windows主机, Linux虚拟机环境.<br />前提是需要在Linux中安装Virtualbox的虚拟机工具.</p><h3>Step1:</h3><p>在设备属性中设置"分配数据空间",</p><ul>
+<li>"数据空间位置" - 主机上需要分享的文件夹位置</li>
+<li>"数据空间名称" - 共享资源显示的名字, 不需要和原文件夹同名, 但不能包含空格. 最好为英文</li>
+<li>"只读分配" - 顾名思义</li>
+<li>"Auto-mount" - 测试没成功, 不推荐选择, 可以手动在虚拟机中设置</li>
+<li>"固定分配" - 是否给该虚拟机永久分配此数据空间</li>
+</ul><h3>Step2:</h3><p>启动虚拟机, 打开Terminal</p><pre><code>sudo mkdir /mnt/share  
+sudo mount -t vboxsf &lt;数据空间名称&gt; /mnt/share
+</code></pre><p>之后就可以在/mnt/share里访问主机的文件了<br />注: /mnt/是Ubuntu的默认mount目录, 并不是所有Linux都是如此, 请自行注意</p><h3>Step3:</h3><p>卸载这个数据空间, 你可以选择重启, 或者使用以下命令</p><pre><code>sudo umount -f /mnt/shared
+</code></pre><h3>Step4:</h3><p>如果需要每次打开虚拟机的时候都自动加载这个, 可以编辑/etc/fstab</p><pre><code>sudo vim /etc/fstab
+# 添加如下一行内容  
+&lt;数据空间名称&gt; /mnt/share vboxsf rw,gid=100,uid=1000,auto 0 0  
+</code></pre></div>
+        </div>
+        <hr class="soften" />
+                <div class="post">
+            <div class="page-header">
+                <h1>
+                    <a href="../../../ipad-2-bai-se-kai-xiang-tu.html">iPad 2 白色高清无码openbox`</a> 
+                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: April 8, 2011</span>
+                    <span>Category: <a href="../index.html">Jotting</a></span>
+                    <a href="../../../ipad-2-bai-se-kai-xiang-tu.html#comments">17 Comments</a>
+                </h6>
+            </div>
+            <div class="entry-content"><p><style type="text/css">
+#post-51 img {
+margin: 10px;
+}
+</style><a href="http://blog.gregwym.info/usr/uploads/2011/04/265457699.jpg" title="IMG_0366.JPG"><img src="http://blog.gregwym.info/usr/uploads/2011/04/265457699.jpg" alt="IMG_0366.JPG" width=100% /></a><br />Fedex, 明明昨天还没到北美大陆呢, 今天早上就到家门口了...</p><p class="more"><a href="../../../ipad-2-bai-se-kai-xiang-tu.html" title="iPad 2 白色高清无码openbox`">Read more...</a></p></div>
+        </div>
+        <hr class="soften" />
+                <div class="post">
+            <div class="page-header">
+                <h1>
+                    <a href="../../../guo-duan-huan-vps-zhe-hui-shi-quickweb.html">果断换VPS...这回是QuickWeb</a> 
+                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: April 2, 2011</span>
+                    <span>Category: <a href="../index.html">Jotting</a></span>
+                    <a href="../../../guo-duan-huan-vps-zhe-hui-shi-quickweb.html#comments">5 Comments</a>
+                </h6>
+            </div>
+            <div class="entry-content"><p>Hostrail实在是不给力...`CPU不灵, 装lnmp慢的一塌糊涂, 好不容易Setup好, 各种问题层出不穷.<br /><ul>
+<li>HyperVM Panel时不时无法访问, 即使可以访问也慢得要死</li>
+<li>html页的速度倒还不错, 可Typecho这么轻量化的php应用都慢的不成样子</li>
+<li>从3.29到4.1这段时间, server至少down了两次, 而且都是长时间的</li>
+<li>外加各种不确定性重启...</li>
+</ul><br />
+悲催的不是一点两点= =||`<br />买的时候抱着随便玩玩的心理也就没仔细研究, 之后才看明白VPS是怎么一潭深水.<br /><br />这两天好好的查了下VPS的相关信息, 留下这么几个性价比高, 又比较靠谱的ISP:<br />VPSYOU, YardVPS, Ramhost, QuickWeb<br /><ul>
+<li>VPSYOU价格中等, OpenVZ 256m的版本$4/m, CPU是745x2, 硬盘20G.</li>
+<li>YardVPS的OpenVZ口碑不太好, 但他的Xen据说硬盘速度超一流, 512m 1.5T流量, $7.95/m. <br />
+不过很少有货, 我看到有一个但因为犹豫不决miss掉了.</li>
+<li>Ramhost是口碑最好的一个. 所有信息都只有夸没有贬, 只是一直没货, 而且256m要$8.99/m.<br />
+(Ramhost每周末会补货, 要注意刷网页)</li>
+<li>QuickWeb在网站上post出来的plan的性价比不是很高, 最低的OpenVZ/Xen都要$9.95/m. <br />
+有个<a target="_blank" href="http://quickweb.co.nz/chinese">Chinese Promo</a>还可以, Texas机房的256mOpenVZ要$5.5/m, 不过好像也是out of stock.</li>
+</ul><p>最后来介绍下我的最终选择:<br />QuickWeb一开始并不在我的选择范围内, 甚至根本不知道这个ISP, 因为几个大的VPS博客都没有特别推荐过这个ISP. 后来在<a target="_blank" href="http://neal.im/">Neal的博客</a>发现他在做<a target="_blank" href="http://neal.im/webhosting/">QuickWeb的代购</a>, 才发现这也是一家在美国蛮有实力的IPS. (之所以说有实力是因为他们在美国五个大的数据中心都有机房)<br />最后入手的这个是$35.88/年的plan, 平摊下来一月只要$3, Neal主推的就是这个plan.<br />他自己的blog就搭在这个plan的VPS上, 访问速度很好, 而且看底下评论的反响普遍不错, 经Google四处查证以后, 决定还是下手试试看. Paypal付款给Neal以后, 主机即时开通.<br /><br />规格:<br />OpenVZ/SolusVM<br />Intel(R) Xeon(R) CPU X3440 @ 2.53GHz, 单核<br />256M/384M突发<br />10G硬盘, 速度测试平均22M/s<br />美国凤凰城机房10Mbit带宽(Phoenix/LA) 250G/m流量<br />+$5可升级100Mbit<br />+$10可升级1000Mbit<br /><br />到目前为止, 对这个主机还是很满意的, 速度和性能方面都很不错. LNMP只用了20分钟就装好了.<br />有需求的朋友可以联系Neal代购, <a target="_blank" href="http://neal.im/webhosting/">http://neal.im/webhosting/</a><br /></p></div>
+        </div>
+        <hr class="soften" />
+                
+        <div class="pagination">
+            <ol class="page-navigator"><li><a class="prev" href="../1/index.html">&laquo;</a></li><li><a href="../1/index.html">1</a></li><li class="current"><a href="index.html">2</a></li><li><a href="../3/index.html">3</a></li><li><a class="next" href="../3/index.html">&raquo;</a></li></ol>        </div>
+    </div><!-- end #content-->
+    <div class="span3" id="sidebar">
+    <div class="widget_search">
+        <form method="post" id="searchform" class="form-search">
+            <input type="text" class="span2" name="s" id="s" />
+            <button type="submit" class="btn" id="searchsubmit">Search</button>
+        </form>
+    </div>
+    
+        
+    
+    
+        <div class="widget">
+        <h3>Recent Comments</h3>
+        <ul>
+                                    <li><a href="../../../github-you-should-have-told-me-earlier.html#comment-952">payday loans</a>: wfxqtdq</li>
+                        <li><a href="../../../Trapecho-boostrap-based-typecho-theme.html#comment-936">地铁线路图网</a>: 我也在用typecho，小巧玲珑，稍微改了以下默认模板，站现在简洁速度也不错，点击我的昵称可以访问。</li>
+                        <li><a href="../../../about.html#comment-930">ramble</a>: 博客 ，请问如何显示显示文章前3段的摘要  不打乱格式</li>
+                        <li><a href="../../../about.html#comment-874">清源</a>: 看来暂时只能看着用了，google的高亮的比较不明显。</li>
+                        <li><a href="../../../about.html#comment-870">清源</a>: 大哥呀，主题这几天我看着感觉用中文书写标题字体太大了，正文的字体也太小了，估计还是适合用英文，不知道...</li>
+                    </ul>
+    </div>
+        
+        <div class="widget">
+    		<h3>Labels</h3>
+        <ul>
+                                    <a href="../../../tag/algorithm/index.html" class="size-20">algorithm</a>
+                        <a href="../../../tag/review/index.html" class="size-20">review</a>
+                        <a href="../../../tag/cs240/index.html" class="size-10">cs240</a>
+                        <a href="../../../tag/server/index.html" class="size-10">server</a>
+                        <a href="../../../tag/VPS/index.html" class="size-10">VPS</a>
+                        <a href="../../../tag/code/index.html" class="size-5">code</a>
+                        <a href="../../../tag/database/index.html" class="size-5">database</a>
+                        <a href="../../../tag/cs348/index.html" class="size-5">cs348</a>
+                        <a href="../../../tag/typecho/index.html" class="size-5">typecho</a>
+                        <a href="../../../tag/nginx/index.html" class="size-5">nginx</a>
+                        <a href="../../../tag/search/index.html" class="size-5">search</a>
+                        <a href="../../../tag/GUI/index.html" class="size-5">GUI</a>
+                        <a href="../../../tag/linux/index.html" class="size-5">linux</a>
+                        <a href="../../../tag/java/index.html" class="size-5">java</a>
+                        <a href="../../../tag/DNS/index.html" class="size-5">DNS</a>
+                        <a href="../../../tag/blog/index.html" class="size-5">blog</a>
+                        <a href="../../../tag/apple/index.html" class="size-5">apple</a>
+                        <a href="../../../tag/cs241/index.html" class="size-5">cs241</a>
+                        <a href="../../../tag/compiler/index.html" class="size-5">compiler</a>
+                        <a href="../../../tag/sql/index.html" class="size-5">sql</a>
+                    </ul>
+		</div>
+    
+    
+        <div class="widget">
+        <h3>Archives</h3>
+        <ul>
+            <li><a href="../../../2013/09/index.html">September 2013</a></li>
+<li><a href="../../../2012/12/index.html">December 2012</a></li>
+<li><a href="../../../2012/11/index.html">November 2012</a></li>
+<li><a href="../../../2012/08/index.html">August 2012</a></li>
+<li><a href="../../../2012/06/index.html">June 2012</a></li>
+<li><a href="../../../2012/04/index.html">April 2012</a></li>
+<li><a href="../../../2012/03/index.html">March 2012</a></li>
+<li><a href="../../../2012/02/index.html">February 2012</a></li>
+<li><a href="../../../2011/12/index.html">December 2011</a></li>
+<li><a href="../../../2011/11/index.html">November 2011</a></li>
+<li><a href="../../../2011/10/index.html">October 2011</a></li>
+<li><a href="../../../2011/06/index.html">June 2011</a></li>
+<li><a href="../../../2011/05/index.html">May 2011</a></li>
+<li><a href="../../../2011/04/index.html">April 2011</a></li>
+<li><a href="../../../2011/03/index.html">March 2011</a></li>
+        </ul>
+    </div>
+    
+    
+        <div class="widget">
+        <h3>Others</h3>
+        <ul>
+                        <li class="last"><a href="http://blog.gregwym.info/admin/login.php">Login</a></li>
+                        <li><a href="http://validator.w3.org/check/referer">Valid XHTML</a></li>
+        </ul>
+    </div>
+    
+    </div><!-- end #sidebar -->
+    
+</div>
+<footer>
+    <p>
+        Powered by <a href="http://typecho.org/">Typecho</a>. 
+        <a href="http://dolast.com/pages/trapecho">Trapecho</a> theme by <a href="../../../index.html">咳嗽di小鱼</a>. 
+        Hosting on <a href="https://www.digitalocean.com/?refcode=b846692d6a3a">Digital Ocean</a>
+    </p>
+</footer><!-- end #footer -->
+
+</div>
+</div>
+
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/jquery-1.7.1.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/bootstrap.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/prettify.js"></script>
+<script type="text/javascript">
+    // fix navbar on scroll
+    var $win = $(window)
+      , $nav = $('.navbar')
+      , navTop = $('.navbar').length && $('.navbar').offset().top - 10
+      , isFixed = 0
+
+    processScroll()
+
+    $win.on('scroll', processScroll)
+
+    function processScroll() {
+      var i, scrollTop = $win.scrollTop()
+      if (scrollTop >= navTop && !isFixed) {
+        isFixed = 1
+        $nav.addClass('navbar-fixed-top')
+      } else if (scrollTop <= navTop && isFixed) {
+        isFixed = 0
+        $nav.removeClass('navbar-fixed-top')
+      }
+    }
+    
+    $('.page-navigator li:not(:has(a))').html('<a>...</a>');
+    $('.page-navigator .current').addClass('active');
+    
+        $('pre').addClass('prettyprint linenums');
+        $('.entry-content a').attr('target','_blank');
+</script>
+</body>
+</html>

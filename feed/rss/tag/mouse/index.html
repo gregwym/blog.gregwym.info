@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/tag/mouse/">
+<title>某储备粮的“学习笔记” - mouse</title>
+<link>http://blog.gregwym.info/tag/mouse/</link>
+<description></description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/linux-extra-mouse-button-customize.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/linux-extra-mouse-button-customize.html">
+<title>在Linux下自定义多按键鼠标的功能</title>
+<link>http://blog.gregwym.info/linux-extra-mouse-button-customize.html</link>
+<dc:date>2012-02-16T10:26:53+08:00</dc:date>
+<description>搭好Ubuntu工作环境以后, 什么都好, 就是接上鼠标以后, 很多键用不了, 比较烦. Ubuntu自带的鼠标设置非常简陋, 罗技也没给Linux做驱动, 只能自己找办法解决.btnx非常好的解决了这个问题, 而且还带GUI设置工具. 除了设置里没有Apply这个按钮, 让人有点琢磨不透它到底什么时候保存设置以外, 其他都还不错.调整好设置以后记得点"Restart BTNX"来重启服务.记一下安装使用时候碰到的各种问题.
+在第一次配置的时候, 直接把btnx-config给关上了, 然后就怎么也打不开了. 具体提示的错误是什么不记得了.解决方法是删除/etc/btnx/btnx&#95;manager和/etc/btnx&#95;config_Default. (如果我没记错的话...因为我删错了, 才有下文)
+如果你和我一样, 不幸把/etc/btnx/整个文件夹给删了, 你会发现你别管怎么删怎么装, 都没法把那个该死的/etc/btnx/events找回来.解决方法是把btnx和btnx-config complete uninstall了, 然后重装.
+在设置好鼠标以后还有点神器的问题, 就是btnx的设置不会屏蔽(override)掉这个按键的默认功能.举个例子, 我把鼠标上原先的"前进/后退"设置成了"Ctrl+TAB/Ctrl+Shift+TAB", 当我在浏览器里按这个按钮的时候, 我不光会切换tab, 还会让页面前进/后退...很恶心是不是?解决方法是, 编辑~/.Xmodmap把这几个按钮屏蔽掉.比如button 8, 9是前进后退, 那就在~/.Xmodmap里写入
+
+! Disable buttons 8 and 9
+pointer = 1 2 3 4 5 6 7 0 0
+
+参考资料:http://ubuntuforums.org/showthread.php?t=918714http://unix.stackexchange.com/questions/20550/how-to-disable-the-forward-back-buttons-on-my-mouse</description>
+</item>
+</rdf:RDF>

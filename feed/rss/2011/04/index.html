@@ -1,0 +1,899 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/2011/04/">
+<title>某储备粮的“学习笔记” - 2011年4月</title>
+<link>http://blog.gregwym.info/2011/04/</link>
+<description>by 咳嗽di小鱼</description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html"/>
+<rdf:li resource="http://blog.gregwym.info/compiler-ge-ge-bu-zhou-de-han-yi.html"/>
+<rdf:li resource="http://blog.gregwym.info/lr-1--parser-example.html"/>
+<rdf:li resource="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-jiu--compression.html"/>
+<rdf:li resource="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-ba--tries-and-string-matching.html"/>
+<rdf:li resource="http://blog.gregwym.info/ipad-2-bai-se-kai-xiang-tu.html"/>
+<rdf:li resource="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-qi--range-search-query.html"/>
+<rdf:li resource="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html"/>
+<rdf:li resource="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-wu--hashing.html"/>
+<rdf:li resource="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-si--dictionaries-and-balanced-search-trees.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html">
+<title>Quickweb OpenVZ安装PPTP VPN实践笔记(不用MPPE)</title>
+<link>http://blog.gregwym.info/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html</link>
+<dc:date>2011-04-22T23:56:29+08:00</dc:date>
+<description>从回国之前, 一直倒腾到家`可算是把VPN搭好了...OpenVZ的VPS在内核这块实在是缺少自由, 如果是Xen这次就不会这么复杂了.废话少说.基本过程和网上其他的教程都差不多, 主要在于加密和ipforward的配置.
+安装ppp和iptables
+
+yum install -y ppp iptables
+
+安装pptpd
+
+wget http://poptop.sourceforge.net/yum/stable/packages/pptpd-1.3.4-2.rhel5.i386.rpm 
+rpm -ivh pptpd-1.3.4-2.rhel5.i386.rpm 
+
+
+配置/etc/ppp/options.pptpd这个是不使用MPPE加密的配置, 适用于母鸡kernel不支持MPPE的童鞋
+
+name pptpd 
+# Encryption部分全部注释掉, 不使用加密 
+# 使用chap验证 
++chap 
+#使用Google DNS 
+ms-dns 8.8.8.8 
+ms-dns 8.8.4.4 
+proxyarp 
+lock 
+nobsdcomp 
+novj 
+novjccomp 
+nologfd 
+nodeflate 
+
+
+这个是使用MPPE的配置, 如果你的母鸡支持, 推荐用这个
+
+name pptpd 
+# 禁用pap, chap, mschap 
+refuse-pap 
+refuse-chap 
+refuse-mschap 
+# 强制mschap-v2和mppe-128 
+require-mschap-v2 
+require-mppe-128 
+#使用Google DNS 
+ms-dns 8.8.8.8 
+ms-dns 8.8.4.4 
+proxyarp 
+lock 
+nobsdcomp 
+novj 
+novjccomp 
+nologfd
+
+配置/etc/pptpd.conf
+
+option /etc/ppp/options.pptpd 
+# 设置ip分配方案 
+localip 172.16.36.1 
+remoteip 172.16.36.2-254 
+
+配置/etc/ppp/chap-secrets, 设置登录帐号
+
+# Secrets for authentication using CHAP 
+# client   server   secret   IP_addresses 
+帐号       pptpd    密码      *(表示任意IP都可以连接)
+
+配置ip转发 /etc/sysctl.conf
+
+net.ipv4.ip_forward = 1
+
+
+在bash中执行
+
+sysctl -p 
+service pptpd restart 
+service iptables restart 
+iptables -t nat -A POSTROUTING -s 172.16.36.0/24 -o venet0 -j MASQUERADE 
+iptables -I FORWARD -p tcp --syn -i ppt+ -j TCPMSS --set-mss 1356 
+service iptables save 
+service iptables restart 
+chkconfig pptpd on 
+chkconfig iptables on
+
+这些都配置好了以后, 如果你使用了MPPE, 那就可以尝试连接了.如果你没有使用MPPE
+在Windows中设置VPN, 取消include windows logon domain, 选择PPTP连接,Data加密选择Optional, 选择CHAP验证登录
+在Mac/iOS中设置VPN, 将加密设置为"无"即可 这样就可以尝试连接了
+Note: 日志文件在/var/log/messages, 如果log中出现, "This system lacks kernel support for PPP. " 字样, 请发ticket让ISP给你打开PPP支持, 之后就应该可以正常连接了.参考资料:CentOS 5 VPS上配置pptpd作为VPN服务器不带MPPE的VPN服务器端及客户端的设置笔记</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/compiler-ge-ge-bu-zhou-de-han-yi.html">
+<title>Compiler各个步骤的含义</title>
+<link>http://blog.gregwym.info/compiler-ge-ge-bu-zhou-de-han-yi.html</link>
+<dc:date>2011-04-19T06:15:49+08:00</dc:date>
+<description>Step1: String -> Scanning (DFA) -> Tokens Scanner又叫Lexical analyzer或Lexer.其目的在于, 将需要compile的源代码逐字读入compiler, 并将每一个符合"词汇命名规则(Lexical Syntax)"的字段转换成token存储.换句话说, 就是一遍读, 一遍看每一个单词的拼写对不对. 对的就转成token, 拼错了就输出error.作业中对应: A6 P4(某些语言的compiler在Scanning之后还包含Preprocessing, 因为不在241讨论范围内, 不做解释)Step2: Tokens -> Parsing(LL/LR) -> Intermediate Format (WLI)Parsing又叫Syntactic Analysis.其目的在于, 将token与token联系在一起, 并将他们的转换成符合一定规范的"中间格式", 一般是某种树状结构, 例如241中定义的WLI.在Parsing过程中, 如果遇到不符合某种语言的"语法规则(Grammar)"时, 则输出error. 如果语法正确, 则输出对应格式.简单说, 就是看的说的话是不是人话, 有没有缺个标点少个括号.如果不是人话那就说明你该重新学语法去了.作业中对应: A8 P4Step3: Intermediate Format -> Semantic Analysis(Context-Sensitive Analysis) ->Semantic Analysis的目的在于, 检查程序是否存在语义上的冲突. 或者说, 上下文是不是相符.比如在C中, 如果没有declare过变量int a;, 则a = 3;就不合法.再比如, 如果a declare为int, 则a = 'b';就不合法, 因为a不能为char.作业中对应: A9 A10(Optimization为代码优化, 241没有涉及, 知道即可)Step4: -> Code Generation -> Code Fragment将Intermediate Format转换为另一种格式, 比如MIPS或者二进制文件, 可与上一步同步进行.作业中对应: A9 A10, A3, A4Step5: Code Fragements -> Linking -> Executable File(Single File)将多个compile好的多个文件链接在一起, 生成一个可执行的二进制文件(或仅生成合并以后的单个文件, 但文件本身可能无法执行)作业中对应: A5 P1, P2附: 09FALL 第二题答案
+Scanning
+Parsing
+Semantic Analysis
+Parsing
+Semantic Analysis
+Linking
+Semantic Analysis
+Parsing
+1A@#SR%$#
+&#43; foo
+x
+</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/lr-1--parser-example.html">
+<title>LR(1) Parser Example</title>
+<link>http://blog.gregwym.info/lr-1--parser-example.html</link>
+<dc:date>2011-04-19T05:24:08+08:00</dc:date>
+<description>Terminal Symbols: 6个BOF, EOF, id, -, (, )Nonterminal Symbols: 3个S, expr, termStart Symbol:SProduction Rules: 5个
+		
+			0
+			S BOF expr EOF
+		
+		
+			1
+			expr term
+		
+		
+			2
+			expr expr - term
+		
+		
+			3
+			term id
+		
+		
+			4
+			term ( expr )
+		
+	Total State: 11个 (0 to 11)Total Transitions: 28个
+		
+			State
+			Symbol
+			Action
+		
+		
+			0
+			BOF
+			shift to state 6
+		
+		
+			1
+			(
+			shift to state 3
+		
+		
+			1
+			id
+			shift to state 2
+		
+		
+			1
+			term
+			shift to state 8
+		
+		
+			3
+			(
+			shift to state 3
+		
+		
+			3
+			expr
+			shift to state 7
+		
+		
+			3
+			id
+			shift to state 2
+		
+		
+			3
+			term
+			shift to state 4
+		
+		
+			6
+			(
+			shift to state 3
+		
+		
+			6
+			expr
+			shift to state 10
+		
+		
+			6
+			id
+			shift to state 2
+		
+		
+			6
+			term
+			shift to state 4
+		
+		
+			7
+			)
+			shift to state 9
+		
+		
+			7
+			-
+			shift to state 1
+		
+		
+			10
+			-
+			shift to state 1
+		
+		
+			10
+			EOF
+			shift to state 5
+		
+		
+			2
+			)
+			reduce by rule 3
+		
+		
+			2
+			-
+			reduce by rule 3
+		
+		
+			2
+			EOF
+			reduce by rule 3
+		
+		
+			4
+			)
+			reduce by rule 1
+		
+		
+			4
+			-
+			reduce by rule 1
+		
+		
+			4
+			EOF
+			reduce by rule 1
+		
+		
+			8
+			)
+			reduce by rule 2
+		
+		
+			8
+			-
+			reduce by rule 2
+		
+		
+			8
+			EOF
+			reduce by rule 2
+		
+		
+			9
+			)
+			reduce by rule 4
+		
+		
+			9
+			-
+			reduce by rule 4
+		
+		
+			9
+			EOF
+			reduce by rule 4
+		
+	String to Parse:BOF id - ( id ) - id EOFParse Step:蓝色的行是Shift, 灰色的行是ReduceReduce的次数取决于Production Rule RHS的长度当前Symbol所对应的State,
+			
+				
+				
+				
+				
+				
+				
+				
+				State Stack 
+(At EOL)
+				Description
+			
+			
+				S0
+				
+				
+				
+				
+				
+				
+				0
+				Start
+			
+			
+				BOF
+				S6
+				
+				
+				
+				
+				
+				0 6
+				S0 BOF S6
+			
+			
+				
+				id
+				S2
+				
+				
+				
+				
+				0 6 2
+				S6 id S2
+			
+			
+				
+				R3
+				-
+				
+				
+				
+				
+				0 6
+				S2 - Reduce by   rule #3 
+(replace id with term)
+			
+			
+				
+				term
+				S4
+				
+				
+				
+				
+				0 6 4
+				S6 term S4
+			
+			
+				
+				R1
+				-
+				
+				
+				
+				
+				0 6
+				S4 - Reduce by   rule #1 
+(replace term with expr)
+			
+			
+				
+				expr
+				S10
+				
+				
+				
+				
+				0 6 10
+				S6 expr S10
+			
+			
+				
+				
+				-
+				S1
+				
+				
+				
+				0 6 10 1
+				S10 - S1
+			
+			
+				
+				
+				
+				(
+				S3
+				
+				
+				0 6 10 1 3
+				S1 ( S3
+			
+			
+				
+				
+				
+				
+				id
+				S2
+				
+				0 6 10 1 3 2
+				S3 id S2
+			
+			
+				
+				
+				
+				
+				R3
+				)
+				
+				0 6 10 1 3
+				S2 ) Reduce by   rule #3 
+(replace id with term)
+			
+			
+				
+				
+				
+				
+				term
+				S4
+				
+				0 6 10 1 3 4
+				S3 term S4
+			
+			
+				
+				
+				
+				
+				R1
+				)
+				
+				0 6 10 1 3
+				S4 ) Reduce by   rule #1 
+(replace term with expr)
+			
+			
+				
+				
+				
+				
+				expr
+				S7
+				
+				0 6 10 1 3 7
+				S3 expr S7
+			
+			
+				
+				
+				
+				
+				
+				)
+				S9
+				0 6 10 1 3 7 9
+				S7 ) S9
+			
+			
+				
+				
+				
+				R4
+				R4
+				R4
+				-
+				0 6 10 1
+				S9 - Reduce by   rule #4 
+(repace &quot;( expr )&quot; with term)
+			
+			
+				
+				
+				
+				term
+				S8
+				
+				
+				0 6 10 1 8
+				S1 term S8
+			
+			
+				
+				R2
+				R2
+				R2
+				-
+				
+				
+				0 6
+				S8 - Reduce by   rule #2 
+(replace &quot;expr - term&quot; with expr)
+			
+			
+				
+				expr
+				S10
+				
+				
+				
+				
+				0 6 10
+				S6 expr S10
+			
+			
+				
+				
+				-
+				S1
+				
+				
+				
+				0 6 10 1
+				S10 - S1
+			
+			
+				
+				
+				
+				id
+				S2
+				
+				
+				0 6 10 1 2
+				S1 id S2
+			
+			
+				
+				
+				
+				R3
+				EOF
+				
+				
+				0 6 10 1
+				S2 EOF Reduce by rule #3 
+(replace id with term)
+			
+			
+				
+				
+				
+				term
+				S8
+				
+				
+				0 6 10 1 8
+				S1 term S8
+			
+			
+				
+				R2
+				R2
+				R2
+				EOF
+				
+				
+				0 6
+				S8 EOF Reduce by rule #2 
+(replace &quot;expr - term&quot; with expr)
+			
+			
+				
+				expr
+				S10
+				
+				
+				
+				
+				0 6 10
+				S6 expr S10
+			
+			
+				
+				
+				EOF
+				S5
+				
+				
+				
+				Final S5
+				S10 EOF S5
+			
+		
+原题来源: http://www.student.cs.uwaterloo.ca/~cs241/parsing/lr1.html</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-jiu--compression.html">
+<title>CS 240复习总结之九: Compression</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-jiu--compression.html</link>
+<dc:date>2011-04-12T07:03:43+08:00</dc:date>
+<description>概念就不说了, 啥压缩比啊, logical/Physical compression, Lossy/Lossless的.Run-Length Encoding (RLE)思路: 将连续的0或1用位数表示, 缩减重复段所占的位置
+第一位表示由0或者1开头
+之后用prefix-free integer encoding表示每一个Run的长度
+后x位表示这个run的binary长度
+前x-1位填零, 为unary表示后x位的长度减一
+
+Huffman Coding
+思路: 用特殊的binary编码表, 省略ASCII/UTF-8编码中无用字符所占用的位置
+用binary trie表示字典中的所有字符
+将文本依照trie转成binary
+
+如何建立压缩比最好的trie
+将每个字符存入独立的trie中
+确定每个字符的出现次数(频率), 一个trie的比重(weight)即为trie中字符的频率和
+将weight最小的两个trie合并成一个新trie
+重复上一步直到只剩下一个trie
+MTF
+用字典中, 字符的index表示字符
+使用动态字典, 将出现过的字符移到字典开头, 以减小下次出现时该字符的index值
+MTF本身不能达到压缩的目的, 需配合prefix-free integer encoding或者huffman
+LZW
+思路: 给出现过的字符组assign编码, 在重复出现时以一个编码代表整个字符组
+字典编码使用固定长度k, 字典总共有2k个entry
+字典由所有单字符开头, 剩余entry留空
+从第二个encode的字符[组]开始, 将其首字符与上一个encode的字符[组], 组成一个新的字符组, 并存入字典中
+当这个字符组合再次出现的时候, 即可用一个编码代表整个字符组
+BWT
+思路: 不知道!!!!!!! 他tm就是work了`!!!不知道为什么!!!!Encode方法:
+将整个string S写成各种cyclic shift, 用$表示string结尾
+比如abcd$可以写成abcd$, bcd$a, cd$ab, d$abc, $abcd
+将所有cyclic shift排序
+将排序后的所有cyclic shift的最后一位按顺序组合成新的string, 既是Encoded的string C
+
+Decode方法:
+给Encoded的string C的每一个字符一个序号, 从0到n-1
+将字符和序号一起排序. 排序后的序号提取为Array N
+for(i = N[N[0]], i != N[0], i = N[i]) print(C[i]);
+
+BWT本身不进行压缩, 而是将string转化成更容易被MTF压缩的Encoded string.BWT以后, 执行MTF即可达到极佳的英文字符压缩比.更多CS 240总结请看: http://blog.gregwym.info/tag/cs240/</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-ba--tries-and-string-matching.html">
+<title>CS 240复习总结之八: Tries &amp; String Matching</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-ba--tries-and-string-matching.html</link>
+<dc:date>2011-04-09T06:12:41+08:00</dc:date>
+<description>Tries单词查找树 Tries (Radix Tree):
+  
+  左0右1
+  item只存在leaf上
+  Prefix-free: 任意一个key不能有其他key是他的前缀(比如: 1101和11011不能共存)
+  Search: 逐位执行BS
+  Insert: 逐位执行BS
+  如果找到某leaf与insert的item不等, insert fail. (现存item是新item的prefix)
+  如果在某个node搜索结束, insert fail. (新item是其他key的prefix)
+  如果无路可走了, 开路出来.
+  Delete: Search到对应item以后, 删除这个leaf以及其他无用的node.
+  Compressed Tries (Patricia Tries):
+  
+  相比普通Tries, compressed tries去除了额外的node(只有一个child的node). 其他基本相同.
+  每个node中增加了下一层Search中, 需要检测的位数
+  Multiway Tries:
+  
+  以特定alphabet集合为基础, 建立的Tries
+  通过$ sigh以允许prefix存在
+  不是Binary Tree
+  同样可以compress, 与Compressed Tries方法相同
+  String Matching 要match的string为T, pattern为PBrute-force Algorithm
+  从前往后依次比对P的首字母
+  如发现与首字母匹配, 则继续比对剩下的字符直到P结尾
+  如P未结尾时出现不匹配, 则回到与首字母匹配位置的下一个, 继续比对首字母
+  如T结尾, 则无匹配
+  Boyer-Moore Algorithm
+  将T和P右对齐
+  从P的结尾开始, 依次向前与T比对
+  如遇到不匹配, 检查T该位置的字符是否在P中出现过 
+  
+  
+  如出现过, 则将该字符在P中最后出现的位置, 与T对齐
+  如没出现过, 则讲P向后shift一个P的长度
+  重复第二步
+  
+  如T结尾, 则无匹配
+  KMP Algorithm
+  建立KMP Failure Array 位于j点的F(j)值等于P[1..j]的结尾与P的开头所重叠的字符位数 
+  将T和P左对齐
+  从P的开头开始, 依次向后与T比对
+  如遇到P[i]不匹配, P向后shift[i - F(i-1)]位, 且 i 值assign为F(i-1)
+  如T结尾, 则无匹配
+  Suffix Tree (Trie) 与前几个Algorithm相反, 此Algorithm是为了在同一个T中寻找不同P而建立的.Post-condition: T长度为n, i值为从0到n-11.  将所有T[i..n]依次insert进Compressed trie
+  2.  因为Compressed trie的性质 (prefix-free), 如果某一个T[i..n]是已有node的prefix, 则不会被insert
+  3.  每个node和leaf中, 保存对应的i和n值
+  4.  在Compressed trie中搜索, 将P与每个node进行比对. (长度以P为准)
+  5.  如果遇到node长度小于P长度, 则无匹配.= =&#96;最后一个Module后天再说...每天都看Algorithm会死人的&#96;明天收拾251更多CS 240总结请看: http://blog.gregwym.info/tag/cs240/</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/ipad-2-bai-se-kai-xiang-tu.html">
+<title>iPad 2 白色高清无码openbox`</title>
+<link>http://blog.gregwym.info/ipad-2-bai-se-kai-xiang-tu.html</link>
+<dc:date>2011-04-09T02:01:16+08:00</dc:date>
+<description>
+#post-51 img {
+margin: 10px;
+}
+Fedex, 明明昨天还没到北美大陆呢, 今天早上就到家门口了...
+包装一向如此`侧影`正面`脸好大`确实挺薄的比一下, $2忘记转了...先不接iTunes了`晚点再折腾With SmartCoverSmartCover的包装很好玩, 后边有个扣子似的东西扣住的我又忘记转了= =`贴上SmartCover半遮面`磁铁果然给力...能拎着晃来晃去`= =(Pia!)Lie on SmartCover`侧面
+Stand on SmartCover`
+
+Stand的侧面`很稳
+Apple一向这么抠门`</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-qi--range-search-query.html">
+<title>CS 240复习总结之七: Range Search Query</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-qi--range-search-query.html</link>
+<dc:date>2011-04-08T12:06:40+08:00</dc:date>
+<description>在我总结这个Module之前允许我吐槽一下...`Assignment 5, 泥玛那个是什么脑残傻缺的ADT啊`! 放着Slide里这么好的三种ADT你不用啊`!!! 你跑去弄什么x-min-heap外加y-BST, 还弄个好听的名字叫Heap-tree`!!! 泥玛就是个残废啊`有木有有木有~!!! 不光残废啊, 是连TA自己都搞不懂到底该怎么用啊`!!! 连"You can slightly break the heap proerty"都说出来了...这种东西随便写写就让他过去吧`!!!!! 以后做工程真的用, 程序怎么死的都不知道啊`!!!
+吐槽完毕= =`回归正题我们日常生活中的很多数据并不是一对一的KVP (不懂KVP的请去看, 总结四 - BST篇).拿Slide里的例子来说, 买一台电脑, 不光要看它的CPU是什么型号, 还要看内存多大, 硬盘多大, 显卡怎么样, 价钱多少, etc. 这样的数据都是一个key对多个value.这种情况下, 如果我需要找一台CPU 2.2GHz以上+内存4G-8G的电脑, 就需要从我的data中进行Range Search Query, 而且是2D的Range Search. 如果我在这个条件上再+要至少3T硬盘存xx...那就是3D的Range Search了.我们之前学习的Sort也好, Tree也好, 都是针对1D数据的排序和搜索, 碰到2D和3D就都傻了.以下三个ADT就能很好的解决这个问题.Quadtree
+将所有数据放在一个平面空间里 (咱们想象力能及的只有2D和3D空间, 这里以2D举例)
+将整个平面以对边中点的连线为基准, 切两刀分成四份 (3D空间的话, 需要多切一刀...)
+针对每一个切出来的平面重复上一步, 直到这个平面内只有一个item为止
+
+也就是说, Quadtree每个node最多有4个child, 如果以整个平面的中心为坐标中点的话, 这4个child代表每一个象限内的点的集合, 以此类推. 所有item都只存在于leaf中
+Search和BST一样, 不解释
+Insert就一个规则, 只要不是单身汉, 别管他3p还是5p, 都要给他们拆散! 直到新item有单间为止
+Delete就是insert相反, 先把item赶走, 然后把单间拆掉
+优点: 简单, 拆两半两半两半再两半就ok了; 对higher dimensions也很容易implementl;
+缺点: 占用空间大; 如果数据分布不平均, Tree就会unbalanced, height就会变得很恐怖;
+Kd-tree
+将item以x-coordinate排序, 画一条过median点的纵线(vertical) (同样以2D举例)
+对第1步切分出来的两个平面, 分别以y-coordinate排序, 然后过median画一条横线(horizontal)
+对第2步切分出来的平面(们)...重复第一步
+如果某一步切分出的某个平面内只有一个item, 则停止.
+
+
+此法解决了Quadtree会unbalanced的问题, 其他一样.
+与Quadtree相同, 所有item都只存在于leaf中
+Range Tree
+以x-coordinate为基准建立balanced BST T (同样以2D举例)
+针对T中的每一个node vi, 用vi及其所有children建立以y-coordinate为基准的Tassoc(vi)
+将vi链接到Tassoc(vi)
+
+
+也就是说, Range Tree第一层的每一个subtree背后, 都有一个以y-coordinate排序的另一个BST
+如果是higher dimensions的话, 则要多几层associated BST嵌套
+Search
+
+用x-coordinate进行BST Search
+对所有inside node的顶部(root of the subtree)的Tassoc, 执行y-coordinate的BST Search
+对所有不确定的边缘node (卡在指定range的边上), 逐一进行单独判断
+
+Insert
+
+依照x-coordinate进行BST insertion
+从最终insert的位置, travel回root. 并将item insert到途经的所有node的Tassoc中
+
+Delete和Insert相反
+缺点: balance难度较大. 
+更新1: 修正了Range Tree的错误解释更多CS 240总结请看: http://blog.gregwym.info/tag/cs240/</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html">
+<title>CS 240复习总结之六: Dictionary Tricks</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html</link>
+<dc:date>2011-04-08T03:03:14+08:00</dc:date>
+<description>各种Binary Search的变种 (杂种?)插值查找法 Interpolation Search
+
+在已知Array A大小的前提下, 假设A中的数据呈线性排列
+用比例推测所查找值 K, 可能存在的Index I
+I = Ilow + (Iupper - Ilow)(K - Klow) / (Kupper - Klow)
+如果A中的数据分布比较平均, 此法效率比BS高
+否则相反
+更详细的解释, 可参考: 【演算】內插搜尋法 - Interpolation Search
+Gallop Search
+先推测出K所在的范围, 然后执行BS
+适用于数据量大的搜索. 通过减小BS的搜索范围, 优化性能.
+跳跃列表 Skip Lists (我觉得最有意思的数据结构)
+整个表以多层表的形式出现, 每层均包含"极小"和"极大"两个item
+每个item拥有一个随机的height值
+最顶层只包含两个极值, 层数越低, 包含的item越多, 直到底层.	
+Search方式
+从顶层起
+如果该层中的下一项item大于K, 则落入下一层
+否则继续在该层向后查找
+
+
+针对访问概率进行的优化自排序搜索 Self-Organizing Search
+如果我们知道某一系列数据中, 每一个item可能被访问的概率
+依照每一项的概率对数据进行排序, 优化高概率item的访问效率
+如果不知道可能的访问概率, 则需要...
+动态排序 Dynamic Ordering
+方法一: Move-To-Front(MTF)
+
+将每次搜索到的item移到最前
+近期内再搜索此item的时候, 效率会提高
+
+方法二: Transpose
+
+将每次搜索到的item与其前一项互换
+多次访问同一item以后, 该item的排序会提前很多, 访问效率会提高
+
+更多CS 240总结请看: http://blog.gregwym.info/tag/cs240/</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-wu--hashing.html">
+<title>CS 240复习总结之五: Hashing</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-wu--hashing.html</link>
+<dc:date>2011-04-07T07:11:34+08:00</dc:date>
+<description>Direct Addressing
+key和地址直接对应
+与Counting Sort同理
+Runtime: Θ(1), Space: Θ(n)
+浪费空间, 且只能用于int
+HashingHash Function
+将key经过function运算以后, 得到对应的hash value
+Hash function的好坏决定于数据的性质, 不同的数据适用不同的function
+好的Hash funtion, 高效, 与数据规律无关联, 依赖于key的所有部分
+
+冲突解决方案(Collision Resolution)Basic concept:
+Buckets: 多个item共存
+Open Addressing: 一个item对应多个位置
+Load Balance: α = n/M (n: item数量, M: hash table大小)
+方案一: Chaining (Buckets)
+将新的item放入对应位置, 并link到原来位置所存放的item
+缺点: 大量数据会导致大量重复, 效率降低
+方案二: Linear Probing
+如果要insert的位置非空, 则将item放入下一个位置. 重复这一条直到insert成功/回到原位置(insert失败)
+某个item被delete以后, 该位置须标记为deleted, 不能再使用
+缺点: 大量数据后会有明显的效率降低, deleted以后会有空间浪费, 增加M以后rehash可以解决部分问题, 但cost很高.
+方案三:  Double Hashing
+在Linear Probing基础上增加一个与h1独立的functions h2.
+如果要insert的位置非空, hash value = [原hash value + h2(k)] % M. 重复这一条直到insert成功/回到原位置(insert失败)
+缺点: 与Linear Probing相同, 只是increment由1变为了h2的结果, 所以降低了第二次insert的失败概率.
+方案四: Cuckoo Hasing
+有两个相互独立的hash functions, h1和h2
+将item insert到h1(k)中
+如果原来h1(k)的位置并不为空, 将原item重新insert到与h1(k)值不同的hash value中去
+如出现loop的情况, insert失败, rehash
+优点: iterm只能出现在h1(k)或者h2(k)中, search效率高.继续编辑中...谁能告诉我, 咱们学Extendible Hashing了么`? 貌似没有吧...更多CS 240总结请看: http://blog.gregwym.info/tag/cs240/</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-si--dictionaries-and-balanced-search-trees.html">
+<title>CS 240复习总结之四: Dictionaries &amp; Balanced Search Trees</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-si--dictionaries-and-balanced-search-trees.html</link>
+<dc:date>2011-04-06T12:00:49+08:00</dc:date>
+<description>AVL Tree性质:
+BST基础性质
+左侧和右侧subtree的height最多差1
+空白Tree的高度为-1
+Search, Insert, Delete Runtime均为Θ(log n)
+AVL Insertion:
+执行标准BST Insertion
+从新insert的leaf开始, 从下往上更新balance factor(左右高度差)
+如发现高度差超过1(即为2), 则执行fix
+AVL Fix: 修复高度差为2的subtree
+Single rotation: 当height最高的leaf位于最左侧/最右侧
+
+将subtree的root Z向height较低的方向旋转, 即以height较高的child Y为root
+Y原内侧child, 并入Z内侧
+
+
+Double rotation: 当height最高的leaf位于Tree内侧
+
+将height较高的root child向外侧旋转, 将Tree变形为Single rotation的初始形式
+执行Single rotation
+
+
+2-3 Tree性质:
+BST基础性质
+每个node包含一个KVP*和两个children, 或者包含两个KVP和三个children.
+所有leaf都在同一层(level)
+
+2-3 Tree Insertion:
+找到KVP应在的leaf (BST规则)
+如果该leaf已经饱和 (已经包含两个KVP), 则将3个KVP排序a < b < c.
+将a和c分割成两个单独的leaf, 并将b插入到parent中.
+重复第2步直到符合2-3 Tree所有性质
+
+2-3 Tree Deletion: 删除x
+如果x所在的node有两个KVP, 则直接删除x
+如果同parent下, 与该node相邻的child有两个KVP, 则用node与child之间的parent替代x, 并用中间值替代parent
+否则 (同parent下, node相邻child均只有一个KVP), 将相邻child与parent(中间值)合并. 重复直到Tree符合要求.
+B-Tree性质:
+扩展版的2-3 Tree
+每个node包含最多2d个KVP
+非root的node最少包含d个KVP
+2-3 Tree的d = 1
+
+Insertion和Deletion与2-3 Tree大同小异注: 此B-Tree定义不完全符合11W Slide备注: KVP意为Key-Value Pair, 即Key与Value的一对, 为一个KVP.今天先到这里了...明天总结后半部分`= =更多CS 240总结请看: http://blog.gregwym.info/tag/cs240/</description>
+</item>
+</rdf:RDF>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+xmlns:thr="http://purl.org/syndication/thread/1.0"
+xml:lang="zh-CN"
+xml:base="http://blog.gregwym.info/tag/quickweb/"
+>
+<title type="text">某储备粮的“学习笔记” - quickweb</title>
+<subtitle type="text"></subtitle>
+<updated>2011-04-03T07:10:58+08:00</updated>
+<generator uri="http://typecho.org/" version="0.9/13.12.12">Typecho</generator>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/tag/quickweb/" />
+<id>http://blog.gregwym.info/feed/atom/tag/quickweb/</id>
+<link rel="self" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/tag/quickweb/" />
+<entry>
+<title type="html"><![CDATA[果断换VPS...这回是QuickWeb]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/guo-duan-huan-vps-zhe-hui-shi-quickweb.html" />
+<id>http://blog.gregwym.info/guo-duan-huan-vps-zhe-hui-shi-quickweb.html</id>
+<updated>2011-04-03T07:10:58+08:00</updated>
+<published>2011-04-03T07:10:58+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[Hostrail实在是不给力...`CPU不灵, 装lnmp慢的一塌糊涂, 好不容易Setup好, 各种问题层出不穷.HyperVM Panel时不时无法访问, 即使可以访问也慢得要死html页的...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/guo-duan-huan-vps-zhe-hui-shi-quickweb.html" xml:lang="zh-CN"><![CDATA[
+<p>Hostrail实在是不给力...`CPU不灵, 装lnmp慢的一塌糊涂, 好不容易Setup好, 各种问题层出不穷.<br /><ul>
+<li>HyperVM Panel时不时无法访问, 即使可以访问也慢得要死</li>
+<li>html页的速度倒还不错, 可Typecho这么轻量化的php应用都慢的不成样子</li>
+<li>从3.29到4.1这段时间, server至少down了两次, 而且都是长时间的</li>
+<li>外加各种不确定性重启...</li>
+</ul><br />
+悲催的不是一点两点= =||`<br />买的时候抱着随便玩玩的心理也就没仔细研究, 之后才看明白VPS是怎么一潭深水.<br /><br />这两天好好的查了下VPS的相关信息, 留下这么几个性价比高, 又比较靠谱的ISP:<br />VPSYOU, YardVPS, Ramhost, QuickWeb<br /><ul>
+<li>VPSYOU价格中等, OpenVZ 256m的版本$4/m, CPU是745x2, 硬盘20G.</li>
+<li>YardVPS的OpenVZ口碑不太好, 但他的Xen据说硬盘速度超一流, 512m 1.5T流量, $7.95/m. <br />
+不过很少有货, 我看到有一个但因为犹豫不决miss掉了.</li>
+<li>Ramhost是口碑最好的一个. 所有信息都只有夸没有贬, 只是一直没货, 而且256m要$8.99/m.<br />
+(Ramhost每周末会补货, 要注意刷网页)</li>
+<li>QuickWeb在网站上post出来的plan的性价比不是很高, 最低的OpenVZ/Xen都要$9.95/m. <br />
+有个<a target="_blank" href="http://quickweb.co.nz/chinese">Chinese Promo</a>还可以, Texas机房的256mOpenVZ要$5.5/m, 不过好像也是out of stock.</li>
+</ul><p>最后来介绍下我的最终选择:<br />QuickWeb一开始并不在我的选择范围内, 甚至根本不知道这个ISP, 因为几个大的VPS博客都没有特别推荐过这个ISP. 后来在<a target="_blank" href="http://neal.im/">Neal的博客</a>发现他在做<a target="_blank" href="http://neal.im/webhosting/">QuickWeb的代购</a>, 才发现这也是一家在美国蛮有实力的IPS. (之所以说有实力是因为他们在美国五个大的数据中心都有机房)<br />最后入手的这个是$35.88/年的plan, 平摊下来一月只要$3, Neal主推的就是这个plan.<br />他自己的blog就搭在这个plan的VPS上, 访问速度很好, 而且看底下评论的反响普遍不错, 经Google四处查证以后, 决定还是下手试试看. Paypal付款给Neal以后, 主机即时开通.<br /><br />规格:<br />OpenVZ/SolusVM<br />Intel(R) Xeon(R) CPU X3440 @ 2.53GHz, 单核<br />256M/384M突发<br />10G硬盘, 速度测试平均22M/s<br />美国凤凰城机房10Mbit带宽(Phoenix/LA) 250G/m流量<br />+$5可升级100Mbit<br />+$10可升级1000Mbit<br /><br />到目前为止, 对这个主机还是很满意的, 速度和性能方面都很不错. LNMP只用了20分钟就装好了.<br />有需求的朋友可以联系Neal代购, <a target="_blank" href="http://neal.im/webhosting/">http://neal.im/webhosting/</a><br /></p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/guo-duan-huan-vps-zhe-hui-shi-quickweb.html#comments" thr:count="5" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/guo-duan-huan-vps-zhe-hui-shi-quickweb.html" thr:count="5"/>
+</entry>
+</feed>

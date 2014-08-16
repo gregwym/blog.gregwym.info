@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+xmlns:content="http://purl.org/rss/1.0/modules/content/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+xmlns:atom="http://www.w3.org/2005/Atom"
+xmlns:wfw="http://wellformedweb.org/CommentAPI/">
+<channel>
+<title>某储备粮的“学习笔记” - google</title>
+<link>http://blog.gregwym.info/tag/google/</link>
+<atom:link href="http://blog.gregwym.info/feed/tag/google/" rel="self" type="application/rss+xml" />
+<language>zh-CN</language>
+<description></description>
+<lastBuildDate>Fri, 25 Nov 2011 22:46:19 +0800</lastBuildDate>
+<pubDate>Fri, 25 Nov 2011 22:46:19 +0800</pubDate>
+<item>
+<title>将Chrome搜索默认定位到google.com</title>
+<link>http://blog.gregwym.info/jiang-chrome-sou-suo-mo-ren-ding-wei-dao-google-com.html</link>
+<guid>http://blog.gregwym.info/jiang-chrome-sou-suo-mo-ren-ding-wei-dao-google-com.html</guid>
+<pubDate>Fri, 25 Nov 2011 22:46:19 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[不同系统, 配置文件的位置不太一样.Windows在%USERPROFILE%\Local Settings\Application Data\Google\Chrome\User DataMac O...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>不同系统, 配置文件的位置不太一样.</p><p>Windows在<br /><em>%USERPROFILE%\Local Settings\Application Data\Google\Chrome\User Data</em></p><p>Mac OS X在<br /><em>~/Library/Application Support/Google/Chrome/</em></p><p>Linux在<br /><em>$HOME/?.config/google-chrome</em></p><p>用编辑器打开Local State这个文件, 找到以下两行</p><blockquote><p>"last&#95;known&#95;google<em>url": "http://www.google.&#42;&#42;&#42;/",<br />"last&#95;prompted&#95;google</em>url": "http://www.google.&#42;&#42;&#42;/",</p></blockquote><p>将它们改为：</p><blockquote><p>"last&#95;known&#95;google<em>url": "http://www.google.com/",<br />"last&#95;prompted&#95;google</em>url": "http://www.google.com/",</p></blockquote><p>打开Chrome以后随便搜索个东西...他会提示你正在使用google.com, 要不要更换到google.&#42;**|.<br />选择继续使用, 大功告成! 嘿嘿</p>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/jiang-chrome-sou-suo-mo-ren-ding-wei-dao-google-com.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/jiang-chrome-sou-suo-mo-ren-ding-wei-dao-google-com.html</wfw:commentRss>
+</item>
+</channel>
+</rss>

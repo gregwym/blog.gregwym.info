@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/category/jotting/">
+<title>某储备粮的“学习笔记” - Jotting</title>
+<link>http://blog.gregwym.info/category/jotting/</link>
+<description>这个...必然就是鄙人的碎碎念啦`哈哈哈</description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/github-you-should-have-told-me-earlier.html"/>
+<rdf:li resource="http://blog.gregwym.info/having-some-changes.html"/>
+<rdf:li resource="http://blog.gregwym.info/linux-extra-mouse-button-customize.html"/>
+<rdf:li resource="http://blog.gregwym.info/macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html"/>
+<rdf:li resource="http://blog.gregwym.info/jiang-chrome-sou-suo-mo-ren-ding-wei-dao-google-com.html"/>
+<rdf:li resource="http://blog.gregwym.info/db2-shu-ju-ku-dao-chu-he-dao-ru.html"/>
+<rdf:li resource="http://blog.gregwym.info/zhe-bei-zi-xie-de-di-yi-ge-gei-ren-yong-de-cheng-xu.html"/>
+<rdf:li resource="http://blog.gregwym.info/virtualbox---zhu-ji-yu-xu-ni-ji-zhi-jian-gong-xiang-wen-jian-jia.html"/>
+<rdf:li resource="http://blog.gregwym.info/ipad-2-bai-se-kai-xiang-tu.html"/>
+<rdf:li resource="http://blog.gregwym.info/guo-duan-huan-vps-zhe-hui-shi-quickweb.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/github-you-should-have-told-me-earlier.html">
+<title>Github, you should have told me earlier...</title>
+<link>http://blog.gregwym.info/github-you-should-have-told-me-earlier.html</link>
+<dc:date>2012-12-22T14:26:35+08:00</dc:date>
+<description>Back to the time it worksIn my last release of doGRT, I was proudly announcing the AUTO UPDATE feature. The feature which would let my user updates the schedule data without update the entire app from the App Store. I spent quite a bit of time to implement this feature, and put the schedule data on a place that I thought will never let me down - Github.Seriously, it was working like a charm. At least during the time I was testing it. Unfortunately, the feature died before anyone can actually try it out.What happened?Right before the schedule season change, Github put out a blog post saying "Goodbye, Uploads". At the main while, they replaced the Downloads Section with Tags and completely disabled the upload.So what does that mean?Even tho Github will keep the downloads page for 90 days, I cannot upload any new file to it. Cannot upload means I cannot tell my app "A newer version of schedule is available, go download it!!!!"How sad is that`T_TGithub, can't you tell me this a bit earlier? or allow upload for extra 90 days? sighWhat I'm going to do?First, I wanna say sorry to doGRT users. If it is not the case, you guys would have the hot and fresh holiday schedule in your hand now. This situation should have been avoided if I have left enough flexibility in my implementation.Of course, I'm going to fix it! Going to release a quick fix version with Winter schedule first.The more feature I'm working on:
+Day picker: Look up schedules for a specific day, so you can plan ahead.
+Bus reminder: Remind you to catch/get off at a curtain bus stop
+GRT Twitter message intergration
+Feel free to @gregwym on twitter about your suggestions. Or you can email me through the feedback button in the app.Merry Christmas,Greg</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/having-some-changes.html">
+<title>Having Some Changes</title>
+<link>http://blog.gregwym.info/having-some-changes.html</link>
+<dc:date>2012-08-15T04:01:20+08:00</dc:date>
+<description>As you can see, I changed the entire blog into english, except the posts I wrote before and the blog title. It doesn't mean I will not write in Chinese any more. It's because I thought, in order to be standing out among the people around North America, I gotta have something the North America people can read and understand.Just finished my 3B term @ University of Waterloo. Learnt a lot, worked a lot...Things that I was or is recently working on:
+doGRT: Going to implement the iPad UI. Refactor the entire app if I have time.
+Moe FM: Refactoring the entire app. Adding bunch of new features. (Hope you guys are still waiting for it)
+CampusNav: It's the project we made for our Software Architecture class. I'm planning to push it to the App Store.
+Yodo1 SDK: Review and help improve the SDK.
+These should be able to keep me busy for my Summer, lol. Gotta stop playing around and start working now.Wish everyone has a nice summer.</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/linux-extra-mouse-button-customize.html">
+<title>在Linux下自定义多按键鼠标的功能</title>
+<link>http://blog.gregwym.info/linux-extra-mouse-button-customize.html</link>
+<dc:date>2012-02-16T10:26:53+08:00</dc:date>
+<description>搭好Ubuntu工作环境以后, 什么都好, 就是接上鼠标以后, 很多键用不了, 比较烦. Ubuntu自带的鼠标设置非常简陋, 罗技也没给Linux做驱动, 只能自己找办法解决.btnx非常好的解决了这个问题, 而且还带GUI设置工具. 除了设置里没有Apply这个按钮, 让人有点琢磨不透它到底什么时候保存设置以外, 其他都还不错.调整好设置以后记得点"Restart BTNX"来重启服务.记一下安装使用时候碰到的各种问题.
+在第一次配置的时候, 直接把btnx-config给关上了, 然后就怎么也打不开了. 具体提示的错误是什么不记得了.解决方法是删除/etc/btnx/btnx&#95;manager和/etc/btnx&#95;config_Default. (如果我没记错的话...因为我删错了, 才有下文)
+如果你和我一样, 不幸把/etc/btnx/整个文件夹给删了, 你会发现你别管怎么删怎么装, 都没法把那个该死的/etc/btnx/events找回来.解决方法是把btnx和btnx-config complete uninstall了, 然后重装.
+在设置好鼠标以后还有点神器的问题, 就是btnx的设置不会屏蔽(override)掉这个按键的默认功能.举个例子, 我把鼠标上原先的"前进/后退"设置成了"Ctrl+TAB/Ctrl+Shift+TAB", 当我在浏览器里按这个按钮的时候, 我不光会切换tab, 还会让页面前进/后退...很恶心是不是?解决方法是, 编辑~/.Xmodmap把这几个按钮屏蔽掉.比如button 8, 9是前进后退, 那就在~/.Xmodmap里写入
+
+! Disable buttons 8 and 9
+pointer = 1 2 3 4 5 6 7 0 0
+
+参考资料:http://ubuntuforums.org/showthread.php?t=918714http://unix.stackexchange.com/questions/20550/how-to-disable-the-forward-back-buttons-on-my-mouse</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html">
+<title>MacBook更换硬盘记 (完美迁移Lion隐藏恢复分区)</title>
+<link>http://blog.gregwym.info/macbook-geng-huan-ying-pan-ji---wan-mei-qian-yi-lion-yin-cang-hui-fu-fen-qu.html</link>
+<dc:date>2011-12-03T15:38:19+08:00</dc:date>
+<description>前段时间收了个二手的MacBook, 升级到8G内存以后, 所有东西都很给力, 但原来的硬盘只有160G. 从同学那拿了个500G的硬盘, 准备换上.主分区的迁移很容易, Mac OS X的磁盘工具是神器, 主分区直接恢复到新硬盘的对应分区即可. 但原机主已经装好了Lion(不知道是不是正版), Lion中增加了一个隐藏分区, 可以在系统崩溃的时候作为恢复分区. 所以希望能把隐藏分区完美移植到新硬盘上, 又保留原先Mac分区的数据, 只是扩大容量.搜索了很多地方, 国内的各大论坛貌似都没有人研究过移植Lion恢复分区的问题, 最后还是在一个英文博客上找到了可行的方法. 翻译整理一下记录在这里, 方便碰到类似问题的朋友. 因为我自己操作的时候并没有截图, 所以直接使用原英文博客上的数据了.Step1: 准备范本在移植隐藏分区之前, 首先需要一个隐藏分区的范本.个人认为, 应该尽量避免把正在运行的系统作为复制的范本我的做法是, 在换硬盘之前, 先使用"Lion 恢复磁盘助理"制作一个可以boot的恢复U盘. 从U盘boot后, 把原硬盘的恢复分区作为范本. 这样也保证了原汁原味.Lion 恢复磁盘助理下载地址: http://support.apple.com/kb/DL1433?viewlocale=zh_CNStep2: 从U盘启动将制作好的U盘插入电脑, 开机时按住Option选择U盘启动, 从U盘boot进入到Lion的恢复系统中.将两块硬盘的其中一块放到USB硬盘盒中并接入电脑.Step3: 格式化新硬盘先进入"磁盘工具"把新硬盘整个都抹成"Mac OS扩展 (日志式)"然后退出"磁盘工具"Step4: 收集信息点击"实用程序"->"终端" 进入Terminal输入diskutil list, 列出系统中所有的磁盘和分区, 找出原盘和新盘的代码, 还有分区的编号.例如:/dev/disk0
+   #:                       TYPE NAME              SIZE      IDENTIFIER
+   0:      GUID_partition_scheme                  *128.0 GB  disk0
+   1:                        EFI                   209.7 MB  disk0s1
+   2:                  Apple_HFS Macintosh HD      127.7 GB  disk0s2
+/dev/disk1
+   #:                       TYPE NAME              SIZE      IDENTIFIER
+   0:      GUID_partition_scheme                  *32.3 GB   disk1
+   1:                        EFI                   209.7 MB  disk1s1
+   2:                  Apple_HFS OSX               31.4 GB   disk1s2
+   3:                 Apple_Boot Recovery HD       650.0 MB  disk1s3
+其中, 记录下列信息
+/dev/disk0是我们要操作的新硬盘, #2分区是主分区
+/dev/disk1是我们要作为范本的老硬盘 or U盘, #3分区是Lion恢复分区
+Step5: 继续收集信息输入diskutil info /dev/disk0s2 (新硬盘的第二个分区)Device Identifier:        disk0s2
+    Device Node:              /dev/disk0s2
+    Part of Whole:            disk0
+    Device / Media Name:      Macintosh HD
+    ...
+    Total Size:               127.7 GB (127691702272 Bytes) (exactly 249397856 512-Byte-Blocks)
+    ...
+重点在于127691702272 Bytes, 你的硬盘不一定是这个大小, 记录下来再输入diskutil info /dev/disk1s3Device Identifier:        disk1s3
+    Device Node:              /dev/disk1s3
+    Part of Whole:            disk1
+    Device / Media Name:      Recovery HD
+    ...
+    Total Size:               650.0 MB (650002432 Bytes) (exactly 1269536 512-Byte-Blocks)
+    ...
+重点是650002432 Bytes, 你的盘可能稍微有点不一样, 记录下来.这样我们就收集齐了移植恢复分区的所有数据.Step6: 调整分区大小并创建新分区原来的隐藏分区是650MB, 但保险起见, 防止复制分区时少copy任意数据, 我们给隐藏分区分配700MB.所以主分区的新大小为 127691702272 - 700 * 1000 * 1000 = 126991702272 Bytes (请根据你实际大小进行计算)调整主分区的同时, 创建新分区. 注意输入正确的分区名称和大小!!!-bash-3.2# diskutil resizeVolume /dev/disk0s2 126991702272B  jhfs+ "Recovery HD" 650002432B
+Started partitioning on disk0s2 Macintosh HD
+Verifying the disk
+Checking file system
+Performing live verification
+Checking Journaled HFS Plus volume
+Checking extents overflow file
+Checking catalog file
+Checking multi-linked files
+Checking catalog hierarchy
+Checking extended attributes file
+Checking volume bitmap
+Checking volume information
+The volume Macintosh HD appears to be OK
+Resizing
+Waiting for the disks to reappear
+Formatting disk0s3 as Mac OS Extended (Journaled) with name Recovery HD
+Initialized /dev/rdisk0s3 as a 621 MB HFS Plus volume with a 8192k journal
+Mounting disk
+Finished partitioning on disk0s2 Macintosh HD
+/dev/disk0
+   #:                       TYPE NAME             SIZE      IDENTIFIER
+   0:      GUID_partition_scheme                 *128.0 GB  disk0
+   1:                        EFI                  209.7 MB  disk0s1
+   2:                  Apple_HFS Macintosh HD     127.0 GB  disk0s2
+   3:                  Apple_HFS Recovery HD      651.1 MB  disk0s3
+新建的分区大小比我们给的数大了些, 重新resize.-bash-3.2# diskutil resizeVolume disk0s3 650002432B
+ Started partitioning on disk0s3 Recovery HD
+ Verifying the disk
+ Checking file system
+ Checking Journaled HFS Plus volume
+ Checking extents overflow file
+ Checking catalog file
+ Checking multi-linked files
+ Checking catalog hierarchy
+ Checking extended attributes file
+ Checking volume bitmap
+ Checking volume information
+ The volume Recovery HD appears to be OK
+ Resizing
+ Finished partitioning on disk0s3 Recovery HD
+ /dev/disk0
+    #:                       TYPE NAME             SIZE      IDENTIFIER
+    0:      GUID_partition_scheme                 *128.0 GB  disk0
+    1:                        EFI                  209.7 MB  disk0s1
+    2:                  Apple_HFS Macintosh HD     127.0 GB  disk0s2
+    3:                  Apple_HFS Recovery HD      650.0 MB  disk0s3
+这样就对了. 注: 这一步很重要, 如果隐藏分区大小不对, 最后会失败的!Step7: 复制隐藏分区数据将新创建的分区卸载(unmount).然后用dd复制隐藏分区文件, 如下-bash-3.2# dd if=/dev/disk1s3 of=/dev/disk0s3
+    1269536+0 records in
+    1269536+0 records out
+    650002432 bytes transferred in 185.538679 secs (3503326 bytes/sec)
+dd会把原盘的隐藏分区里的内容, 一字不差的复制到新分区中, 不该失败.Step8: 修改隐藏分区的类型-bash-3.2# asr adjust --target /dev/disk0s3 -settype "Apple_Boot"
+    Fsck /dev/disk0s3 ....10....20....30....40....50....60....70....80....90....100
+  Adjust completed successfully
+运行完以后检查一下结果,-bash-3.2# diskutil list
+ /dev/disk0
+    #:                       TYPE NAME             SIZE      IDENTIFIER
+    0:      GUID_partition_scheme                 *128.0 GB  disk0
+    1:                        EFI                  209.7 MB  disk0s1
+    2:                  Apple_HFS Macintosh HD     127.0 GB  disk0s2
+    3:                 Apple_Boot Recovery HD      650.0 MB  disk0s3
+ /dev/disk1
+    #:                       TYPE NAME             SIZE      IDENTIFIER
+    0:      GUID_partition_scheme                 *32.3 GB   disk1
+    1:                        EFI                  209.7 MB  disk1s1
+    2:                  Apple_HFS OSX              31.4 GB   disk1s2
+    3:                 Apple_Boot Recovery HD      650.0 MB  disk1s3
+新硬盘上的Recovery HD现在应该已经是Apple_Boot类型了.之后通过"磁盘工具"将老硬盘的Mac分区恢复到新硬盘的Mac分区, 然后在开机时就可以通过按住option键boot进新硬盘中的系统和恢复分区了.进入系统后注意设置启动磁盘, 不然再次重启时候还需要按option键.完毕参考源:http://www.dmitry-dulepov.com/2011/09/mac-recovery-partion-revisited.html</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/jiang-chrome-sou-suo-mo-ren-ding-wei-dao-google-com.html">
+<title>将Chrome搜索默认定位到google.com</title>
+<link>http://blog.gregwym.info/jiang-chrome-sou-suo-mo-ren-ding-wei-dao-google-com.html</link>
+<dc:date>2011-11-25T22:46:19+08:00</dc:date>
+<description>不同系统, 配置文件的位置不太一样.Windows在%USERPROFILE%\Local Settings\Application Data\Google\Chrome\User DataMac OS X在~/Library/Application Support/Google/Chrome/Linux在$HOME/?.config/google-chrome用编辑器打开Local State这个文件, 找到以下两行"last&#95;known&#95;googleurl": "http://www.google.&#42;&#42;&#42;/","last&#95;prompted&#95;googleurl": "http://www.google.&#42;&#42;&#42;/",将它们改为："last&#95;known&#95;googleurl": "http://www.google.com/","last&#95;prompted&#95;googleurl": "http://www.google.com/",打开Chrome以后随便搜索个东西...他会提示你正在使用google.com, 要不要更换到google.&#42;**|.选择继续使用, 大功告成! 嘿嘿</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/db2-shu-ju-ku-dao-chu-he-dao-ru.html">
+<title>db2 数据库导出和导入</title>
+<link>http://blog.gregwym.info/db2-shu-ju-ku-dao-chu-he-dao-ru.html</link>
+<dc:date>2011-11-04T03:48:05+08:00</dc:date>
+<description>Db2=&gt;CONNECT TO db_name 
+Db2=&gt;EXPORT TO absolute_file_path OF DEL SELECT * FROM "table_name"
+Db2=&gt;IMPORT FROM absolute_file_path OF DEL INSERT_UPDATE INTO "table_name"
+</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/zhe-bei-zi-xie-de-di-yi-ge-gei-ren-yong-de-cheng-xu.html">
+<title>这辈子写的第一个给人用的程序...</title>
+<link>http://blog.gregwym.info/zhe-bei-zi-xie-de-di-yi-ge-gei-ren-yong-de-cheng-xu.html</link>
+<dc:date>2011-06-24T05:29:17+08:00</dc:date>
+<description>埋头写了3整天的code&#96;...不用Interface Builder写GUI真是自虐啊&#96;不过结果还是不错的`啊哈哈哈写的是个Twitter-like Web Service的客户端, 网页端在这里https://hci-courses.cs.uwaterloo.ca/channelw/不是开放注册, 但可以邀请...有人想玩玩看的话, 可以留言回复哈`Post上来得瑟一下Java运行文件下载:mikrocalendar.jar截图如下:</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/virtualbox---zhu-ji-yu-xu-ni-ji-zhi-jian-gong-xiang-wen-jian-jia.html">
+<title>Virtualbox - 主机与虚拟机之间共享文件夹</title>
+<link>http://blog.gregwym.info/virtualbox---zhu-ji-yu-xu-ni-ji-zhi-jian-gong-xiang-wen-jian-jia.html</link>
+<dc:date>2011-05-16T04:13:28+08:00</dc:date>
+<description>此文章特指Windows主机, Linux虚拟机环境.前提是需要在Linux中安装Virtualbox的虚拟机工具.Step1:在设备属性中设置"分配数据空间",
+"数据空间位置" - 主机上需要分享的文件夹位置
+"数据空间名称" - 共享资源显示的名字, 不需要和原文件夹同名, 但不能包含空格. 最好为英文
+"只读分配" - 顾名思义
+"Auto-mount" - 测试没成功, 不推荐选择, 可以手动在虚拟机中设置
+"固定分配" - 是否给该虚拟机永久分配此数据空间
+Step2:启动虚拟机, 打开Terminalsudo mkdir /mnt/share  
+sudo mount -t vboxsf &lt;数据空间名称&gt; /mnt/share
+之后就可以在/mnt/share里访问主机的文件了注: /mnt/是Ubuntu的默认mount目录, 并不是所有Linux都是如此, 请自行注意Step3:卸载这个数据空间, 你可以选择重启, 或者使用以下命令sudo umount -f /mnt/shared
+Step4:如果需要每次打开虚拟机的时候都自动加载这个, 可以编辑/etc/fstabsudo vim /etc/fstab
+# 添加如下一行内容  
+&lt;数据空间名称&gt; /mnt/share vboxsf rw,gid=100,uid=1000,auto 0 0  
+</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/ipad-2-bai-se-kai-xiang-tu.html">
+<title>iPad 2 白色高清无码openbox`</title>
+<link>http://blog.gregwym.info/ipad-2-bai-se-kai-xiang-tu.html</link>
+<dc:date>2011-04-09T02:01:16+08:00</dc:date>
+<description>
+#post-51 img {
+margin: 10px;
+}
+Fedex, 明明昨天还没到北美大陆呢, 今天早上就到家门口了...
+包装一向如此`侧影`正面`脸好大`确实挺薄的比一下, $2忘记转了...先不接iTunes了`晚点再折腾With SmartCoverSmartCover的包装很好玩, 后边有个扣子似的东西扣住的我又忘记转了= =`贴上SmartCover半遮面`磁铁果然给力...能拎着晃来晃去`= =(Pia!)Lie on SmartCover`侧面
+Stand on SmartCover`
+
+Stand的侧面`很稳
+Apple一向这么抠门`</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/guo-duan-huan-vps-zhe-hui-shi-quickweb.html">
+<title>果断换VPS...这回是QuickWeb</title>
+<link>http://blog.gregwym.info/guo-duan-huan-vps-zhe-hui-shi-quickweb.html</link>
+<dc:date>2011-04-03T07:10:58+08:00</dc:date>
+<description>Hostrail实在是不给力...`CPU不灵, 装lnmp慢的一塌糊涂, 好不容易Setup好, 各种问题层出不穷.
+HyperVM Panel时不时无法访问, 即使可以访问也慢得要死
+html页的速度倒还不错, 可Typecho这么轻量化的php应用都慢的不成样子
+从3.29到4.1这段时间, server至少down了两次, 而且都是长时间的
+外加各种不确定性重启...
+
+悲催的不是一点两点= =||`买的时候抱着随便玩玩的心理也就没仔细研究, 之后才看明白VPS是怎么一潭深水.这两天好好的查了下VPS的相关信息, 留下这么几个性价比高, 又比较靠谱的ISP:VPSYOU, YardVPS, Ramhost, QuickWeb
+VPSYOU价格中等, OpenVZ 256m的版本$4/m, CPU是745x2, 硬盘20G.
+YardVPS的OpenVZ口碑不太好, 但他的Xen据说硬盘速度超一流, 512m 1.5T流量, $7.95/m. 
+不过很少有货, 我看到有一个但因为犹豫不决miss掉了.
+Ramhost是口碑最好的一个. 所有信息都只有夸没有贬, 只是一直没货, 而且256m要$8.99/m.
+(Ramhost每周末会补货, 要注意刷网页)
+QuickWeb在网站上post出来的plan的性价比不是很高, 最低的OpenVZ/Xen都要$9.95/m. 
+有个Chinese Promo还可以, Texas机房的256mOpenVZ要$5.5/m, 不过好像也是out of stock.
+最后来介绍下我的最终选择:QuickWeb一开始并不在我的选择范围内, 甚至根本不知道这个ISP, 因为几个大的VPS博客都没有特别推荐过这个ISP. 后来在Neal的博客发现他在做QuickWeb的代购, 才发现这也是一家在美国蛮有实力的IPS. (之所以说有实力是因为他们在美国五个大的数据中心都有机房)最后入手的这个是$35.88/年的plan, 平摊下来一月只要$3, Neal主推的就是这个plan.他自己的blog就搭在这个plan的VPS上, 访问速度很好, 而且看底下评论的反响普遍不错, 经Google四处查证以后, 决定还是下手试试看. Paypal付款给Neal以后, 主机即时开通.规格:OpenVZ/SolusVMIntel(R) Xeon(R) CPU X3440 @ 2.53GHz, 单核256M/384M突发10G硬盘, 速度测试平均22M/s美国凤凰城机房10Mbit带宽(Phoenix/LA) 250G/m流量+$5可升级100Mbit+$10可升级1000Mbit到目前为止, 对这个主机还是很满意的, 速度和性能方面都很不错. LNMP只用了20分钟就装好了.有需求的朋友可以联系Neal代购, http://neal.im/webhosting/</description>
+</item>
+</rdf:RDF>

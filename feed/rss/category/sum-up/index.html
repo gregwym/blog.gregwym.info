@@ -1,0 +1,767 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/category/sum-up/">
+<title>某储备粮的“学习笔记” - Sum Up</title>
+<link>http://blog.gregwym.info/category/sum-up/</link>
+<description>整理平时学习中碰到的各种难点重点, 以Computer Science相关内容为主. 涉及到的课程名称均为University of Waterloo的课程. </description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/software-architecture-CS446-midterm.html"/>
+<rdf:li resource="http://blog.gregwym.info/cs-341-algorithm-brief-review.html"/>
+<rdf:li resource="http://blog.gregwym.info/os161-memory-management.html"/>
+<rdf:li resource="http://blog.gregwym.info/os161-system-calls-implementation-notes.html"/>
+<rdf:li resource="http://blog.gregwym.info/guan-xi-mo-xing-gai-nian-zheng-li.html"/>
+<rdf:li resource="http://blog.gregwym.info/shu-ju-ku-ji-chu-gai-nian-zheng-li.html"/>
+<rdf:li resource="http://blog.gregwym.info/sql-yu-fa-zheng-li.html"/>
+<rdf:li resource="http://blog.gregwym.info/java-xian-xue-xian-mai-zhi-layout-managers.html"/>
+<rdf:li resource="http://blog.gregwym.info/xlib-chu-jie-chu.html"/>
+<rdf:li resource="http://blog.gregwym.info/compiler-ge-ge-bu-zhou-de-han-yi.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/software-architecture-CS446-midterm.html">
+<title>Software Architecture - CS 446 Midterm Outline</title>
+<link>http://blog.gregwym.info/software-architecture-CS446-midterm.html</link>
+<dc:date>2012-06-22T10:46:34+08:00</dc:date>
+<description>Software Design Process ModelsDesign as search. Design spaces. Design state, goal structure, generative design operations, early quantitative evaluations, control of design process. Basic models of design (transformational, plan/architecture driven). Relationship to other life-cycle activities.Terms
+Module: a collection of classes
+Subsystem: a collection of classes with an interface
+Design window: the time, which design decision have to be made
+Service: the operation in common purpose, offered by a subsystem
+Different Views
+Analysis focus on the problem domain 
+
+
+Analyst, end user, customer
+
+Design focus on the solution domain 
+
+
+designer, implementer
+
+Goals
+Designer 
+
+
+Specify interface of subsystems
+Usability
+Reusability
+
+Implementer 
+
+
+implementer
+Extender
+User
+
+Major Design Goals
+Behavioural Model 
+
+
+Concurrency
+Resource Handling
+Software Control
+
+Structural Model 
+
+
+Hardware/Software mapping
+Data Management
+
+Use Case Model 
+
+
+Boundary Conditions (边缘情况)
+
+Non Functional Requirements 
+
+
+Feasibility (可行性)
+
+A lot of others.Most of them involves trade off between each otherDecomposition
+High cohesion
+Low coupling
+Architecture/Design RepresentationWhat should be represented (structure, behaviour)? Informal representations of design, examples of design notations. Formal representation of design. Domain specific architecture descriptions. Role of standards, reference architectures. Design documentation.Terms
+Subsystem decomposition: identify subsystems, service, and their association in between
+Architectural style: pattern for a subsystem decomposition
+Software architecture: instance of a style. composed of components and connectors
+Components: encapsulated subsystem, provides services
+Connectors: Facilitate communication within software. Simple procedure calls or shared data accesses
+-
+Conceptual Arch
+Concrete Arch
+Evolution
+Degradation 
+
+
+Drift: add things to conceptual
+Erosion: conflict to conceptual
+Recover: determining from implementation
+
+Architectural Style
+Vocab of design elements
+Set of config rules
+Semantic interpretation
+Benefits
+Design/Code reuse
+Visualization
+Interoperability (WTH is this word…)
+Style-specific analyses
+Style Examples
+Main program and subroutines
+Object-Oriented Style
+Layered Style
+Virtual Machine Layers 
+
+
+Closed/Open Layering
+
+3/4-Tier
+Client/Server
+Peer-to-Peer
+Batch Sequential
+Pipes and Filters
+Repository
+Implicit Invocation
+Publish-Subscribe
+Event-Based
+MVC
+Interpreter
+Sservice-Oriented Arch (SOA)
+Architectural ModelArch Views and ViewpointsDifferent views should be consistent between each other.
+Logical View 
+
+
+UML component diagram
+
+Physical View
+Deployment View 
+
+
+UML deployment diagram
+
+Concurrency/Process View
+Behavioral View 
+
+
+UML collaboration diagram
+
+Metamodel意会了, 但是不知道怎么总结…主要用来保证view之间的consistencyDesign Goals
+Reduce Complexity
+Scalability
+Adaptability
+Heterogeneity
+Portability
+Dependability 
+
+
+Reliability
+Availability
+Robustness
+Fault-tolerant
+
+Detail design activities
+Identify modules 
+
+
+Data Flow Analysis (DFA)
+
+Identify control structure 
+
+
+Instantiation of modules
+Management of base processes
+
+Decide on overall control structure 
+
+
+Centralized/Decentralized control
+
+Address boundary control conditions
+Address persistent data management
+Address hardware/software mapping
+Implement concurrency
+Define access control
+...继续ing...Design Plans/ArchitectureReview of small/medium scale plans (data structures, programming language structures, concurrency). Plans/architectures for common types of software systems (translators, embedded, real-time, user interface)....未开始...</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/cs-341-algorithm-brief-review.html">
+<title>CS 341 Algorithm 复习小记</title>
+<link>http://blog.gregwym.info/cs-341-algorithm-brief-review.html</link>
+<dc:date>2011-12-16T00:27:48+08:00</dc:date>
+<description>Master TheoremT(n) = a * T(n / b) + f(n)
+x    = log_b(a)
+T(n) = θ(n^x)          if f(n) = O(n^(x-ε))
+       θ(n^x * lg(n))  if f(n) = θ(n^x)
+       θ(f(n))         if f(n) = Ω(n^(x+ε)) 
+                          and a * f(n/b) &amp;lt;= c * f(n)
+Greedy
+At each step, make the "best" next choice.
+Never backtrack or change past choices.
+Never look ahead to see if this choice has negative consequences.
+Greedy Proof, Type 1
+Describe a greedy local choice strategy
+Setup the configurations of the greedy solution G and the optimal solution O
+Argue that O can become G by replacing each entry in OFor each replacement, show it is possible, because it consist the compatibilty and optimality The last two step involves induction
+
+In basecase, focusing on how the first greedy choice can be used in an optimal solution
+During induction,assume the first k choices in an optimal solution are made by the greedy algorithm, show that the k+1 choice can be made by the greedy algorithm as well
+Greedy Proof, Type 2
+Describe a greedy local choice strategy
+Setup the configurations of the greedy solution G and the optimal solution O
+Find out the difference between O and G
+Try to reorder O to G and consists the optimality
+Dynamic ProgrammingDynamic Programming calculates a solution based on the result of a previous calculation. It saves the previous result so that no duplicate calculation needed. Dynamic Programming Design Recipe
+Find out the subproblem 
+
+
+give a score evaluation function
+give a recursive difinition
+
+State how an array can be used to evaluate the scores 
+
+
+dimension
+evaluation order
+basecase
+final result
+
+How to recover the solution
+GraphRepresentations of Graphs
+Pointers 
+
+
+vertices have pointers to adjacent vertices
+Cannot determine whether an edge exists directly
+
+Adjacency matrix 
+
+
+A matrix M, M[i, j] = 1 iff exists edge from i to j
+waste a lot of space
+
+Adjacency lists 
+
+
+Link-list like representation
+
+继续ing...</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/os161-memory-management.html">
+<title>OS161 Memory Management</title>
+<link>http://blog.gregwym.info/os161-memory-management.html</link>
+<dc:date>2011-11-20T13:08:45+08:00</dc:date>
+<description>这次Assignment除了Physical Memory Management, 其他几个部分都相互关联. 所以在设计完成前几部分的时候, 最好将所有需要解决的问题都搞明白, 然后统一设计Address Space的结构.TLB Management和TLB有关的, 需要解决的问题有这么几个:
+Context Switch的时候, 如果不是两个不同的thread, 则不需要flush TLB
+当TLB被占满的时候, 要替换最老的TLB entry
+TLB内保存read-only信息
+然后一个一个说…
+只要检查上一次flush TLB时候的thread, 和现在的是不是同一个thread即可
+这部分这次Assignment已经把code写好大半了…`你需要做的就是把tlb&#95;get&#95;rr_victim return回来的那个entry替换掉
+理解MIPS TLB的每个flag bits的用处, 然后把read-only flag放在对应的位置.当程序试图写入一个read-only的memory时候, vm&#95;fault拿到的faulttype是VM&#95;FAULT_READONLY.Don't PANIC!!!
+TLB基本就这么多= =||`没啥东西…On-Demand LoadingThis is the fun part…哈哈哈这部分, 需要, 灰常严谨的逻辑和计算…`还要对page loading的步骤非常清晰. 任何一点对内存地址或者file offset的计算错误, 或者理解错误, 都会mess up.所以, 咱们重新来列一遍从程序开始运行, 到page loading结束的整个过程:
+runprogram/execv拿到一个progname (ELF file's path), 并call load_elf.
+load_elf不立刻load到physical memory,而是把ELF中的每一个segment所对应的virtual address定义好, 并且保存load这个segment所需要的所有信息.(这些信息如何/以什么样的形式保存, 需要在动手之前就先明确!)
+当系统碰到一个TLB Miss时, 会有两种情况:
+这个page还没有被load到physical memory, 说明这个page是第一次被访问, 
+
+
+找到这个page所对应的segment的信息
+计算load这个page所需要的所有相关数据
+从physical memory steal一个page的内存
+将这个page的数据从file load到physical memory中(提示: PADDR&#95;TO&#95;KVADDR is useful)
+将这个physical memory保存成这个segment vaddr对应的paddr
+将这对vaddr和paddr存入TLB
+
+反之, 直接将已知的一对vaddr和paddr存入TLB即可
+本身, 整个过程还是很straight forward的. 可有一些special case需要handle…
+有的segment不是从一个page的顶头开始的
+有的segment跨越多个page
+有的data segment的filesize是0, 但memsize需要填零
+…好像还有别的, = =想不起来了, 大家写的时候发现了, 告诉我下, 哈哈 最容易出错的部分还是计算, filesize, memsize, file offset, memory offset, 等各种数据…大家加油
+Address Space多写两句和as有关的很多人在刚开始写这个assignment的时候, 最先纠结的就是, as的结构要不要改...这是个好问题, 但答案是: 不一定要改as, 但肯定需要+东西.在解释为什么之前, 咱们先来看看dumb_vm的as里, 每个东西都是干嘛用的.struct addrspace { 
+    #if OPT_DUMBVM 
+        vaddr_t as_vbase1; 
+        paddr_t as_pbase1; 
+        size_t as_npages1; 
+        vaddr_t as_vbase2; 
+        paddr_t as_pbase2; 
+        size_t as_npages2; 
+        paddr_t as_stackpbase; 
+    #else 
+        /* Put stuff here for your VM system */ 
+    #endif 
+};
+dumb_vm里只保存两个segment/region的内存信息
+vbase是每个reg在virtual address上开始的位置
+pbase是每个reg在physical address上开始的位置
+npages是每一个reg一共占用了多少个virtual page/physical frame
+stackpbase顾名思义, stack在physical address上的底是哪里
+然后咱们再研究下, 可能需要记录哪些信息. (并不一定全部都需要记录, 有些可以相互计算)为了计算写入TLB的值, 需要
+每个reg在virtual &amp; physical address的开始位置
+每个reg有多少个page/frame
+每个reg的permission flags
+为了On-Demand Loading, 需要
+当前app对应的ELF file是什么
+每个reg里的每个page/frame是否被load过
+每个reg里的每个page/frame的vaddr和paddr开始位置
+每个reg里的每个page/frame所对应在ELF-FILE中的program header information (例如: file offset)
+stack已经占用了多少个page
+对比一下上下两个列表, 我们缺点什么呢?原来的as没有记录reg的permissions, 没有记录page/frame是不是被load过了, 没有分别记录每个page/frame的vaddr+paddr(当然, 可以通过seg的数据进行计算), 也没有每个reg对应的ELF信息...stack也是固定大小所以原本的as是100%缺少东西的, 但这些额外的东西, 具体应该保存到哪里就自由发挥了.补充1: OS161里假设了一个ELF程序只包括两个segment. 虽然实际可能不止2个, 但现阶段, 只支持2个也没问题.更新1: 叫seg不太确切, 还是叫region好了. 另补充了一些需要记录的内容.Physical Memory Management在dumbvm里, Physical Memory的分配机制非常简单. 在first和last之间, 一页一页的把内存分配出去, first逐次往后移动, 直到first = last, 就没有memory可用了. 也不回收, 不重复使用.要想改变优化这个机制, 首先需要增加一个能够tracking所有可用Physical Frame使用状态的table. 在进行malloc或者free某个frame的时候, 在table中记录下来这个frame的状态. 这样, 如果存在free过的page, 这些page就可以优先被malloc, 从而重复利用已经free了的内存.整体流程:
+系统启动
+进入vm_bootstrap
+取得现在可用的Physical Memory的地址范围
+通过地址范围计算出有多少个可用的frame
+建立保存Physical Frame Status的table
+完成其他vm_bootstrap所需要做的工作
+再次取得可用的Physical Memory的地址范围, 这就是真正可用的内存范围
+停用原本的Physical Memory管理机制, 并接管所有alloc&#95;kpages和free&#95;kpages的操作
+vm系统启动完成
+除此之外, 还需要修改allocation和free时候的操作, 让alloc能够通过某种algorithm来重复使用已经被free的内存位置. (用什么样的Algorithm就看各位了, 实在不行做liner search也是方法之一, 嘿嘿)个别要点:
+建立的table可能比最后实际需要的大, 但并无大碍. (因为table本身占用了一部分内存)
+alloc_kpages的时候, 有可能需要一次alloc超过一页的frame.如果你使用的algorithm不方便在被free的内存中找出多个连续的frame, 那尽管把从未用过的连续frame分配出去吧.
+其他的待补充...
+Instrumentation实在没什么好写的, 把declaration和initialization放对地方就好了.</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/os161-system-calls-implementation-notes.html">
+<title>OS161 System Calls Implementation Notes</title>
+<link>http://blog.gregwym.info/os161-system-calls-implementation-notes.html</link>
+<dc:date>2011-10-31T12:38:37+08:00</dc:date>
+<description>这篇文章的目的是记录CS350 Assignment2中, 我编写各种System Calls时所采用的思路. 实际coding的时候, 同一种System Call的实现方式很可能不止一种, 但殊途同归.注1: 文章顺序和实际coding顺序并不一定一致, 请参考Assignment中的Strategy部分.注2: 如果没有仔细读过code和Assignment...这里很有些东西你可能读的似懂非懂.欢迎在评论中提问...General Tips
+别管写什么function, 第一步永远是检查parameter是否有效!!!(比如, pointer是不是NULL, string是不是空, etc)
+不要放过任何一个warning...需要explicit cast的时候, 千万不要偷懒.
+function一般使用parameter中的pointer进行value return, 正常的return用来return errno.
+开始coding之前, 除了读Assignment, 读code, 还要好好读Assignment Hint! 解答了很多FAQ
+注意在header file里用#ifndef, 保证header不会出现重复include
+kmalloc了的东西...在destroy的时候一定要kfree. 不然A3里, 你会发现各种memory leak(Create某些data structure的中间, 如果出现error, 则需要首先free已经allocated的内存, 然后返回error)
+善用spl解决mutex问题. 当然, 首先你要明白什么样的操作需要mutex!
+
+我会边写这个Note边添加Tips...Part 1, Play with the files and console在OS161中, 所有应用程序在打开, 关闭, 读取, 写入一个文件的时候, 都是通过一个file descriptor [ID]来标识某一个文件的. 需要注意的是, file descriptor [ID]和vnode是完全两个东西.每个thread都有单独一套file descriptors [ID], 但两个thread的两个不同的file descriptor [ID]如果标识的是同一个文件, 则共用一个vnode.(这里所说的file descriptors实际上只是一个int, 是代表一个file descriptor的ID, 而实际上file descriptor要保存很多内容. 后边继续)简单来说, 我们需要给每一个thread都增加一个, 记录所有opened file的机制. 我们暂称之为file table.file table可以就是个简单的array, 但为了让file table的operation和thread以及syscall相互独立, 减少重复code并减少bug机会, 我强烈建议大家把file table相关的所有operations都写成独立的functions, 放在单独的文件里.file table &amp; file descriptorfile table其实很简单, 一个array外加一个size_t记录array的长度, 就ok了. (这里说的所有array都是struct array, OS161中自带的kernel array lib)file descriptor中需要记录以下几个东西,
+vnode pointer
+permission flags
+the current offset in file
+probably need something else, depends on your implementation. (like a reference counter, etc.)
+然后就是操作file table的各种function, 比如
+create file table
+destroy file table
+duplicate file table (is one of the most important part of execv fork, but not nessesary for now)
+add/get/delete a file descriptor
+may need extra functions or helpers for convenience
+至此基本没有难点 (就类似写个小"class").之后要把file table添加到thread里, 并且在thread_fork中进行initialization.Stdin &amp; Stdout 也是FILE!!!这是Assignment在"Implementing file system calls"中特别提到的一点.在建立一个新的process时候, 不止要initialization一个file table, 而且还要把table的0, 1, 2分别设置成standard input, standard output和standard error, 不然printf就不work哦, 哈哈哈.注: OS161中stdout和stderr是一样的.知道了怎么Open, Close就简单了open步骤 1. 创建file descriptor 2. vfs_open打开文件 (获取vnode) 3. 往file descriptor中存需要的数据 4. 把file descriptor加到file table中, 并取得ID 5. return ID给user program如何用vfs_open打开文件, 请参考runprogram.cRead和Write差在细节有file descriptor就有vnode...如何用VOP_READ配合vnode和uio读文件, 请参看loadelf.c注意offset怎么算!!!!!考验你读code读够不够细致的时候到了...好好读vnode.h(的comment)吧.Write和Read差在uio的配置, 和用VOP_WRITE.请细读uio.h(的comment)= =...都是comment有用, code看不懂影响不是很大.Part 2, Get the process organizedfork, getpid, waitpid, _exit...注: 按我的理解, OS161所有的thread都是process, 只不过有parent和child之分.这部分中, PID的管理逻辑是关键, 主要解决几个问题.
+如何让一个process wait在一个PID上, 并在exit的时候wake up所有在当前PID waiting的process
+如何防止deadlock (P1 wait on P2, and P2 wait on P1)
+如何保存exitcode. 并明确, 何时可以安全的删除这个exitcode的记录
+如何重复使用已经空闲的PID 除此之外, fork还要考虑其他问题, 后边再说.
+Table解决一切问题...和file descriptor类似, PID也需要构建一个table. 区别在于, process table必须是global的! 也就是说, 整个系统只有一个process table.然后考虑, 我们需要为每个PID/process保存哪些信息, 才能解决上边列举的几个问题.process table相关的function (仅供参考),
+create process table (use in thread_bootstrap)
+destroy process table (use in thread_shutdown)
+assign and save a PID for new process (use in thread_fork)
+mark a PID as inactive and save the exitcode (use when _exit is called)
+you may also want to add other things here. Like the actual implementation of waitpid, wakeup waitings, release a exited PID or any other PID related functions. But its all depends on your implementation decision.
+Wait&amp;Wakeup的钥匙 - A magical memory address第一个Assignment写完, 对于thread&#95;sleep和thread&#95;wakeup应该都很熟悉了.两个function都consume一个pointer作为钥匙. 只要sleep的thread和wakeup的thread用的是同一个钥匙, 睡着的所有thread就能被唤醒.这在implement waitpid和_exit的时候是很实用的.fork意味着, 一模一样这估计是这次Assignment中最难的部分.fork的作用是生成一个和当前thread完全一样的thread. 说具体点就是,
+CPU的每个register值一模一样
+address space中的memory一模一样
+打开的file一模一样 (duplicate a file table)
+其他一个thread中可能包含的部分
+只有PID不一样!!!
+fork system call要点:
+consume一个东西, trapframe. 这里保存着user program进入privilege mode之前, 所有register的数据.
+用memcpy把trapframe复制一份给新thread用
+调用thread&#95;fork的时候, 用复制的trapframe和md&#95;forkentry作为parameter.
+thread_fork要点:
+thread_fork要想办法知道, 是不是被fork system call调用的
+如果是, 需要复制address space
+如果是, 需要duplicate file table. 否则, 创建新的
+md_forkentry要点:
+trapframe要复制到kernel stack上 (太简单了以至于有时候想不到用)
+fork里复制的trapframe要free掉
+在trapframe里设置return value, (pc貌似也要increment...回忆不起来当时increment的原因了)
+address space需要activate
+Follow这些要点, 应该可以比较顺利的搞定fork. 但我仍推荐先把fork和md_forkentry的工作原理搞明白, 再开始.(如果写完了还没明白, 为什么要把md&#95;forkentry pass给thread&#95;fork, 那你绝对是奇葩)到这里, A2中最难的部分过去了...runprogram和execv, 我不确定有没有时间在下周一之前总结出来.这两个大同小异, runprogram写好, execv只是稍微多点东西.exception handling是打酱油...大家加油</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/guan-xi-mo-xing-gai-nian-zheng-li.html">
+<title>关系模型概念整理 (Relational Model)</title>
+<link>http://blog.gregwym.info/guan-xi-mo-xing-gai-nian-zheng-li.html</link>
+<dc:date>2011-10-19T08:49:01+08:00</dc:date>
+<description>Definition实在不知道怎么概括= =...
+Intention of a relation: relation definition and constrains
+Extention of a relation: the actual data, tuples
+Relation properties
+Set Theory 
+
+
+Attributes has order (not necessary)
+Value are used to identify tuples
+Tuples dont have order
+Tuples cant have duplication
+
+Attribute value are atomic
+Degree: How many attributes in the schema
+Cardinality: How many tuples in an instance
+Constraints
+Let the DBMS to ensure the entry or modification on data are legal
+Give applications' bug no chance to ruin the data
+Three Constraint Level
+Tuple-level 
+
+
+Domain restrictions (datatype)
+Attribute comparisons (好像是指check)
+
+Relation-level 
+
+
+Special type of keys 
+
+
+Superkey: 能uniquely identifies a tuple的一个or一组attribute
+Candidate key: Superkey的最小集, (最简单的一个or一组attribute)
+Primary key: 被选中, 用来identity tuples的Candidate key
+
+
+Database-level 
+
+
+Referential integrity 
+
+
+Foreign key: 其他relation中的primary key
+Referential integrity: 不允许出现和对应relation中的记录不符的情况
+
+Inclusion dependencies: = =`不懂
+
+</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/shu-ju-ku-ji-chu-gai-nian-zheng-li.html">
+<title>数据库基础概念整理</title>
+<link>http://blog.gregwym.info/shu-ju-ku-ji-chu-gai-nian-zheng-li.html</link>
+<dc:date>2011-10-19T04:55:14+08:00</dc:date>
+<description>Definitions
+Database: is a large and persistent collection of pieces of information organized in a way that facilitate efficient retrieval and modification.
+DBMS: is a program that manages details related to storage and access for a database.
+Schema: is a description of the data interface to the database.
+Instance: is a database that conforms to a given schema.
+Transaction: is an application-specified atomic and durable unit of work.
+View: is a relation in the external schema whose instance is determined by the instances of the relations in the conceptual schema.
+Trigger: is a procedure executed by the database in response to a change to the database instance
+Three Level Schema Architecture
+External schema (view): visualized data
+Conceptual schema: logical structure
+Physical schema: file/storage devices
+Data Independence
+Application access the data through an abstract data model provided by the DBMS, rather than direct access
+Physical: applications cant touch the storage stucture
+Logical: applications cant change the data organization
+Four Transaction PropertiesNoSQL据说就是要break these properties= =`IDK why...
+Atomic: once the transaction happens, it happened. No intermediate stage!
+Consistency: transaction follows the database consitences
+Isolated: concurrent transactions wont effect each other
+Durable: transaction results permanently
+What DBMS do
+Remoce common code from applications
+Provide uniform access to data
+Guarantee data integrity
+manage concurrent access
+Protect against system failure
+Set access policies for data
+</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/sql-yu-fa-zheng-li.html">
+<title>SQL语法整理</title>
+<link>http://blog.gregwym.info/sql-yu-fa-zheng-li.html</link>
+<dc:date>2011-10-17T06:00:15+08:00</dc:date>
+<description>SELECTSELECT attribute-expression-list FROM relation-list [ WHERE condition ];
+attribute-expression-list:
+[relation-name.]attribute
+[relation-name.]attribute [arithmatic computation] AS another name 
+
+
+i.e., E.Salary - 40000 AS SalaryDiff
+
+CASE WHEN ... THEN ...ELSE ... END 
+
+
+i.e., CASE WHEN E.Salary &lt; 40000 THEN 0ELSE E.Salary - 40000 END
+
+relation-list:
+list of table names
+seperate by comma
+condition:
+arithmetic operation +, -, *, /
+comparisions =, &lt;>, &lt;, &lt;=, >. >=
+logical connectives AND, OR, NOT
+attribute IN (Q)
+attribute NOT IN (Q)
+attribute op SOME (Q)
+attribute op ALL (Q)
+EXISTS (Q)
+NOT EXISTS (Q)
+IS [NOT] NULL
+NULLAND Table
+  
+    
+      AND
+      
+      TRUE
+      
+      FALSE
+      
+      NULL
+    
+    
+    
+      TRUE
+      
+      TRUE
+      
+      FALSE
+      
+      NULL
+    
+    
+    
+      FALSE
+      
+      FALSE
+      
+      FALSE
+      
+      FALSE
+    
+    
+    
+      NULL
+      
+      NULL
+      
+      FALSE
+      
+      NULL
+    
+  
+OR Table
+  
+    
+      OR
+      
+      TRUE
+      
+      FALSE
+      
+      NULL
+    
+    
+    
+      TRUE
+      
+      TRUE
+      
+      TRUE
+      
+      TRUE
+    
+    
+    
+      FALSE
+      
+      TRUE
+      
+      FALSE
+      
+      NULL
+    
+    
+    
+      NULL
+      
+      TRUE
+      
+      NULL
+      
+      NULL
+    
+  
+NOT Table
+  
+    
+      NOT
+      
+      TRUE
+      
+      FALSE
+      
+      NULL
+    
+    
+    
+      
+      
+      FALSE
+      
+      TRUE
+      
+      NULL
+    
+  
+UNION INTERSECT EXCEPT(Q1 and Q2 must have same attribute-list)Q1 UNION Q2 => Together all the tuples in Q1 and Q2Q1 INTERSECT Q2 => Only tuples in both Q1 and Q2Q1 EXCEPT Q2 => Tuples only in Q1 but not in Q2ALL关键字: 允许重复UNION ALL will include twice of duplicate tuplesINTERSECT ALL will include all possible pairs of match tuples, duplication possibleEXCEPT ALL will include all "not in Q2" tuples, duplication possible[INNER]/OUTER JOIN
+Inner join把两个表连接在一起, 返回两个表中相匹配的记录, 是2和3的交集
+Left outer join, 左侧表所有的记录都返回, 右侧匹配的记录返回, 没有匹配的返回Null
+Right outer join, 与Left outer join相反, 右侧的记录返回, 左侧返回匹配的记录, 没有匹配返回Null
+Full outer join, 2和3的并集
+Cross join, 两个表的笛卡儿积, 返回所有可能的值, 不允许有连接条件
+ORDER BYSELECT ... ... ORDER BY attribute [DESC/ASC], attribute [DESC/ASC], ......
+Note: 如果没有指定Order, return的数据可能是任意顺序GROUP BY, HAVING, Aggregate expressions{count, sum, avg, min, max} => Aggregate expressionsOrder: Group => Having => Aggregate
+count(*): number of tuples
+count(E): number of tupple for which E is non-NULL
+count(distinct E): number of distinct non-NULL E values
+sum(E)
+sum(distinct E)
+avg(E)
+avg(distinct E)
+min(E)
+max(E)
+Note: 没有被group by指定的attribute不能出现在SELECT的attr-list中, 除非是aggregateINSERT INTOINSERT INTO relation-name [( attribute-list )] VALUE ( value-list );
+DELETEDELETE FROM relation-name [ WHERE condition ];
+UPDATEUPDATE relation-name SET attribute-assignment-list [ WHERE condition ]; 
+attribute-assignment-list:
+pairs of assignment
+seperate by comma
+i.e., WorkDept = 'E01', Address = 'Waterloo'
+CREATE TABLECREATE TABLE relation-name ( attribute-name attribute-type [constraints-list], ... )
+attribute-type: http://www.w3school.com.cn/sql/sql_datatypes.aspconstraints-list: (Constraints的格式在各种数据库中都不太一样, 就不列举了)
+NOT NULL
+PRIMARY KEY
+UNIQUE
+FOREIGN KEY
+Column or Tuple CHECK
+CREATE VIEWCREATE VIEW view-name AS ( SELECT ... ) 
+从View SELECT的方法和table一样CREATE TRIGGERCREATE TRIGGER trigger-name 
+AFTER UPDATE OF attribute-list ON relation-name 
+REFERENCING OLD as instance-name(o) NEW as instance-name(n) 
+FOR EACH ROW ...  
+不同database语法不一</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/java-xian-xue-xian-mai-zhi-layout-managers.html">
+<title>Java现学现卖之Layout Managers</title>
+<link>http://blog.gregwym.info/java-xian-xue-xian-mai-zhi-layout-managers.html</link>
+<dc:date>2011-06-24T12:29:35+08:00</dc:date>
+<description>Java里一共提供了8种Layout Manager
+BorderLayout
+BoxLayout
+CardLayout
+FlowLayout
+GridBagLayout
+GridLayout
+GroupLayout
+SpringLayout
+这其中最后两种是专门为GUI Builder设计的, 并不是很适合手动写, 我就没花时间研究, 但应该是这几种Layout Manager中, 灵活性最大的两种.网上有人说GridBagLayout是手写UI时&#96;功能最强大的Layout...可一般强大就是复杂的代名词, 我也把它跳过了= =&#96;(好吧, 我确实比较懒, 但更主要是时间不够)先说说基础,给一个container设置Layout使用 .setLayout(LayoutManager) 这个方法.针对不同的Layout, 添加component时候, .add()有时可能需要额外的参数然后来说说我玩明白了的几种LayoutBorderLayout这是所有content pane的默认Layout. 它将整个界面划分为PAGE&#95;START, PAGE&#95;END, CENTER, LINE&#95;START, LINE&#95;END 五个部分. 可以分别理解为一个页面的header, footer, content, left-sidebar, right-sidebar..add() 的时候需要在后边增加一个额外的参数, 标识这个component该被添加到哪个区域.例: pane.add(button, BorderLayout.PAGE_END);BoxLayout这个Layout适用于单纯的将components纵向或横向直线排列. 在Constructor中, 用X&#95;AXIS或者Y&#95;AXIS标识排列方向.BoxLayout本身无视components的 preferredSize, 但如果设置了maximumSize那就另当别论了. 这点在设置自适应宽度或高度的components时候, 很有用处.BoxLayout还有两个很有用的排版小工具, 通过 .add这几个小东西, 可以很轻松的调整Layout中的空间
+Box.createHorizontalGlue(); 水平的自动填充空间
+Box.createRigidArea(new Dimension(width, height)); 创建一个占据多大空间的空白
+Trick: RigidArea的width或者height可以为0, 而且可以添加到任意其他Layout中FlowLayout这是JPanel的默认Layout. 和Box类似, 也是把components直线排列. 区别在于, 它更智能(当然有时候太聪明不是好事儿). 可以很方便的设置
+.setAlignment() 左/右对齐
+.setComponentOrientation() 从左到右/从右到左
+.setHgap() .setVgap() components之间的水平/垂直间距
+GridLayout这个Layout就是画格子. 把一个矩形空间分成n * m的格子, 可以自适应大小, 同Flow可以设置间距.其实还是很好用的, 但在排版中比较awkward...因为很多时候并不需要像表格一样的空间.创建方法很简单, new GridLayout(col, row);CardLayout 啊哈哈哈...这个我的最爱啊`!这个Layout其实就像一摞卡片, 每次你只能看到最上边的一张卡. 你可以按顺序前后切换, 也可以要求显示特定的一张, 在这次做翻页的时候非常给力!.add() 的时候, 需要增加一个额外的String参数, 标识这个card的name, 在.show(c, name)的时候会用到切换Card可以用.first(c) .last(c) .previous(c) .next(c)参考资料: enter link description here</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/xlib-chu-jie-chu.html">
+<title>XLib初接触</title>
+<link>http://blog.gregwym.info/xlib-chu-jie-chu.html</link>
+<dc:date>2011-05-15T04:24:52+08:00</dc:date>
+<description>XLib是X Window编程的基础Library, 使用时首先需要在文件头中#include &lt;X11/Xlib.h&gt;
+在绘制图形界面之前, 第一步要连接到一个Display. 就好比画画之前先要找到一张桌子或者画板, 你不能举着一张纸直接就往上泼墨...// Open display 
+Display* display; 
+display = XOpenDisplay(""); 
+if(!display){ 
+    printf("Cannot open display\n"); 
+    exit(-1); 
+} 
+之后可以通过一些函数, 获取当前Display的各种信息. 如需要, 可以保存到variable里供后边绘图时候使用.int printScreenInfo(Display* display){ 
+    int screen_num;  // 当前屏幕的编号 
+    int screen_width;    // 当前屏幕的宽度 
+    int screen_height;   // 当前屏幕的高度 
+    Window root_window; // root窗口的编号 
+    unsigned long white_pixel;   // 白色像素的编号 
+    unsigned long black_pixel;   // 黑色像素的编号 
+    screen_num = DefaultScreen(display); 
+    screen_width = DisplayWidth(display, screen_num); 
+    screen_height = DisplayHeight(display, screen_num); 
+    root_window = RootWindow(display, screen_num); 
+    white_pixel = WhitePixel(display, screen_num); 
+    black_pixel = BlackPixel(display, screen_num); 
+    printf("Screen Number: \t%d\n
+                    Width: \t%d\n
+                   Height: \t%d\n
+                     Root: \t%d\n
+                    White: \t%d\n
+                    Black: \t%d\n", 
+           screen_num, screen_width, screen_height, 
+           root_window, white_pixel, black_pixel); 
+    return 0; 
+}
+画板摆好以后, 就要在上边铺上一张用来画画的纸, 也就是一个窗口...// Define window properties 
+Window window; 
+int x, y; 
+unsigned int width, height, border_width; 
+width = 850; 
+height = 470; 
+x = y = 50; 
+border_width = 0; 
+
+// Define display constants 
+int screen_num = DefaultScreen(display); 
+unsigned long white_pixel = WhitePixel(display, screen_num); 
+unsigned long black_pixel = BlackPixel(display, screen_num); 
+
+// Create window 
+window = XCreateSimpleWindow(display, RootWindow(display, screen_num), 
+                             x, y, width, height, border_width, 
+                             black_pixel, white_pixel); 
+
+// Map win to display &amp; Flush display 
+XMapWindow(display, win); 
+XFlush(display);
+万事俱备只欠画画儿了`XLib的function都挺容易看懂的...int drawInterface(Display* display, Window window, unsigned long black_pixel, unsigned long white_pixel ){
+    // Define GCs for drawing 
+    GC foregc; 
+    foregc = XCreateGC (display, window, 0, 0); 
+    XSetBackground( display, foregc, black_pixel ); 
+    XSetForeground( display, foregc, white_pixel ); 
+
+    // Start Drawing 
+    XClearWindow(display, window); 
+    // Door 
+    XDrawRectangle(display, window, foregc, 1, 1, 630, 460); 
+    XFillRectangle(display, window, foregc, 66, 66, 480, 330); 
+    // Dashboard 
+    XDrawRectangle(display, window, foregc, 633, 1, 215, 460); 
+    XDrawRectangle(display, window, foregc, 650, 45, 185, 330); 
+    // Timer 
+    XDrawRectangle(display, window, foregc, 660, 60, 160, 65); 
+    // And More... 
+
+    // Flush display to show everything changed 
+    XFlush(display);
+}
+Event Handling的部分晚点再整理</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/compiler-ge-ge-bu-zhou-de-han-yi.html">
+<title>Compiler各个步骤的含义</title>
+<link>http://blog.gregwym.info/compiler-ge-ge-bu-zhou-de-han-yi.html</link>
+<dc:date>2011-04-19T06:15:49+08:00</dc:date>
+<description>Step1: String -> Scanning (DFA) -> Tokens Scanner又叫Lexical analyzer或Lexer.其目的在于, 将需要compile的源代码逐字读入compiler, 并将每一个符合"词汇命名规则(Lexical Syntax)"的字段转换成token存储.换句话说, 就是一遍读, 一遍看每一个单词的拼写对不对. 对的就转成token, 拼错了就输出error.作业中对应: A6 P4(某些语言的compiler在Scanning之后还包含Preprocessing, 因为不在241讨论范围内, 不做解释)Step2: Tokens -> Parsing(LL/LR) -> Intermediate Format (WLI)Parsing又叫Syntactic Analysis.其目的在于, 将token与token联系在一起, 并将他们的转换成符合一定规范的"中间格式", 一般是某种树状结构, 例如241中定义的WLI.在Parsing过程中, 如果遇到不符合某种语言的"语法规则(Grammar)"时, 则输出error. 如果语法正确, 则输出对应格式.简单说, 就是看的说的话是不是人话, 有没有缺个标点少个括号.如果不是人话那就说明你该重新学语法去了.作业中对应: A8 P4Step3: Intermediate Format -> Semantic Analysis(Context-Sensitive Analysis) ->Semantic Analysis的目的在于, 检查程序是否存在语义上的冲突. 或者说, 上下文是不是相符.比如在C中, 如果没有declare过变量int a;, 则a = 3;就不合法.再比如, 如果a declare为int, 则a = 'b';就不合法, 因为a不能为char.作业中对应: A9 A10(Optimization为代码优化, 241没有涉及, 知道即可)Step4: -> Code Generation -> Code Fragment将Intermediate Format转换为另一种格式, 比如MIPS或者二进制文件, 可与上一步同步进行.作业中对应: A9 A10, A3, A4Step5: Code Fragements -> Linking -> Executable File(Single File)将多个compile好的多个文件链接在一起, 生成一个可执行的二进制文件(或仅生成合并以后的单个文件, 但文件本身可能无法执行)作业中对应: A5 P1, P2附: 09FALL 第二题答案
+Scanning
+Parsing
+Semantic Analysis
+Parsing
+Semantic Analysis
+Linking
+Semantic Analysis
+Parsing
+1A@#SR%$#
+&#43; foo
+x
+</description>
+</item>
+</rdf:RDF>

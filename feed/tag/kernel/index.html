@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+xmlns:content="http://purl.org/rss/1.0/modules/content/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+xmlns:atom="http://www.w3.org/2005/Atom"
+xmlns:wfw="http://wellformedweb.org/CommentAPI/">
+<channel>
+<title>某储备粮的“学习笔记” - kernel</title>
+<link>http://blog.gregwym.info/tag/kernel/</link>
+<atom:link href="http://blog.gregwym.info/feed/tag/kernel/" rel="self" type="application/rss+xml" />
+<language>zh-CN</language>
+<description></description>
+<lastBuildDate>Sun, 20 Nov 2011 13:08:45 +0800</lastBuildDate>
+<pubDate>Sun, 20 Nov 2011 13:08:45 +0800</pubDate>
+<item>
+<title>OS161 Memory Management</title>
+<link>http://blog.gregwym.info/os161-memory-management.html</link>
+<guid>http://blog.gregwym.info/os161-memory-management.html</guid>
+<pubDate>Sun, 20 Nov 2011 13:08:45 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[这次Assignment除了Physical Memory Management, 其他几个部分都相互关联. 所以在设计完成前几部分的时候, 最好将所有需要解决的问题都搞明白, 然后统一设计Addre...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>这次Assignment除了Physical Memory Management, 其他几个部分都相互关联. 所以在设计完成前几部分的时候, 最好将所有需要解决的问题都搞明白, 然后统一设计Address Space的结构.</p><h2>TLB Management</h2><p>和TLB有关的, 需要解决的问题有这么几个:</p><ol>
+<li>Context Switch的时候, 如果不是两个不同的thread, 则不需要flush TLB</li>
+<li>当TLB被占满的时候, 要替换最老的TLB entry</li>
+<li>TLB内保存read-only信息</li>
+</ol><p>然后一个一个说…</p><ol>
+<li>只要检查上一次flush TLB时候的thread, 和现在的是不是同一个thread即可</li>
+<li>这部分这次Assignment已经把code写好大半了…`你需要做的就是把tlb&#95;get&#95;rr_victim return回来的那个entry替换掉</li>
+<li>理解MIPS TLB的每个flag bits的用处, 然后把read-only flag放在对应的位置.<br />当程序试图写入一个read-only的memory时候, vm&#95;fault拿到的faulttype是VM&#95;FAULT_READONLY.<br /><strong>Don't PANIC!!!</strong></li>
+</ol><p>TLB基本就这么多= =||`没啥东西…<br /><!--more--></p><h2>On-Demand Loading</h2><p>This is the fun part…哈哈哈<br />这部分, 需要, 灰常严谨的逻辑和计算…`还要对page loading的步骤非常清晰. 任何一点对内存地址或者file offset的计算错误, 或者理解错误, 都会mess up.</p><p>所以, 咱们重新来列一遍从程序开始运行, 到page loading结束的整个过程:</p><ul>
+<li>runprogram/execv拿到一个progname (ELF file's path), 并call load_elf.</li>
+<li>load_elf不立刻load到physical memory,<br />而是把ELF中的每一个segment所对应的virtual address定义好, 并且保存load这个segment所需要的所有信息.<br />(这些信息如何/以什么样的形式保存, 需要在动手之前就先明确!)</li>
+<li>当系统碰到一个TLB Miss时, 会有两种情况:</li>
+<li>这个page还没有被load到physical memory, 说明这个page是第一次被访问, <br />
+<br />
+<ul>
+<li>找到这个page所对应的segment的信息</li>
+<li>计算load这个page所需要的所有相关数据</li>
+<li>从physical memory steal一个page的内存</li>
+<li>将这个page的数据从file load到physical memory中<br />(提示: PADDR&#95;TO&#95;KVADDR is useful)</li>
+<li>将这个physical memory保存成这个segment vaddr对应的paddr</li>
+<li>将这对vaddr和paddr存入TLB</li>
+</ul></li>
+<li>反之, 直接将已知的一对vaddr和paddr存入TLB即可</li>
+</ul><p>本身, 整个过程还是很straight forward的. 可有一些special case需要handle…</p><ol>
+<li>有的segment不是从一个page的顶头开始的</li>
+<li>有的segment跨越多个page</li>
+<li>有的data segment的filesize是0, 但memsize需要填零</li>
+<li>…好像还有别的, = =想不起来了, 大家写的时候发现了, 告诉我下, 哈哈 最容易出错的部分还是计算, filesize, memsize, file offset, memory offset, 等各种数据…大家加油</li>
+</ol><h2>Address Space</h2><p>多写两句和as有关的</p><p>很多人在刚开始写这个assignment的时候, 最先纠结的就是, as的结构要不要改...<br />这是个好问题, 但答案是: 不一定要改as, 但肯定需要+东西.</p><p>在解释为什么之前, 咱们先来看看dumb_vm的as里, 每个东西都是干嘛用的.</p><pre><code>struct addrspace { 
+    #if OPT_DUMBVM 
+        vaddr_t as_vbase1; 
+        paddr_t as_pbase1; 
+        size_t as_npages1; 
+        vaddr_t as_vbase2; 
+        paddr_t as_pbase2; 
+        size_t as_npages2; 
+        paddr_t as_stackpbase; 
+    #else 
+        /* Put stuff here for your VM system */ 
+    #endif 
+};
+</code></pre><p>dumb_vm里只保存两个<del>segment</del>/region的内存信息</p><ul>
+<li>vbase是每个reg在virtual address上开始的位置</li>
+<li>pbase是每个reg在physical address上开始的位置</li>
+<li>npages是每一个reg一共占用了多少个virtual page/physical frame</li>
+<li>stackpbase顾名思义, stack在physical address上的底是哪里</li>
+</ul><p>然后咱们再研究下, 可能需要记录哪些信息. (并不一定全部都需要记录, 有些可以相互计算)</p><p>为了计算写入TLB的值, 需要</p><ul>
+<li>每个reg在virtual &amp; physical address的开始位置</li>
+<li>每个reg有多少个page/frame</li>
+<li>每个reg的permission flags</li>
+</ul><p>为了On-Demand Loading, 需要</p><ul>
+<li>当前app对应的ELF file是什么</li>
+<li>每个reg里的每个page/frame是否被load过</li>
+<li>每个reg里的每个page/frame的vaddr和paddr开始位置</li>
+<li>每个reg里的每个page/frame所对应在ELF-FILE中的program header information (例如: file offset)</li>
+<li>stack已经占用了多少个page</li>
+</ul><p>对比一下上下两个列表, 我们缺点什么呢?<br />原来的as没有记录reg的permissions, 没有记录page/frame是不是被load过了, 没有分别记录每个page/frame的vaddr+paddr(当然, 可以通过seg的数据进行计算), 也没有每个reg对应的ELF信息...stack也是固定大小</p><p>所以原本的as是100%缺少东西的, 但这些额外的东西, 具体应该保存到哪里就自由发挥了.</p><p>补充1: OS161里假设了一个ELF程序只包括两个segment. 虽然实际可能不止2个, 但现阶段, 只支持2个也没问题.<br />更新1: 叫seg不太确切, 还是叫region好了. 另补充了一些需要记录的内容.</p><h2>Physical Memory Management</h2><p>在dumbvm里, Physical Memory的分配机制非常简单. 在first和last之间, 一页一页的把内存分配出去, first逐次往后移动, 直到first = last, 就没有memory可用了. 也不回收, 不重复使用.</p><p>要想改变优化这个机制, 首先需要增加一个能够tracking所有可用Physical Frame使用状态的table. 在进行malloc或者free某个frame的时候, 在table中记录下来这个frame的状态. 这样, 如果存在free过的page, 这些page就可以优先被malloc, 从而重复利用已经free了的内存.</p><p>整体流程:</p><ul>
+<li>系统启动</li>
+<li>进入vm_bootstrap</li>
+<li>取得现在可用的Physical Memory的地址范围</li>
+<li>通过地址范围计算出有多少个可用的frame</li>
+<li>建立保存Physical Frame Status的table</li>
+<li>完成其他vm_bootstrap所需要做的工作</li>
+<li>再次取得可用的Physical Memory的地址范围, 这就是真正可用的内存范围</li>
+<li>停用原本的Physical Memory管理机制, 并接管所有alloc&#95;kpages和free&#95;kpages的操作</li>
+<li>vm系统启动完成</li>
+</ul><p>除此之外, 还需要修改allocation和free时候的操作, 让alloc能够通过某种algorithm来重复使用已经被free的内存位置. (用什么样的Algorithm就看各位了, 实在不行做liner search也是方法之一, 嘿嘿)</p><p>个别要点:</p><ul>
+<li>建立的table可能比最后实际需要的大, 但并无大碍. (因为table本身占用了一部分内存)</li>
+<li>alloc_kpages的时候, 有可能需要一次alloc超过一页的frame.<br />如果你使用的algorithm不方便在被free的内存中找出多个连续的frame, 那尽管把从未用过的连续frame分配出去吧.</li>
+<li>其他的待补充...</li>
+</ul><p><hr /></p><p>Instrumentation实在没什么好写的, 把declaration和initialization放对地方就好了.</p>
+]]></content:encoded>
+<slash:comments>19</slash:comments>
+<comments>http://blog.gregwym.info/os161-memory-management.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/os161-memory-management.html</wfw:commentRss>
+</item>
+<item>
+<title>OS161 System Calls Implementation Notes</title>
+<link>http://blog.gregwym.info/os161-system-calls-implementation-notes.html</link>
+<guid>http://blog.gregwym.info/os161-system-calls-implementation-notes.html</guid>
+<pubDate>Mon, 31 Oct 2011 12:38:37 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[这篇文章的目的是记录CS350 Assignment2中, 我编写各种System Calls时所采用的思路. 实际coding的时候, 同一种System Call的实现方式很可能不止一种, 但殊途...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>这篇文章的目的是记录CS350 Assignment2中, 我编写各种System Calls时所采用的思路. 实际coding的时候, 同一种System Call的实现方式很可能不止一种, 但殊途同归.<br />注1: 文章顺序和实际coding顺序并不一定一致, 请参考Assignment中的Strategy部分.<br />注2: 如果没有仔细读过code和Assignment...这里很有些东西你可能读的似懂非懂.</p><p>欢迎在评论中提问...</p><p><hr /></p><h2>General Tips</h2><ol>
+<li>别管写什么function, 第一步永远是检查parameter是否有效!!!<br />(比如, pointer是不是NULL, string是不是空, etc)</li>
+<li>不要放过任何一个warning...需要explicit cast的时候, 千万不要偷懒.</li>
+<li>function一般使用parameter中的pointer进行value return, 正常的return用来return errno.</li>
+<li>开始coding之前, 除了读Assignment, 读code, 还要好好读Assignment Hint! 解答了很多FAQ</li>
+<li>注意在header file里用#ifndef, 保证header不会出现重复include</li>
+<li>kmalloc了的东西...在destroy的时候一定要kfree. 不然A3里, 你会发现各种memory leak<br />(Create某些data structure的中间, 如果出现error, 则需要首先free已经allocated的内存, 然后返回error)</li>
+<li>善用spl解决mutex问题. 当然, 首先你要明白什么样的操作需要mutex!</li>
+<li></li>
+</ol><p>我会边写这个Note边添加Tips...</p><p><!--more--></p><p><hr /></p><h2>Part 1, Play with the files and console</h2><p>在OS161中, 所有应用程序在打开, 关闭, 读取, 写入一个文件的时候, 都是通过一个file descriptor [ID]来标识某一个文件的. 需要注意的是, file descriptor [ID]和vnode是完全两个东西.</p><p>每个thread都有单独一套file descriptors [ID], 但两个thread的两个不同的file descriptor [ID]如果标识的是同一个文件, 则共用一个vnode.<br />(这里所说的file descriptors实际上只是一个int, 是代表一个file descriptor的ID, 而实际上file descriptor要保存很多内容. 后边继续)</p><p>简单来说, 我们需要给每一个thread都增加一个, 记录所有opened file的机制. 我们暂称之为file table.<br />file table可以就是个简单的array, 但为了让file table的operation和thread以及syscall相互独立, 减少重复code并减少bug机会, 我强烈建议大家把file table相关的所有operations都写成独立的functions, 放在单独的文件里.</p><h3>file table &amp; file descriptor</h3><p>file table其实很简单, 一个array<del>外加一个size_t记录array的长度</del>, 就ok了. (这里说的所有array都是struct array, OS161中自带的kernel array lib)<br />file descriptor中需要记录以下几个东西,</p><ul>
+<li>vnode pointer</li>
+<li>permission flags</li>
+<li>the current offset in file</li>
+<li>probably need something else, depends on your implementation. (like a reference counter, etc.)</li>
+</ul><p>然后就是操作file table的各种function, 比如</p><ul>
+<li>create file table</li>
+<li>destroy file table</li>
+<li>duplicate file table (is one of the most important part of <del>execv</del> fork, but not nessesary for now)</li>
+<li>add/get/delete a file descriptor</li>
+<li>may need extra functions or helpers for convenience</li>
+</ul><p>至此基本没有难点 (就类似写个小"class").<br />之后要把file table添加到thread里, 并且在thread_fork中进行initialization.</p><h3>Stdin &amp; Stdout 也是FILE!!!</h3><p>这是Assignment在"Implementing file system calls"中特别提到的一点.<br />在建立一个新的process时候, 不止要initialization一个file table, 而且还要把table的0, 1, 2分别设置成standard input, standard output和standard error, 不然printf就不work哦, 哈哈哈.</p><p>注: OS161中stdout和stderr是一样的.</p><h3>知道了怎么Open, Close就简单了</h3><p>open步骤 1. 创建file descriptor 2. vfs_open打开文件 (获取vnode) 3. 往file descriptor中存需要的数据 4. 把file descriptor加到file table中, 并取得ID 5. return ID给user program</p><p>如何用vfs_open打开文件, 请参考runprogram.c</p><h3>Read和Write差在细节</h3><p>有file descriptor就有vnode...如何用VOP_READ配合vnode和uio读文件, 请参看loadelf.c<br />注意offset怎么算!!!!!<br />考验你读code读够不够细致的时候到了...好好读vnode.h(的comment)吧.</p><p>Write和Read差在uio的配置, 和用VOP_WRITE.<br />请细读uio.h(的comment)= =...都是comment有用, code看不懂影响不是很大.</p><p><hr /></p><h2>Part 2, Get the process organized</h2><p>fork, getpid, waitpid, _exit...<br />注: 按我的理解, OS161所有的thread都是process, 只不过有parent和child之分.</p><p>这部分中, PID的管理逻辑是关键, 主要解决几个问题.</p><ul>
+<li>如何让一个process wait在一个PID上, 并在exit的时候wake up所有在当前PID waiting的process</li>
+<li>如何防止deadlock (P1 wait on P2, and P2 wait on P1)</li>
+<li>如何保存exitcode. 并明确, 何时可以安全的删除这个exitcode的记录</li>
+<li>如何重复使用已经空闲的PID 除此之外, fork还要考虑其他问题, 后边再说.</li>
+</ul><h3>Table解决一切问题...</h3><p>和file descriptor类似, PID也需要构建一个table. 区别在于, process table必须是global的! 也就是说, 整个系统只有一个process table.<br />然后考虑, 我们需要为每个PID/process保存哪些信息, 才能解决上边列举的几个问题.</p><p>process table相关的function (仅供参考),</p><ul>
+<li>create process table (use in thread_bootstrap)</li>
+<li>destroy process table (use in thread_shutdown)</li>
+<li>assign and save a PID for new process (use in thread_fork)</li>
+<li>mark a PID as inactive and save the exitcode (use when _exit is called)</li>
+<li>you may also want to add other things here. Like the actual implementation of waitpid, wakeup waitings, release a exited PID or any other PID related functions. But its all depends on your implementation decision.</li>
+</ul><h3>Wait&amp;Wakeup的钥匙 - A magical memory address</h3><p>第一个Assignment写完, 对于thread&#95;sleep和thread&#95;wakeup应该都很熟悉了.<br />两个function都consume一个pointer作为钥匙. 只要sleep的thread和wakeup的thread用的是同一个钥匙, 睡着的所有thread就能被唤醒.<br />这在implement waitpid和_exit的时候是很实用的.</p><h3>fork意味着, 一模一样</h3><p>这估计是这次Assignment中最难的部分.</p><p>fork的作用是生成一个和当前thread完全一样的thread. 说具体点就是,</p><ul>
+<li>CPU的每个register值一模一样</li>
+<li>address space中的memory一模一样</li>
+<li>打开的file一模一样 (duplicate a file table)</li>
+<li>其他一个thread中可能包含的部分</li>
+<li>只有PID不一样!!!</li>
+</ul><p>fork system call要点:</p><ol>
+<li>consume一个东西, trapframe. 这里保存着user program进入privilege mode之前, 所有register的数据.</li>
+<li>用memcpy把trapframe复制一份给新thread用</li>
+<li>调用thread&#95;fork的时候, 用复制的trapframe和md&#95;forkentry作为parameter.</li>
+</ol><p>thread_fork要点:</p><ol>
+<li>thread_fork要想办法知道, 是不是被fork system call调用的</li>
+<li>如果是, 需要复制address space</li>
+<li>如果是, 需要duplicate file table. 否则, 创建新的</li>
+</ol><p>md_forkentry要点:</p><ol>
+<li>trapframe要复制到kernel stack上 (太简单了以至于有时候想不到用)</li>
+<li>fork里复制的trapframe要free掉</li>
+<li>在trapframe里设置return value, (pc貌似也要increment...回忆不起来当时increment的原因了)</li>
+<li>address space需要activate</li>
+</ol><p>Follow这些要点, 应该可以比较顺利的搞定fork. 但我仍推荐先把fork和md_forkentry的工作原理搞明白, 再开始.<br />(如果写完了还没明白, 为什么要把md&#95;forkentry pass给thread&#95;fork, 那你绝对是奇葩)</p><p><hr /></p><p>到这里, A2中最难的部分过去了...</p><p>runprogram和execv, 我不确定有没有时间在下周一之前总结出来.<br />这两个大同小异, runprogram写好, execv只是稍微多点东西.<br />exception handling是打酱油...</p><p>大家加油</p>
+]]></content:encoded>
+<slash:comments>12</slash:comments>
+<comments>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/os161-system-calls-implementation-notes.html</wfw:commentRss>
+</item>
+</channel>
+</rss>

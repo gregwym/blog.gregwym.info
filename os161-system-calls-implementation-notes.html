@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>OS161 System Calls Implementation Notes - 某储备粮的“学习笔记”</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 使用url函数转换相关路径 -->
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/style.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/prettify.css" />
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="http://blog.gregwym.info/images/favicon.ico">
+<link rel="apple-touch-icon" href="http://blog.gregwym.info/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="http://blog.gregwym.info/images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="http://blog.gregwym.info/images/apple-touch-icon-114x114.png">
+
+<!-- 通过自有函数输出HTML头部信息 -->
+<meta name="description" content="这篇文章的目的是记录CS350 Assignment2中, 我编写各种System Calls时所采用的思路. 实际coding的时候, 同一种System Call的实现方式很可能不止一种, 但殊途..." />
+<meta name="keywords" content="cs350,os161,kernel" />
+<meta name="generator" content="Typecho 0.9/13.12.12" />
+<meta name="template" content="trapecho" />
+<link rel="pingback" href="action/xmlrpc.html" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="action/xmlrpc%3Frsd.html" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="action/xmlrpc%3Fwlw.html" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="feed/os161-system-calls-implementation-notes.html" />
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="feed/rss/os161-system-calls-implementation-notes.html" />
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="feed/atom/os161-system-calls-implementation-notes.html" />
+<script type="text/javascript">
+//<![CDATA[
+var TypechoComment = {
+    dom : function (id) {
+        return document.getElementById(id);
+    },
+    
+    create : function (tag, attr) {
+        var el = document.createElement(tag);
+        
+        for (var key in attr) {
+            el.setAttribute(key, attr[key]);
+        }
+        
+        return el;
+    },
+
+    reply : function (cid, coid) {
+        var comment = this.dom(cid), parent = comment.parentNode,
+            response = this.dom('respond-post-75'), input = this.dom('comment-parent'),
+            form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+            textarea = response.getElementsByTagName('textarea')[0];
+
+        if (null == input) {
+            input = this.create('input', {
+                'type' : 'hidden',
+                'name' : 'parent',
+                'id'   : 'comment-parent'
+            });
+
+            form.appendChild(input);
+        }
+        
+        input.setAttribute('value', coid);
+
+        if (null == this.dom('comment-form-place-holder')) {
+            var holder = this.create('div', {
+                'id' : 'comment-form-place-holder'
+            });
+            
+            response.parentNode.insertBefore(holder, response);
+        }
+
+        comment.appendChild(response);
+        this.dom('cancel-comment-reply-link').style.display = '';
+        
+        if (null != textarea && 'text' == textarea.name) {
+            textarea.focus();
+        }
+        
+        return false;
+    },
+
+    cancelReply : function () {
+        var response = this.dom('respond-post-75'),
+        holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+        if (null != input) {
+            input.parentNode.removeChild(input);
+        }
+
+        if (null == holder) {
+            return true;
+        }
+
+        this.dom('cancel-comment-reply-link').style.display = 'none';
+        holder.parentNode.insertBefore(response, holder);
+        return false;
+    }
+}
+//]]>
+</script></head>
+
+<body onload="prettyPrint()">
+
+<div class="container">
+
+<header class="jumbotron" id="overview">
+        <h1>某储备粮的“学习笔记” </h1>
+    <p class="lead">by 咳嗽di小鱼</p>
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                
+                <a class="brand" href="index.html">
+                    Trapecho
+                </a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="index.html">Home</a></li>
+                        <li class="divider-vertical"></li>
+                                                                        <li><a href="category/sum-up/index.html" title="Sum Up">Sum Up</a></li>
+                                                <li><a href="category/code-dump/index.html" title="Code Dump">Code Dump</a></li>
+                                                <li><a href="category/network/index.html" title="Network">Network</a></li>
+                                                <li><a href="category/jotting/index.html" title="Jotting">Jotting</a></li>
+                                                <li><a href="category/Portfolio/index.html" title="Portfolio">Portfolio</a></li>
+                                                <li class="divider-vertical"></li>
+                                                                        <li><a href="linked-in.html" title="Linked In">Linked In</a></li>
+                                                <li><a href="guess-book.html" title="Guest Book">Guest Book</a></li>
+                                                <li><a href="about.html" title="About">About</a></li>
+                                                <li><a href="rss.html" title="RSS">RSS</a></li>
+                                            </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="content">
+
+
+<div class="row">
+    <div class="span9" id="content">
+        <div class="post">
+            <div class="page-header">
+                <h1>
+                    OS161 System Calls Implementation Notes                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: October 30, 2011</span>
+                    <span>Category: <a href="category/sum-up/index.html">Sum Up</a></span>
+                </h6>
+            </div>
+            <div class="entry-content"><p>这篇文章的目的是记录CS350 Assignment2中, 我编写各种System Calls时所采用的思路. 实际coding的时候, 同一种System Call的实现方式很可能不止一种, 但殊途同归.<br />注1: 文章顺序和实际coding顺序并不一定一致, 请参考Assignment中的Strategy部分.<br />注2: 如果没有仔细读过code和Assignment...这里很有些东西你可能读的似懂非懂.</p><p>欢迎在评论中提问...</p><p><hr /></p><h2>General Tips</h2><ol>
+<li>别管写什么function, 第一步永远是检查parameter是否有效!!!<br />(比如, pointer是不是NULL, string是不是空, etc)</li>
+<li>不要放过任何一个warning...需要explicit cast的时候, 千万不要偷懒.</li>
+<li>function一般使用parameter中的pointer进行value return, 正常的return用来return errno.</li>
+<li>开始coding之前, 除了读Assignment, 读code, 还要好好读Assignment Hint! 解答了很多FAQ</li>
+<li>注意在header file里用#ifndef, 保证header不会出现重复include</li>
+<li>kmalloc了的东西...在destroy的时候一定要kfree. 不然A3里, 你会发现各种memory leak<br />(Create某些data structure的中间, 如果出现error, 则需要首先free已经allocated的内存, 然后返回error)</li>
+<li>善用spl解决mutex问题. 当然, 首先你要明白什么样的操作需要mutex!</li>
+<li></li>
+</ol><p>我会边写这个Note边添加Tips...</p><p><!--more--></p><p><hr /></p><h2>Part 1, Play with the files and console</h2><p>在OS161中, 所有应用程序在打开, 关闭, 读取, 写入一个文件的时候, 都是通过一个file descriptor [ID]来标识某一个文件的. 需要注意的是, file descriptor [ID]和vnode是完全两个东西.</p><p>每个thread都有单独一套file descriptors [ID], 但两个thread的两个不同的file descriptor [ID]如果标识的是同一个文件, 则共用一个vnode.<br />(这里所说的file descriptors实际上只是一个int, 是代表一个file descriptor的ID, 而实际上file descriptor要保存很多内容. 后边继续)</p><p>简单来说, 我们需要给每一个thread都增加一个, 记录所有opened file的机制. 我们暂称之为file table.<br />file table可以就是个简单的array, 但为了让file table的operation和thread以及syscall相互独立, 减少重复code并减少bug机会, 我强烈建议大家把file table相关的所有operations都写成独立的functions, 放在单独的文件里.</p><h3>file table &amp; file descriptor</h3><p>file table其实很简单, 一个array<del>外加一个size_t记录array的长度</del>, 就ok了. (这里说的所有array都是struct array, OS161中自带的kernel array lib)<br />file descriptor中需要记录以下几个东西,</p><ul>
+<li>vnode pointer</li>
+<li>permission flags</li>
+<li>the current offset in file</li>
+<li>probably need something else, depends on your implementation. (like a reference counter, etc.)</li>
+</ul><p>然后就是操作file table的各种function, 比如</p><ul>
+<li>create file table</li>
+<li>destroy file table</li>
+<li>duplicate file table (is one of the most important part of <del>execv</del> fork, but not nessesary for now)</li>
+<li>add/get/delete a file descriptor</li>
+<li>may need extra functions or helpers for convenience</li>
+</ul><p>至此基本没有难点 (就类似写个小"class").<br />之后要把file table添加到thread里, 并且在thread_fork中进行initialization.</p><h3>Stdin &amp; Stdout 也是FILE!!!</h3><p>这是Assignment在"Implementing file system calls"中特别提到的一点.<br />在建立一个新的process时候, 不止要initialization一个file table, 而且还要把table的0, 1, 2分别设置成standard input, standard output和standard error, 不然printf就不work哦, 哈哈哈.</p><p>注: OS161中stdout和stderr是一样的.</p><h3>知道了怎么Open, Close就简单了</h3><p>open步骤 1. 创建file descriptor 2. vfs_open打开文件 (获取vnode) 3. 往file descriptor中存需要的数据 4. 把file descriptor加到file table中, 并取得ID 5. return ID给user program</p><p>如何用vfs_open打开文件, 请参考runprogram.c</p><h3>Read和Write差在细节</h3><p>有file descriptor就有vnode...如何用VOP_READ配合vnode和uio读文件, 请参看loadelf.c<br />注意offset怎么算!!!!!<br />考验你读code读够不够细致的时候到了...好好读vnode.h(的comment)吧.</p><p>Write和Read差在uio的配置, 和用VOP_WRITE.<br />请细读uio.h(的comment)= =...都是comment有用, code看不懂影响不是很大.</p><p><hr /></p><h2>Part 2, Get the process organized</h2><p>fork, getpid, waitpid, _exit...<br />注: 按我的理解, OS161所有的thread都是process, 只不过有parent和child之分.</p><p>这部分中, PID的管理逻辑是关键, 主要解决几个问题.</p><ul>
+<li>如何让一个process wait在一个PID上, 并在exit的时候wake up所有在当前PID waiting的process</li>
+<li>如何防止deadlock (P1 wait on P2, and P2 wait on P1)</li>
+<li>如何保存exitcode. 并明确, 何时可以安全的删除这个exitcode的记录</li>
+<li>如何重复使用已经空闲的PID 除此之外, fork还要考虑其他问题, 后边再说.</li>
+</ul><h3>Table解决一切问题...</h3><p>和file descriptor类似, PID也需要构建一个table. 区别在于, process table必须是global的! 也就是说, 整个系统只有一个process table.<br />然后考虑, 我们需要为每个PID/process保存哪些信息, 才能解决上边列举的几个问题.</p><p>process table相关的function (仅供参考),</p><ul>
+<li>create process table (use in thread_bootstrap)</li>
+<li>destroy process table (use in thread_shutdown)</li>
+<li>assign and save a PID for new process (use in thread_fork)</li>
+<li>mark a PID as inactive and save the exitcode (use when _exit is called)</li>
+<li>you may also want to add other things here. Like the actual implementation of waitpid, wakeup waitings, release a exited PID or any other PID related functions. But its all depends on your implementation decision.</li>
+</ul><h3>Wait&amp;Wakeup的钥匙 - A magical memory address</h3><p>第一个Assignment写完, 对于thread&#95;sleep和thread&#95;wakeup应该都很熟悉了.<br />两个function都consume一个pointer作为钥匙. 只要sleep的thread和wakeup的thread用的是同一个钥匙, 睡着的所有thread就能被唤醒.<br />这在implement waitpid和_exit的时候是很实用的.</p><h3>fork意味着, 一模一样</h3><p>这估计是这次Assignment中最难的部分.</p><p>fork的作用是生成一个和当前thread完全一样的thread. 说具体点就是,</p><ul>
+<li>CPU的每个register值一模一样</li>
+<li>address space中的memory一模一样</li>
+<li>打开的file一模一样 (duplicate a file table)</li>
+<li>其他一个thread中可能包含的部分</li>
+<li>只有PID不一样!!!</li>
+</ul><p>fork system call要点:</p><ol>
+<li>consume一个东西, trapframe. 这里保存着user program进入privilege mode之前, 所有register的数据.</li>
+<li>用memcpy把trapframe复制一份给新thread用</li>
+<li>调用thread&#95;fork的时候, 用复制的trapframe和md&#95;forkentry作为parameter.</li>
+</ol><p>thread_fork要点:</p><ol>
+<li>thread_fork要想办法知道, 是不是被fork system call调用的</li>
+<li>如果是, 需要复制address space</li>
+<li>如果是, 需要duplicate file table. 否则, 创建新的</li>
+</ol><p>md_forkentry要点:</p><ol>
+<li>trapframe要复制到kernel stack上 (太简单了以至于有时候想不到用)</li>
+<li>fork里复制的trapframe要free掉</li>
+<li>在trapframe里设置return value, (pc貌似也要increment...回忆不起来当时increment的原因了)</li>
+<li>address space需要activate</li>
+</ol><p>Follow这些要点, 应该可以比较顺利的搞定fork. 但我仍推荐先把fork和md_forkentry的工作原理搞明白, 再开始.<br />(如果写完了还没明白, 为什么要把md&#95;forkentry pass给thread&#95;fork, 那你绝对是奇葩)</p><p><hr /></p><p>到这里, A2中最难的部分过去了...</p><p>runprogram和execv, 我不确定有没有时间在下周一之前总结出来.<br />这两个大同小异, runprogram写好, execv只是稍微多点东西.<br />exception handling是打酱油...</p><p>大家加油</p></div>
+            <div class="entry-tags">
+                Labels: 
+                <span class="label label-info">
+                    <a href="tag/cs350/index.html">cs350</a></span> <span class="label label-info"><a href="tag/os161/index.html">os161</a></span> <span class="label label-info"><a href="tag/kernel/index.html">kernel</a>                </span>
+            </div>
+        </div>
+        <hr class="soften" />
+        <div id="comments">
+                                    <h3>12 comments &raquo;</h3>
+            
+            <ol class="comment-list"><li id="comment-478" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/43110ce9dd31ef52b54e761f1110fb50?s=32&amp;r=X&amp;d=" alt="杰森葱" width="32" height="32" />        <cite class="fn">杰森葱</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-system-calls-implementation-notes.html#comment-478">October 29th, 2011 at 10:18 am</a>
+            </div>
+    <div class="comment-content">
+    <p>感谢格雷格</p>    </div>
+    <div class="comment-reply">
+        <a href="os161-system-calls-implementation-notes.html%3FreplyTo=478.html#respond-post-75" rel="nofollow" onclick="return TypechoComment.reply('comment-478', 478);">回复</a>    </div>
+    </li>
+<li id="comment-479" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/e3195dfa12f053cd665e08827b2ff4d4?s=32&amp;r=X&amp;d=" alt="Haolun Chai" width="32" height="32" />        <cite class="fn">Haolun Chai</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-system-calls-implementation-notes.html#comment-479">November 7th, 2011 at 07:07 am</a>
+            </div>
+    <div class="comment-content">
+    <p>感谢格雷戈</p>    </div>
+    <div class="comment-reply">
+        <a href="os161-system-calls-implementation-notes.html%3FreplyTo=479.html#respond-post-75" rel="nofollow" onclick="return TypechoComment.reply('comment-479', 479);">回复</a>    </div>
+    </li>
+<li id="comment-513" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/592880e39870cd652b4f0cf1de876e82?s=32&amp;r=X&amp;d=" alt="Dennis" width="32" height="32" />        <cite class="fn">Dennis</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-system-calls-implementation-notes.html#comment-513">March 2nd, 2012 at 10:51 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>感谢greg</p>    </div>
+    <div class="comment-reply">
+        <a href="os161-system-calls-implementation-notes.html%3FreplyTo=513.html#respond-post-75" rel="nofollow" onclick="return TypechoComment.reply('comment-513', 513);">回复</a>    </div>
+    </li>
+<li id="comment-551" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/310adf01ac2a25739f8c0a8cfe9e3912?s=32&amp;r=X&amp;d=" alt="saintnoah" width="32" height="32" />        <cite class="fn">saintnoah</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-system-calls-implementation-notes.html#comment-551">March 26th, 2012 at 08:55 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>请问为什么 说“所有array都是struct array, OS161中自带的kernel array lib”?</p><p>这里的filetable声明为一个结构体指针数组可以吗？</p>    </div>
+    <div class="comment-reply">
+        <a href="os161-system-calls-implementation-notes.html%3FreplyTo=551.html#respond-post-75" rel="nofollow" onclick="return TypechoComment.reply('comment-551', 551);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-552" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-system-calls-implementation-notes.html#comment-552">March 26th, 2012 at 09:05 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>我的意思是, 所有我文中提到的"array", 都是"kernel/include/array.h"这个array, 而不是[]这个array.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-554" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/310adf01ac2a25739f8c0a8cfe9e3912?s=32&amp;r=X&amp;d=" alt="saintnoah" width="32" height="32" />        <cite class="fn">saintnoah</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-system-calls-implementation-notes.html#comment-554">March 26th, 2012 at 10:14 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>是的 就想请教这个 为什么需要用array.h里的array而不能用[]?</p>    </div>
+    <div class="comment-reply">
+        <a href="os161-system-calls-implementation-notes.html%3FreplyTo=554.html#respond-post-75" rel="nofollow" onclick="return TypechoComment.reply('comment-554', 554);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-555" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-system-calls-implementation-notes.html#comment-555">March 26th, 2012 at 10:20 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>使用array.h里的array可以规范数据存储, 访问, 删除的方式, 帮助你管理Array的内存使用, 省时省力省bug. 用[], 必要时size不可变, 还涉及kmalloc的内存管理问题, 平添很多不必要的麻烦.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-556" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/310adf01ac2a25739f8c0a8cfe9e3912?s=32&amp;r=X&amp;d=" alt="saintnoah" width="32" height="32" />        <cite class="fn">saintnoah</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-system-calls-implementation-notes.html#comment-556">March 26th, 2012 at 10:53 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>嗯 有道理 多谢：）</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-557" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/b79f56f98d4a1cdcdc6b8897bd5c7eab?s=32&amp;r=X&amp;d=" alt="xiaov" width="32" height="32" />        <cite class="fn">xiaov</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-system-calls-implementation-notes.html#comment-557">March 28th, 2012 at 01:20 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>麻烦问一下，做fork拷贝addrspace的时候，会调用到as_copy方法，as_copy之中又会调as_create,问题是如何这个as_create开辟出来的地址空间是属于用户空间，还是内核空间？</p>    </div>
+    <div class="comment-reply">
+        <a href="os161-system-calls-implementation-notes.html%3FreplyTo=557.html#respond-post-75" rel="nofollow" onclick="return TypechoComment.reply('comment-557', 557);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-558" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-system-calls-implementation-notes.html#comment-558">March 28th, 2012 at 11:34 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>as_create是创建一个address space, 代表的是process运行时可以使用的内存. 是用户空间. 但as这个strcutre本身是kmalloc出来的, 存在在内核空间里.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-563" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/b79f56f98d4a1cdcdc6b8897bd5c7eab?s=32&amp;r=X&amp;d=" alt="xiaov" width="32" height="32" />        <cite class="fn">xiaov</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-system-calls-implementation-notes.html#comment-563">March 30th, 2012 at 08:07 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>你好，请问在实现fork的过程中，需要使用同步原语来控制同步吗？</p>    </div>
+    <div class="comment-reply">
+        <a href="os161-system-calls-implementation-notes.html%3FreplyTo=563.html#respond-post-75" rel="nofollow" onclick="return TypechoComment.reply('comment-563', 563);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-564" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="os161-system-calls-implementation-notes.html#comment-564">March 30th, 2012 at 08:40 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>我记得, fork过程中应该是splhigh的吧?</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+</ol>            
+            <div class="pagination">
+                            </div>
+            
+                        
+                        <div id="respond-post-75" class="respond">
+            
+            <div class="cancel-comment-reply">
+            <a id="cancel-comment-reply-link" href="os161-system-calls-implementation-notes.html#respond-post-75" rel="nofollow" style="display:none" onclick="return TypechoComment.cancelReply();">取消回复</a>            </div>
+            
+            <form class="form-horizontal" method="post" action="http://blog.gregwym.info/os161-system-calls-implementation-notes.html/comment" id="comment_form">
+                <fieldset>
+                    <legend>Add new comment &raquo;</legend>
+                                        <div class="control-group">
+                        <label class="control-label" for="author">Nick name</label>
+                        <div class="controls">
+                            <input type="text" name="author" id="author" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="mail">E-mail<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" name="mail" id="mail" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Web</label>
+                        <div class="controls">
+                            <input type="text" name="url" id="url" class="input-large" value="" />
+                        </div>
+                    </div>
+                                        <div class="control-group">
+                        <label class="control-label" for="url">Comment</label>
+                        <div class="controls">
+                            <textarea class="input-xlarge" name="text" rows="3"></textarea>
+                            <p class="help-block">Enter your comment here...</p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Captcha</label>
+                        <div class="controls">
+                            <img src="action/captcha" alt="captcha" onclick="this.src = this.src + '?' + Math.random()" style="cursor: pointer" title="点击图片刷新验证码" /><br /><input type="text" class="captcha" name="captcha_code" /> <strong>请输入验证码</strong>							                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Submit comment</button>
+                    </div>
+                </fieldset>
+            </form>
+            </div>
+            
+
+        </div>    </div><!-- end #content-->
+    <div class="span3" id="sidebar">
+    <div class="widget_search">
+        <form method="post" id="searchform" class="form-search">
+            <input type="text" class="span2" name="s" id="s" />
+            <button type="submit" class="btn" id="searchsubmit">Search</button>
+        </form>
+    </div>
+    
+        
+                    <div class="widget">
+            <h3>Related Posts</h3>
+                        <ul>
+                            <li><a href="os161-memory-management.html" title="OS161 Memory Management">OS161 Memory Management</a></li>
+                        </ul>
+        </div>
+            
+    
+        <div class="widget">
+        <h3>Recent Comments</h3>
+        <ul>
+                                    <li><a href="github-you-should-have-told-me-earlier.html#comment-952">payday loans</a>: wfxqtdq</li>
+                        <li><a href="Trapecho-boostrap-based-typecho-theme.html#comment-936">地铁线路图网</a>: 我也在用typecho，小巧玲珑，稍微改了以下默认模板，站现在简洁速度也不错，点击我的昵称可以访问。</li>
+                        <li><a href="about.html#comment-930">ramble</a>: 博客 ，请问如何显示显示文章前3段的摘要  不打乱格式</li>
+                        <li><a href="about.html#comment-874">清源</a>: 看来暂时只能看着用了，google的高亮的比较不明显。</li>
+                        <li><a href="about.html#comment-870">清源</a>: 大哥呀，主题这几天我看着感觉用中文书写标题字体太大了，正文的字体也太小了，估计还是适合用英文，不知道...</li>
+                    </ul>
+    </div>
+        
+        <div class="widget">
+    		<h3>Labels</h3>
+        <ul>
+                                    <a href="tag/algorithm/index.html" class="size-20">algorithm</a>
+                        <a href="tag/review/index.html" class="size-20">review</a>
+                        <a href="tag/cs240/index.html" class="size-10">cs240</a>
+                        <a href="tag/server/index.html" class="size-10">server</a>
+                        <a href="tag/VPS/index.html" class="size-10">VPS</a>
+                        <a href="tag/code/index.html" class="size-5">code</a>
+                        <a href="tag/database/index.html" class="size-5">database</a>
+                        <a href="tag/cs348/index.html" class="size-5">cs348</a>
+                        <a href="tag/typecho/index.html" class="size-5">typecho</a>
+                        <a href="tag/nginx/index.html" class="size-5">nginx</a>
+                        <a href="tag/search/index.html" class="size-5">search</a>
+                        <a href="tag/GUI/index.html" class="size-5">GUI</a>
+                        <a href="tag/linux/index.html" class="size-5">linux</a>
+                        <a href="tag/java/index.html" class="size-5">java</a>
+                        <a href="tag/DNS/index.html" class="size-5">DNS</a>
+                        <a href="tag/blog/index.html" class="size-5">blog</a>
+                        <a href="tag/apple/index.html" class="size-5">apple</a>
+                        <a href="tag/cs241/index.html" class="size-5">cs241</a>
+                        <a href="tag/compiler/index.html" class="size-5">compiler</a>
+                        <a href="tag/sql/index.html" class="size-5">sql</a>
+                    </ul>
+		</div>
+    
+    
+        <div class="widget">
+        <h3>Archives</h3>
+        <ul>
+            <li><a href="2013/09/index.html">September 2013</a></li>
+<li><a href="2012/12/index.html">December 2012</a></li>
+<li><a href="2012/11/index.html">November 2012</a></li>
+<li><a href="2012/08/index.html">August 2012</a></li>
+<li><a href="2012/06/index.html">June 2012</a></li>
+<li><a href="2012/04/index.html">April 2012</a></li>
+<li><a href="2012/03/index.html">March 2012</a></li>
+<li><a href="2012/02/index.html">February 2012</a></li>
+<li><a href="2011/12/index.html">December 2011</a></li>
+<li><a href="2011/11/index.html">November 2011</a></li>
+<li><a href="2011/10/index.html">October 2011</a></li>
+<li><a href="2011/06/index.html">June 2011</a></li>
+<li><a href="2011/05/index.html">May 2011</a></li>
+<li><a href="2011/04/index.html">April 2011</a></li>
+<li><a href="2011/03/index.html">March 2011</a></li>
+        </ul>
+    </div>
+    
+    
+        <div class="widget">
+        <h3>Others</h3>
+        <ul>
+                        <li class="last"><a href="http://blog.gregwym.info/admin/login.php">Login</a></li>
+                        <li><a href="http://validator.w3.org/check/referer">Valid XHTML</a></li>
+        </ul>
+    </div>
+    
+    </div><!-- end #sidebar -->
+    
+</div>
+<footer>
+    <p>
+        Powered by <a href="http://typecho.org/">Typecho</a>. 
+        <a href="http://dolast.com/pages/trapecho">Trapecho</a> theme by <a href="index.html">咳嗽di小鱼</a>. 
+        Hosting on <a href="https://www.digitalocean.com/?refcode=b846692d6a3a">Digital Ocean</a>
+    </p>
+</footer><!-- end #footer -->
+
+</div>
+</div>
+
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/jquery-1.7.1.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/bootstrap.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/prettify.js"></script>
+<script type="text/javascript">
+    // fix navbar on scroll
+    var $win = $(window)
+      , $nav = $('.navbar')
+      , navTop = $('.navbar').length && $('.navbar').offset().top - 10
+      , isFixed = 0
+
+    processScroll()
+
+    $win.on('scroll', processScroll)
+
+    function processScroll() {
+      var i, scrollTop = $win.scrollTop()
+      if (scrollTop >= navTop && !isFixed) {
+        isFixed = 1
+        $nav.addClass('navbar-fixed-top')
+      } else if (scrollTop <= navTop && isFixed) {
+        isFixed = 0
+        $nav.removeClass('navbar-fixed-top')
+      }
+    }
+    
+    $('.page-navigator li:not(:has(a))').html('<a>...</a>');
+    $('.page-navigator .current').addClass('active');
+    
+        $('pre').addClass('prettyprint linenums');
+        $('.entry-content a').attr('target','_blank');
+</script>
+</body>
+</html>
+

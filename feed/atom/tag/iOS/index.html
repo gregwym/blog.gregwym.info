@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+xmlns:thr="http://purl.org/syndication/thread/1.0"
+xml:lang="zh-CN"
+xml:base="http://blog.gregwym.info/tag/iOS/"
+>
+<title type="text">某储备粮的“学习笔记” - iOS</title>
+<subtitle type="text"></subtitle>
+<updated>2012-11-05T09:08:18+08:00</updated>
+<generator uri="http://typecho.org/" version="0.9/13.12.12">Typecho</generator>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/tag/iOS/" />
+<id>http://blog.gregwym.info/feed/atom/tag/iOS/</id>
+<link rel="self" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/tag/iOS/" />
+<entry>
+<title type="html"><![CDATA[InformaticToolbar: iOS Toolbar Enhancement Library]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/informatic-toolbar.html" />
+<id>http://blog.gregwym.info/informatic-toolbar.html</id>
+<updated>2012-11-05T09:08:18+08:00</updated>
+<published>2012-11-05T09:08:18+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[First of all, the repo: https://github.com/gregwym/InformaticToolbarIntroRemember in the Mail App, i...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/informatic-toolbar.html" xml:lang="zh-CN"><![CDATA[
+<p>First of all, the repo: <a href="https://github.com/gregwym/InformaticToolbar">https://github.com/gregwym/InformaticToolbar</a></p><h2>Intro</h2><p>Remember in the Mail App, it shows update status and sending mail progress in the bottom toolbar. I think it is a really neat way to show information, especially for those apps who use native iOS UI elements.</p><p>However, I couldn't find any lib out there for this task. So I decide to invent the wheel myself.</p><p>Feel free to post any issues or patch. It's my pleasure for any who like my work.</p><h2>What it does</h2><p>InformaticToolbar is mainly an UIViewController Category which allows you to add several <strong><em>UIBarButtonItem</em></strong>s set to your toolbar.</p><p>The sets are defined as subclasses of <strong><em>ITBarItemSet</em></strong>. All <strong><em>ITBarItemSet</em></strong> can have a <strong><em>dismiss button</em></strong> if the target and action has been defined. If more than one set has been added, a <strong><em>switch button</em></strong> (an arrow) will be displayed on the left for user to switch between sets.</p><p>For now, there are three pre-defined set:</p><ul>
+<li><strong><em>ITLabelBarItemSet</em></strong>: a textLabel and a detailTextLabel</li>
+<li><strong><em>ITProgressBarItemSet</em></strong>: a textLabel and a progressBar</li>
+<li><strong><em>ITConfirmationBarItemSet</em></strong>: two label and a check-mark button</li>
+</ul><p>You can easily create new sets by extending <strong><em>ITBarItemSet</em></strong> yourself.</p><p><strong>Screenshot:</strong></p><p><img src="https://github.com/downloads/gregwym/InformaticToolbar/InformaticToolbar" alt="Screenshot" /></p><p><!--more--></p><h2>How to use</h2><h3>First: clone it to your project directory</h3><pre><code>cd *your-project-location*
+git submodule add git://github.com/gregwym/InformaticToolbar.git
+</code></pre><h3>Second: add to your project</h3><p>You can either add the source codes directly or</p><ul>
+<li>drag and drop <code>InformaticToolbar.xcodeproj</code> to your project.</li>
+<li>In your project setting <br />
+<br />
+<ul>
+<li>In <strong>Build Phases->Target Dependencies</strong>, add <code>InformaticToolbar</code> (the library)</li>
+<li>In <strong>Build Phases->Link Binary With Libraries</strong>, add <code>libInformaticToolbar.a</code></li>
+<li>In <strong>Build Settings</strong>, add <code>"${PROJECT_DIR}/InformaticToolbar/"</code> to <strong>User Header Search Paths</strong>, include the quotation marks.</li>
+<li>In <strong>Build Settings</strong>, set <strong>Always Search User Path</strong> to <code>YES</code></li>
+<li>In <strong>Build Settings</strong>, set <strong>Other Linker Flags</strong> to <code>-ObjC</code></li>
+</ul></li>
+</ul><h3>Third: add the header</h3><p>In any <code>UIViewController</code> that you want to use this lib, add <code>#import "InformaticToolbar.h"</code> at the front.</p><p>Or easier, you can add the import to YOUR <code>Prefix.pch</code> file.</p><h3>Forth: add an item set to toolbar</h3><p>Let's say I want to add a Label to my toolbar, I can call the following method in an <code>UIViewController</code>:</p><pre><code>- (IBAction)addLabelBarItemSet:(id)sender
+{
+    ITLabelBarItemSet *labelBarItemSet = [ITLabelBarItemSet labelBarItemSetWithDismissTarget:self andAction:@selector(dismissBarItemSet:)];
+    labelBarItemSet.textLabel.text = @"This is text label. ";
+    labelBarItemSet.detailTextLabel.text = @"This is detail text label. ";
+    [self pushBarItemSet:labelBarItemSet animated:YES];
+}
+
+- (void)dismissBarItemSet:(ITBarItemSet *)sender
+{
+    [self removeBarItemSet:sender animated:YES];
+}
+</code></pre><h2>Demo Project</h2><p>In the project, there is a demo app you can tryout. <code>ITViewController.m</code> includes the sample usage of all three pre-defined item sets.</p><h2>License</h2><p><a href="http://creativecommons.org/licenses/by-sa/3.0/"><img src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" alt="Creative Commons License" /></a></p><p>InformaticToolbar by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/gregwym/InformaticToolbar" property="cc:attributionName" rel="cc:attributionURL">Greg Wang</a> is licensed under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/informatic-toolbar.html#comments" thr:count="0" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/informatic-toolbar.html" thr:count="0"/>
+</entry>
+</feed>

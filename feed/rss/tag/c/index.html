@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/tag/c/">
+<title>某储备粮的“学习笔记” - c++</title>
+<link>http://blog.gregwym.info/tag/c/</link>
+<description></description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/zhao-shu-zu-vector-nei-di-k-da-de-shu.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/zhao-shu-zu-vector-nei-di-k-da-de-shu.html">
+<title>找数组/vector内第k大的数</title>
+<link>http://blog.gregwym.info/zhao-shu-zu-vector-nei-di-k-da-de-shu.html</link>
+<dc:date>2011-04-01T05:26:20+08:00</dc:date>
+<description>= =...`消极怠工消极怠工, 240拖到最后一秒算是交掉了. w/e找一个vector里第k大的数一直是个有意思的课题, 这次又碰到了, 自己写了一个. 记下来记下来, 以后八成用得到.网上给的思路很多, 大家普遍认为用quicksort的algorithm是效率最好的. 原本也不怎么在乎效率问题, 完全是被240逼的啊啊啊啊啊...vector好像并不是高效率的选择, 不过随它去吧`这次的tree实在有够恶心#include &lt;vector&gt; 
+
+int kTh(vector&lt;int&gt; &amp; vals, int k){ 
+    if(k == 0){ // 如果k为0, 则取中点 
+        k = vals.size(); 
+        k = k / 2 + k % 2; 
+    }
+
+    vector&lt;int&gt; v, l ,r; 
+    int i; 
+    v = vals; 
+    int c, n = 0, s = v.size(), p = v[0]; // pivot = the first 
+
+    while(true){ 
+        for(i = s-1; i &gt;= 0; i--){ // partite 
+            c = v[i]; 
+            if(c &lt;= p) l.push_back(c); 
+            else if(c &gt; p) r.push_back(c); 
+        } 
+        s = l.size(); 
+        if(s == k) break; // find the k'th 
+        else if(s &gt; k) v = l; // in left 
+        else if(s &lt; k) { // in right 
+            k = k - l.size(); 
+            v = r; 
+        } 
+
+        l.clear(); 
+        r.clear(); 
+        s = v.size(); 
+        p = v[0]; // re-choose pivot 
+    } 
+    return p; 
+}
+欢迎大家批评指正...= =`更新更规范的写法, 请见 CS 240复习总结之三: Sorting and Randomized Algorithms</description>
+</item>
+</rdf:RDF>

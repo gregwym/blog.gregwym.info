@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/tag/compression/">
+<title>某储备粮的“学习笔记” - compression</title>
+<link>http://blog.gregwym.info/tag/compression/</link>
+<description></description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-jiu--compression.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-jiu--compression.html">
+<title>CS 240复习总结之九: Compression</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-jiu--compression.html</link>
+<dc:date>2011-04-12T07:03:43+08:00</dc:date>
+<description>概念就不说了, 啥压缩比啊, logical/Physical compression, Lossy/Lossless的.Run-Length Encoding (RLE)思路: 将连续的0或1用位数表示, 缩减重复段所占的位置
+第一位表示由0或者1开头
+之后用prefix-free integer encoding表示每一个Run的长度
+后x位表示这个run的binary长度
+前x-1位填零, 为unary表示后x位的长度减一
+
+Huffman Coding
+思路: 用特殊的binary编码表, 省略ASCII/UTF-8编码中无用字符所占用的位置
+用binary trie表示字典中的所有字符
+将文本依照trie转成binary
+
+如何建立压缩比最好的trie
+将每个字符存入独立的trie中
+确定每个字符的出现次数(频率), 一个trie的比重(weight)即为trie中字符的频率和
+将weight最小的两个trie合并成一个新trie
+重复上一步直到只剩下一个trie
+MTF
+用字典中, 字符的index表示字符
+使用动态字典, 将出现过的字符移到字典开头, 以减小下次出现时该字符的index值
+MTF本身不能达到压缩的目的, 需配合prefix-free integer encoding或者huffman
+LZW
+思路: 给出现过的字符组assign编码, 在重复出现时以一个编码代表整个字符组
+字典编码使用固定长度k, 字典总共有2k个entry
+字典由所有单字符开头, 剩余entry留空
+从第二个encode的字符[组]开始, 将其首字符与上一个encode的字符[组], 组成一个新的字符组, 并存入字典中
+当这个字符组合再次出现的时候, 即可用一个编码代表整个字符组
+BWT
+思路: 不知道!!!!!!! 他tm就是work了`!!!不知道为什么!!!!Encode方法:
+将整个string S写成各种cyclic shift, 用$表示string结尾
+比如abcd$可以写成abcd$, bcd$a, cd$ab, d$abc, $abcd
+将所有cyclic shift排序
+将排序后的所有cyclic shift的最后一位按顺序组合成新的string, 既是Encoded的string C
+
+Decode方法:
+给Encoded的string C的每一个字符一个序号, 从0到n-1
+将字符和序号一起排序. 排序后的序号提取为Array N
+for(i = N[N[0]], i != N[0], i = N[i]) print(C[i]);
+
+BWT本身不进行压缩, 而是将string转化成更容易被MTF压缩的Encoded string.BWT以后, 执行MTF即可达到极佳的英文字符压缩比.更多CS 240总结请看: http://blog.gregwym.info/tag/cs240/</description>
+</item>
+</rdf:RDF>

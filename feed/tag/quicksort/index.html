@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+xmlns:content="http://purl.org/rss/1.0/modules/content/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+xmlns:atom="http://www.w3.org/2005/Atom"
+xmlns:wfw="http://wellformedweb.org/CommentAPI/">
+<channel>
+<title>某储备粮的“学习笔记” - quicksort</title>
+<link>http://blog.gregwym.info/tag/quicksort/</link>
+<atom:link href="http://blog.gregwym.info/feed/tag/quicksort/" rel="self" type="application/rss+xml" />
+<language>zh-CN</language>
+<description></description>
+<lastBuildDate>Wed, 06 Apr 2011 08:12:26 +0800</lastBuildDate>
+<pubDate>Wed, 06 Apr 2011 08:12:26 +0800</pubDate>
+<item>
+<title>CS 240复习总结之三: Sorting and Randomized Algorithms</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-san--sorting-and-randomized-algorithms.html</link>
+<guid>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-san--sorting-and-randomized-algorithms.html</guid>
+<pubDate>Wed, 06 Apr 2011 08:12:26 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[Comparison-based sorting最优Runtime为Ω(n log n)QuickSelect用QuickSort algorithm快速查找第k大的数 (avg rumtime: Θ...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<h2>Comparison-based sorting</h2><p>最优Runtime为Ω(n log n)</p><h3>QuickSelect</h3><p>用QuickSort algorithm快速查找第k大的数 (avg rumtime: Θ(n))</p><h4>组成函数</h4><ul>
+<li>choose-pivot(A) 在数据中选择其中一个作为pivot</li>
+<li>partition(A, p) 使用A[p]作为pivot, 将A中的数据分为 <br />
+<br />
+<ul>
+<li>所有小于等于pivot的数据</li>
+<li>pivot本身</li>
+<li>所有大于pivot的数据</li>
+</ul></li>
+</ul><h4>Implementation</h4><p>下载: <a href="http://blog.gregwym.info/usr/uploads/2011/04/78276328.cc" title="quickselect.cc">quickselect.cc</a></p><pre><code>void swap(int *A, int i, int j){ 
+    int temp; 
+    temp = A[i]; 
+    A[i] = A[j]; 
+    A[j] = temp; 
+    return; 
+}
+</code></pre><p><!--more--></p><ul>
+<li><p>partition(A, p)<br />思路: 逐次将最外侧的一对不符合partition规则的item对调</p><br />
+<br />
+<pre><code> int partition(int *A, int p, int n){ 
+     swap(A, 0, p); 
+     int i = 1, j = n - 1; 
+     while(i &lt;= j){ 
+         while(A[i] &lt;= A[0] &amp;&amp; i &lt; n) i++; 
+         while(A[j] &gt; A[0] &amp;&amp; j &gt; 0) j--; 
+         if(i &lt;= j) swap(A, i, j); 
+     } 
+     swap(A, 0, j); 
+     return j; 
+ } 
+</code></pre></li>
+<li><p>quick-select(A, k)<br />思路: 以partition分组数据以后, 判断第k大的数所在的分组, 然后recall其本身, 达到持续缩小搜索范围的目的</p><br />
+<br />
+<pre><code>int quickSelect(int *A, int k, int n){ 
+    int p = 0; 
+    int i = partition(A, p, n); 
+    if(i == k) return A[i]; 
+    else if(i &gt; k) return quickSelect(A, k, i); 
+    else if(i &lt; k) return quickSelect(A+i+1, k-i-1, n-i-1); 
+    return -1; 
+}
+</code></pre></li>
+<li><p>choose-pivot(A)<br />思路1: 永远取第一个item为pivot<br />思路2: 取从0到n-1之间的随机数为pivot</p></li>
+</ul><h3>QuickSort</h3><p>快速排序(分治法)<br />avg rumtime: Θ(n log n)</p><ul>
+<li>结构与QuickSelect基本相同</li>
+<li><p>区别: 需要对partition分出的两组数据都进行排序</p><br />
+<br />
+<pre><code> void quickSort(int *A, int n){ 
+     if(n &lt;= 1) return; 
+     int p = 0; 
+     int i = partition(A, p, n); 
+     quickSort(A, i); 
+     quickSort(A + i + 1, n - i - 1);
+ } 
+</code></pre></li>
+</ul><h2>Non-comparison-based sorting</h2><p>最优Runtime为O(n)</p><h4>Counting Sort</h4><p>前提: Array A包含n个数据, 数据的最大值小于k</p><p>思路:</p><ul>
+<li>建立一个大小为k的空白Array C, 填零.</li>
+<li>将从0到k, 每一个数字在 A 出现的次数, 填到 C 对应的index中</li>
+<li>从1到k, 将 C 中的数字逐次累加 C[i] = C[i] + C[i - 1]</li>
+<li>则C[i]为任意A[x] == i, 在排序后应该在的index</li>
+</ul><p>Runtime: O(n)<br />Space: Θ(k)</p><p>下载: <a href="http://blog.gregwym.info/usr/uploads/2011/04/1505364388.cc" title="countingsort.cc">countingsort.cc</a></p><pre><code>void countingSort(int *A, int k, int n){ 
+    int i, B[n], C[k]; 
+    for(i = 0; i &lt; n; i++){ 
+        C[A[i]]++; 
+        B[i] = A[i]; 
+    } 
+    for(i = 1; i &lt; k; i++) C[i] = C[i] + C[i-1]; 
+    for(i = n-1; i &gt;= 0; i--){ 
+        C[B[i]]--; 
+        A[C[B[i]]] = B[i]; 
+    } 
+    return; 
+}
+</code></pre><h3>Radix sort</h3><p>前提: Array A包含的数据均可拆分成d个片段x<sub>d-1</sub>x<sub>d-2</sub>… x<sub></sub>, 且任一片段x<sub>i</sub>满足0 &lt;= x<sub>i</sub> &lt; k<br />例如: 十进制数的每一位都是0 &lt;= x<sub>i</sub> &lt; 9的单位数字<br />思路: 以每一个x<sub>i</sub>为基准 (从0到d - 1), 运行counting sort.</p><p>Runtime: Θ(d(n+k))<br />Space: Θ(n+k)</p><p>注: 如果以从d-1到0的顺序执行, 则是以最低位为基准(LSD). 正常是以最高位为基准(MSD).</p><p>更新1: 各种Sorting Algorithm的动画演示<a target="_blank" href="http://jsdo.it/norahiko/oxIy/fullscreen">http://jsdo.it/norahiko/oxIy/fullscreen</a><br />更新2: 修正了partition中的bug</p><p>更多CS 240总结请看: <a target="_blank" href="http://blog.gregwym.info/tag/cs240/">http://blog.gregwym.info/tag/cs240/</a></n></p>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-san--sorting-and-randomized-algorithms.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/cs-240-fu-xi-zong-jie-zhi-san--sorting-and-randomized-algorithms.html</wfw:commentRss>
+</item>
+</channel>
+</rss>

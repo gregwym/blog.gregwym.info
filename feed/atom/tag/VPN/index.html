@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+xmlns:thr="http://purl.org/syndication/thread/1.0"
+xml:lang="zh-CN"
+xml:base="http://blog.gregwym.info/tag/VPN/"
+>
+<title type="text">某储备粮的“学习笔记” - VPN</title>
+<subtitle type="text"></subtitle>
+<updated>2011-04-22T23:56:29+08:00</updated>
+<generator uri="http://typecho.org/" version="0.9/13.12.12">Typecho</generator>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/tag/VPN/" />
+<id>http://blog.gregwym.info/feed/atom/tag/VPN/</id>
+<link rel="self" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/tag/VPN/" />
+<entry>
+<title type="html"><![CDATA[Quickweb OpenVZ安装PPTP VPN实践笔记(不用MPPE)]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html" />
+<id>http://blog.gregwym.info/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html</id>
+<updated>2011-04-22T23:56:29+08:00</updated>
+<published>2011-04-22T23:56:29+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[从回国之前, 一直倒腾到家`可算是把VPN搭好了...OpenVZ的VPS在内核这块实在是缺少自由, 如果是Xen这次就不会这么复杂了.废话少说.基本过程和网上其他的教程都差不多, 主要在于加密和ip...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html" xml:lang="zh-CN"><![CDATA[
+<p>从回国之前, 一直倒腾到家`可算是把VPN搭好了...<br />OpenVZ的VPS在内核这块实在是缺少自由, 如果是Xen这次就不会这么复杂了.<br />废话少说.</p><p>基本过程和网上其他的教程都差不多, 主要在于加密和ipforward的配置.</p><ol>
+<li><p>安装ppp和iptables</p><br />
+<br />
+<pre><code>yum install -y ppp iptables
+</code></pre></li>
+<li><p>安装pptpd</p><br />
+<br />
+<pre><code>wget http://poptop.sourceforge.net/yum/stable/packages/pptpd-1.3.4-2.rhel5.i386.rpm 
+rpm -ivh pptpd-1.3.4-2.rhel5.i386.rpm 
+</code></pre></li>
+</ol><p><!--more--></p><ol>
+<li><p>配置/etc/ppp/options.pptpd</p><p>这个是不使用MPPE加密的配置, 适用于母鸡kernel不支持MPPE的童鞋</p><br />
+<br />
+<pre><code>name pptpd 
+# Encryption部分全部注释掉, 不使用加密 
+# 使用chap验证 
++chap 
+#使用Google DNS 
+ms-dns 8.8.8.8 
+ms-dns 8.8.4.4 
+proxyarp 
+lock 
+nobsdcomp 
+novj 
+novjccomp 
+nologfd 
+nodeflate 
+</code></pre><br />
+<br />
+<p>这个是使用MPPE的配置, 如果你的母鸡支持, 推荐用这个</p><br />
+<br />
+<pre><code>name pptpd 
+# 禁用pap, chap, mschap 
+refuse-pap 
+refuse-chap 
+refuse-mschap 
+# 强制mschap-v2和mppe-128 
+require-mschap-v2 
+require-mppe-128 
+#使用Google DNS 
+ms-dns 8.8.8.8 
+ms-dns 8.8.4.4 
+proxyarp 
+lock 
+nobsdcomp 
+novj 
+novjccomp 
+nologfd
+</code></pre></li>
+<li><p>配置/etc/pptpd.conf</p><br />
+<br />
+<pre><code>option /etc/ppp/options.pptpd 
+# 设置ip分配方案 
+localip 172.16.36.1 
+remoteip 172.16.36.2-254 
+</code></pre></li>
+<li><p>配置/etc/ppp/chap-secrets, 设置登录帐号</p><br />
+<br />
+<pre><code># Secrets for authentication using CHAP 
+# client   server   secret   IP_addresses 
+帐号       pptpd    密码      *(表示任意IP都可以连接)
+</code></pre></li>
+<li><p>配置ip转发 /etc/sysctl.conf</p><br />
+<br />
+<pre><code>net.ipv4.ip_forward = 1
+</code></pre><br />
+<br />
+<p>在bash中执行</p><br />
+<br />
+<pre><code>sysctl -p 
+service pptpd restart 
+service iptables restart 
+iptables -t nat -A POSTROUTING -s 172.16.36.0/24 -o venet0 -j MASQUERADE 
+iptables -I FORWARD -p tcp --syn -i ppt+ -j TCPMSS --set-mss 1356 
+service iptables save 
+service iptables restart 
+chkconfig pptpd on 
+chkconfig iptables on
+</code></pre></li>
+</ol><p>这些都配置好了以后, 如果你使用了MPPE, 那就可以尝试连接了.</p><p>如果你没有使用MPPE</p><ul>
+<li>在Windows中设置VPN, 取消include windows logon domain, 选择PPTP连接,<br />Data加密选择Optional, 选择CHAP验证登录</li>
+<li>在Mac/iOS中设置VPN, 将加密设置为"无"即可 这样就可以尝试连接了</li>
+</ul><p>Note: 日志文件在/var/log/messages, 如果log中出现, "This system lacks kernel support for PPP. " 字样, 请发ticket让ISP给你打开PPP支持, 之后就应该可以正常连接了.</p><p><hr /></p><p>参考资料:<br /><a href="http://rashost.com/blog/centos5-pptpd-vpn">CentOS 5 VPS上配置pptpd作为VPN服务器</a><br /><a href="http://good784.blog.163.com/blog/static/327217152007670350514/">不带MPPE的VPN服务器端及客户端的设置笔记</a></p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html#comments" thr:count="7" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/quickweb-openvz-an-zhuang-pptp-vpn-shi-jian-bi-ji---bu-yong-mppe.html" thr:count="7"/>
+</entry>
+</feed>

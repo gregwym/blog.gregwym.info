@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>高速缓存学习 Cache (Memory Hierarchies) - 某储备粮的“学习笔记”</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 使用url函数转换相关路径 -->
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/style.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/prettify.css" />
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="http://blog.gregwym.info/images/favicon.ico">
+<link rel="apple-touch-icon" href="http://blog.gregwym.info/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="http://blog.gregwym.info/images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="http://blog.gregwym.info/images/apple-touch-icon-114x114.png">
+
+<!-- 通过自有函数输出HTML头部信息 -->
+<meta name="description" content="搞定240以后, 晚上就开始搞251...硬件的东西其实还挺有意思的, 很多是以前只知其然不知其所以然的东西. 比如这回终于知道了为啥虚拟内存的设置叫&quot;页面文件&quot;, 比如CPU的L1, L2, L3都..." />
+<meta name="keywords" content="hardware,material" />
+<meta name="generator" content="Typecho 0.9/13.12.12" />
+<meta name="template" content="trapecho" />
+<link rel="pingback" href="action/xmlrpc.html" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="action/xmlrpc%3Frsd.html" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="action/xmlrpc%3Fwlw.html" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="feed/gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html" />
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="feed/rss/gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html" />
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="feed/atom/gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html" />
+<script type="text/javascript">
+//<![CDATA[
+var TypechoComment = {
+    dom : function (id) {
+        return document.getElementById(id);
+    },
+    
+    create : function (tag, attr) {
+        var el = document.createElement(tag);
+        
+        for (var key in attr) {
+            el.setAttribute(key, attr[key]);
+        }
+        
+        return el;
+    },
+
+    reply : function (cid, coid) {
+        var comment = this.dom(cid), parent = comment.parentNode,
+            response = this.dom('respond-post-7'), input = this.dom('comment-parent'),
+            form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+            textarea = response.getElementsByTagName('textarea')[0];
+
+        if (null == input) {
+            input = this.create('input', {
+                'type' : 'hidden',
+                'name' : 'parent',
+                'id'   : 'comment-parent'
+            });
+
+            form.appendChild(input);
+        }
+        
+        input.setAttribute('value', coid);
+
+        if (null == this.dom('comment-form-place-holder')) {
+            var holder = this.create('div', {
+                'id' : 'comment-form-place-holder'
+            });
+            
+            response.parentNode.insertBefore(holder, response);
+        }
+
+        comment.appendChild(response);
+        this.dom('cancel-comment-reply-link').style.display = '';
+        
+        if (null != textarea && 'text' == textarea.name) {
+            textarea.focus();
+        }
+        
+        return false;
+    },
+
+    cancelReply : function () {
+        var response = this.dom('respond-post-7'),
+        holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+        if (null != input) {
+            input.parentNode.removeChild(input);
+        }
+
+        if (null == holder) {
+            return true;
+        }
+
+        this.dom('cancel-comment-reply-link').style.display = 'none';
+        holder.parentNode.insertBefore(response, holder);
+        return false;
+    }
+}
+//]]>
+</script></head>
+
+<body onload="prettyPrint()">
+
+<div class="container">
+
+<header class="jumbotron" id="overview">
+        <h1>某储备粮的“学习笔记” </h1>
+    <p class="lead">by 咳嗽di小鱼</p>
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                
+                <a class="brand" href="index.html">
+                    Trapecho
+                </a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="index.html">Home</a></li>
+                        <li class="divider-vertical"></li>
+                                                                        <li><a href="category/sum-up/index.html" title="Sum Up">Sum Up</a></li>
+                                                <li><a href="category/code-dump/index.html" title="Code Dump">Code Dump</a></li>
+                                                <li><a href="category/network/index.html" title="Network">Network</a></li>
+                                                <li><a href="category/jotting/index.html" title="Jotting">Jotting</a></li>
+                                                <li><a href="category/Portfolio/index.html" title="Portfolio">Portfolio</a></li>
+                                                <li class="divider-vertical"></li>
+                                                                        <li><a href="linked-in.html" title="Linked In">Linked In</a></li>
+                                                <li><a href="guess-book.html" title="Guest Book">Guest Book</a></li>
+                                                <li><a href="about.html" title="About">About</a></li>
+                                                <li><a href="rss.html" title="RSS">RSS</a></li>
+                                            </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="content">
+
+
+<div class="row">
+    <div class="span9" id="content">
+        <div class="post">
+            <div class="page-header">
+                <h1>
+                    高速缓存学习 Cache (Memory Hierarchies)                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: April 1, 2011</span>
+                    <span>Category: <a href="category/sum-up/index.html">Sum Up</a></span>
+                </h6>
+            </div>
+            <div class="entry-content"><p>搞定240以后, 晚上就开始搞251...<br />硬件的东西其实还挺有意思的, 很多是以前只知其然不知其所以然的东西. 比如这回终于知道了为啥虚拟内存的设置叫"页面文件", 比如CPU的L1, L2, L3都是怎么和内存协调工作的...lol`<br /><br />251 Course Notes上的内容大多都比较容易理解, 不过阅读中文的效率必然还是比英文的高很多, 能在网上找到对应的中文材料是件很幸运的事儿.<br />虽然对百度文库无好感= =, 但不得不说里边好东西真不少...拿出来给大家分享一下<br /><br /><object height="500" align="middle" width="630" id="reader" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"><param value="window" name="wmode"><param value="true" name="allowfullscreen"><param name="allowscriptaccess" value="always"><param value="http://wenku.baidu.com/static/flash/apireader.swf?docurl=http://wenku.baidu.com/play&amp;docid=689d84d97f1922791688e882&amp;title=计算机体系结构课件&amp;doctype=pdf&amp;fpn=5&amp;npn=5&amp;readertype=external&catal=0&amp;cdnurl=http://txt.wenku.baidu.com/play" name="movie"><embed height="500" align="middle" width="630" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" name="reader" src="http://wenku.baidu.com/static/flash/apireader.swf?docurl=http://wenku.baidu.com/play&amp;docid=689d84d97f1922791688e882&amp;title=计算机体系结构课件&amp;doctype=pdf&amp;fpn=5&amp;npn=5&amp;readertype=external&catal=0&amp;cdnurl=http://txt.wenku.baidu.com/play" allowfullscreen="true" wmode="window" allowscriptaccess="always" bgcolor="#FFFFFF" ver="9.0.0"></embed></object><br /></p></div>
+            <div class="entry-tags">
+                Labels: 
+                <span class="label label-info">
+                    <a href="tag/hardware/index.html">hardware</a></span> <span class="label label-info"><a href="tag/material/index.html">material</a>                </span>
+            </div>
+        </div>
+        <hr class="soften" />
+        <div id="comments">
+                                    <h3>19 comments &raquo;</h3>
+            
+            <ol class="comment-list"><li id="comment-5" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/8ad7d532088537f546021e9a8e07f43a?s=32&amp;r=X&amp;d=" alt="K" width="32" height="32" />        <cite class="fn">K</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html#comment-5">April 1st, 2011 at 03:12 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>WTF..baidu wen ku plug-in?</p>    </div>
+    <div class="comment-reply">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html%3FreplyTo=5.html#respond-post-7" rel="nofollow" onclick="return TypechoComment.reply('comment-5', 5);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-6" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html#comment-6">April 1st, 2011 at 03:43 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>...just a html object...simply plug the  tag in`</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-7" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/8ad7d532088537f546021e9a8e07f43a?s=32&amp;r=X&amp;d=" alt="K" width="32" height="32" />        <cite class="fn">K</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html#comment-7">April 1st, 2011 at 04:05 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>interesting..i m pulling out source code now..is that from baidu wenku itself? or did u write that up?</p>    </div>
+    <div class="comment-reply">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html%3FreplyTo=7.html#respond-post-7" rel="nofollow" onclick="return TypechoComment.reply('comment-7', 7);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-8" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html#comment-8">April 1st, 2011 at 04:26 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>Baidu provide it for sharing purpose`</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-10" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/8ad7d532088537f546021e9a8e07f43a?s=32&amp;r=X&amp;d=" alt="K" width="32" height="32" />        <cite class="fn">K</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html#comment-10">April 1st, 2011 at 09:18 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>=D this is smart..</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-9" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/d2ad946411bb7848e873d0c3588bfe45?s=32&amp;r=X&amp;d=" alt="neal" width="32" height="32" />        <cite class="fn"><a href="http://neal.im" rel="external nofollow">neal</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html#comment-9">April 1st, 2011 at 07:54 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>你好，我看见你在我的博客页面上留言http://neal.im/webhosting/comment-page-1#comment-1870</p><p>没什么问题的，有需求的话你Q我！</p>    </div>
+    <div class="comment-reply">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html%3FreplyTo=9.html#respond-post-7" rel="nofollow" onclick="return TypechoComment.reply('comment-9', 9);">回复</a>    </div>
+    </li>
+<li id="comment-11" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/8ad7d532088537f546021e9a8e07f43a?s=32&amp;r=X&amp;d=" alt="K" width="32" height="32" />        <cite class="fn">K</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html#comment-11">April 1st, 2011 at 09:42 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>test..</p>    </div>
+    <div class="comment-reply">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html%3FreplyTo=11.html#respond-post-7" rel="nofollow" onclick="return TypechoComment.reply('comment-11', 11);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-38" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html#comment-38">April 3rd, 2011 at 12:57 am</a>
+            </div>
+    <div class="comment-content">
+    <p>now u can get mail notification when someone replies.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-39" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/8ad7d532088537f546021e9a8e07f43a?s=32&amp;r=X&amp;d=" alt="K" width="32" height="32" />        <cite class="fn">K</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html#comment-39">April 3rd, 2011 at 12:58 am</a>
+            </div>
+    <div class="comment-content">
+    <p>but that's gonna spam my inbox..</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-40" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html#comment-40">April 3rd, 2011 at 01:19 am</a>
+            </div>
+    <div class="comment-content">
+    <p>only if my blog get spammed first`</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-41" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/8ad7d532088537f546021e9a8e07f43a?s=32&amp;r=X&amp;d=" alt="K" width="32" height="32" />        <cite class="fn">K</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html#comment-41">April 3rd, 2011 at 01:20 am</a>
+            </div>
+    <div class="comment-content">
+    <p>can i opt-out on email..?</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-42" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html#comment-42">April 3rd, 2011 at 01:26 am</a>
+            </div>
+    <div class="comment-content">
+    <p>nop`lol<br>
+i will require captcha if there is spam coming</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-43" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/8ad7d532088537f546021e9a8e07f43a?s=32&amp;r=X&amp;d=" alt="K" width="32" height="32" />        <cite class="fn">K</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html#comment-43">April 3rd, 2011 at 01:27 am</a>
+            </div>
+    <div class="comment-content">
+    <p>T.T and now you are actually spamming both my hotmail and gmail...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-45" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/43110ce9dd31ef52b54e761f1110fb50?s=32&amp;r=X&amp;d=" alt="葱Onion" width="32" height="32" />        <cite class="fn"><a href="http://hi.baidu.com/onion/home" rel="external nofollow">葱Onion</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html#comment-45">April 3rd, 2011 at 11:54 am</a>
+            </div>
+    <div class="comment-content">
+    <p>这个有用。很难找到与251匹配率高的中文教材啊</p>    </div>
+    <div class="comment-reply">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html%3FreplyTo=45.html#respond-post-7" rel="nofollow" onclick="return TypechoComment.reply('comment-45', 45);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-46" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html#comment-46">April 3rd, 2011 at 03:59 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>这个是95%同步率...<br>
+(要交换blogroll么?)</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-47" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/43110ce9dd31ef52b54e761f1110fb50?s=32&amp;r=X&amp;d=" alt="葱Onion" width="32" height="32" />        <cite class="fn"><a href="http://hi.baidu.com/onion/home" rel="external nofollow">葱Onion</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html#comment-47">April 3rd, 2011 at 04:50 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>(⊙＿⊙)什么是blogroll</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-48" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html#comment-48">April 3rd, 2011 at 04:55 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>= =`或者叫`友情链接?</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-49" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/43110ce9dd31ef52b54e761f1110fb50?s=32&amp;r=X&amp;d=" alt="葱Onion" width="32" height="32" />        <cite class="fn"><a href="http://hi.baidu.com/onion/home" rel="external nofollow">葱Onion</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html#comment-49">April 3rd, 2011 at 05:00 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>OK啊。我已经你放到友情链接里去了</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-50" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html#comment-50">April 3rd, 2011 at 05:06 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>哈哈`done...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+</ol>            
+            <div class="pagination">
+                            </div>
+            
+                        
+                        <div id="respond-post-7" class="respond">
+            
+            <div class="cancel-comment-reply">
+            <a id="cancel-comment-reply-link" href="gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html#respond-post-7" rel="nofollow" onclick="return TypechoComment.cancelReply();">取消回复</a>            </div>
+            
+            <form class="form-horizontal" method="post" action="http://blog.gregwym.info/gao-su-huan-cun-xue-xi-cache--memory-hierarchies.html/comment?parent=11" id="comment_form">
+                <fieldset>
+                    <legend>Add new comment &raquo;</legend>
+                                        <div class="control-group">
+                        <label class="control-label" for="author">Nick name</label>
+                        <div class="controls">
+                            <input type="text" name="author" id="author" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="mail">E-mail<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" name="mail" id="mail" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Web</label>
+                        <div class="controls">
+                            <input type="text" name="url" id="url" class="input-large" value="" />
+                        </div>
+                    </div>
+                                        <div class="control-group">
+                        <label class="control-label" for="url">Comment</label>
+                        <div class="controls">
+                            <textarea class="input-xlarge" name="text" rows="3"></textarea>
+                            <p class="help-block">Enter your comment here...</p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Captcha</label>
+                        <div class="controls">
+                            <img src="action/captcha" alt="captcha" onclick="this.src = this.src + '?' + Math.random()" style="cursor: pointer" title="点击图片刷新验证码" /><br /><input type="text" class="captcha" name="captcha_code" /> <strong>请输入验证码</strong>							                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Submit comment</button>
+                    </div>
+                </fieldset>
+            </form>
+            </div>
+            
+
+        </div>    </div><!-- end #content-->
+    <div class="span3" id="sidebar">
+    <div class="widget_search">
+        <form method="post" id="searchform" class="form-search">
+            <input type="text" class="span2" name="s" id="s" />
+            <button type="submit" class="btn" id="searchsubmit">Search</button>
+        </form>
+    </div>
+    
+        
+                    <div class="widget">
+            <h3>Related Posts</h3>
+                        <ul>
+                        </ul>
+        </div>
+            
+    
+        <div class="widget">
+        <h3>Recent Comments</h3>
+        <ul>
+                                    <li><a href="github-you-should-have-told-me-earlier.html#comment-952">payday loans</a>: wfxqtdq</li>
+                        <li><a href="Trapecho-boostrap-based-typecho-theme.html#comment-936">地铁线路图网</a>: 我也在用typecho，小巧玲珑，稍微改了以下默认模板，站现在简洁速度也不错，点击我的昵称可以访问。</li>
+                        <li><a href="about.html#comment-930">ramble</a>: 博客 ，请问如何显示显示文章前3段的摘要  不打乱格式</li>
+                        <li><a href="about.html#comment-874">清源</a>: 看来暂时只能看着用了，google的高亮的比较不明显。</li>
+                        <li><a href="about.html#comment-870">清源</a>: 大哥呀，主题这几天我看着感觉用中文书写标题字体太大了，正文的字体也太小了，估计还是适合用英文，不知道...</li>
+                    </ul>
+    </div>
+        
+        <div class="widget">
+    		<h3>Labels</h3>
+        <ul>
+                                    <a href="tag/algorithm/index.html" class="size-20">algorithm</a>
+                        <a href="tag/review/index.html" class="size-20">review</a>
+                        <a href="tag/cs240/index.html" class="size-10">cs240</a>
+                        <a href="tag/server/index.html" class="size-10">server</a>
+                        <a href="tag/VPS/index.html" class="size-10">VPS</a>
+                        <a href="tag/code/index.html" class="size-5">code</a>
+                        <a href="tag/database/index.html" class="size-5">database</a>
+                        <a href="tag/cs348/index.html" class="size-5">cs348</a>
+                        <a href="tag/typecho/index.html" class="size-5">typecho</a>
+                        <a href="tag/nginx/index.html" class="size-5">nginx</a>
+                        <a href="tag/search/index.html" class="size-5">search</a>
+                        <a href="tag/GUI/index.html" class="size-5">GUI</a>
+                        <a href="tag/linux/index.html" class="size-5">linux</a>
+                        <a href="tag/java/index.html" class="size-5">java</a>
+                        <a href="tag/DNS/index.html" class="size-5">DNS</a>
+                        <a href="tag/blog/index.html" class="size-5">blog</a>
+                        <a href="tag/apple/index.html" class="size-5">apple</a>
+                        <a href="tag/cs241/index.html" class="size-5">cs241</a>
+                        <a href="tag/compiler/index.html" class="size-5">compiler</a>
+                        <a href="tag/sql/index.html" class="size-5">sql</a>
+                    </ul>
+		</div>
+    
+    
+        <div class="widget">
+        <h3>Archives</h3>
+        <ul>
+            <li><a href="2013/09/index.html">September 2013</a></li>
+<li><a href="2012/12/index.html">December 2012</a></li>
+<li><a href="2012/11/index.html">November 2012</a></li>
+<li><a href="2012/08/index.html">August 2012</a></li>
+<li><a href="2012/06/index.html">June 2012</a></li>
+<li><a href="2012/04/index.html">April 2012</a></li>
+<li><a href="2012/03/index.html">March 2012</a></li>
+<li><a href="2012/02/index.html">February 2012</a></li>
+<li><a href="2011/12/index.html">December 2011</a></li>
+<li><a href="2011/11/index.html">November 2011</a></li>
+<li><a href="2011/10/index.html">October 2011</a></li>
+<li><a href="2011/06/index.html">June 2011</a></li>
+<li><a href="2011/05/index.html">May 2011</a></li>
+<li><a href="2011/04/index.html">April 2011</a></li>
+<li><a href="2011/03/index.html">March 2011</a></li>
+        </ul>
+    </div>
+    
+    
+        <div class="widget">
+        <h3>Others</h3>
+        <ul>
+                        <li class="last"><a href="http://blog.gregwym.info/admin/login.php">Login</a></li>
+                        <li><a href="http://validator.w3.org/check/referer">Valid XHTML</a></li>
+        </ul>
+    </div>
+    
+    </div><!-- end #sidebar -->
+    
+</div>
+<footer>
+    <p>
+        Powered by <a href="http://typecho.org/">Typecho</a>. 
+        <a href="http://dolast.com/pages/trapecho">Trapecho</a> theme by <a href="index.html">咳嗽di小鱼</a>. 
+        Hosting on <a href="https://www.digitalocean.com/?refcode=b846692d6a3a">Digital Ocean</a>
+    </p>
+</footer><!-- end #footer -->
+
+</div>
+</div>
+
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/jquery-1.7.1.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/bootstrap.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/prettify.js"></script>
+<script type="text/javascript">
+    // fix navbar on scroll
+    var $win = $(window)
+      , $nav = $('.navbar')
+      , navTop = $('.navbar').length && $('.navbar').offset().top - 10
+      , isFixed = 0
+
+    processScroll()
+
+    $win.on('scroll', processScroll)
+
+    function processScroll() {
+      var i, scrollTop = $win.scrollTop()
+      if (scrollTop >= navTop && !isFixed) {
+        isFixed = 1
+        $nav.addClass('navbar-fixed-top')
+      } else if (scrollTop <= navTop && isFixed) {
+        isFixed = 0
+        $nav.removeClass('navbar-fixed-top')
+      }
+    }
+    
+    $('.page-navigator li:not(:has(a))').html('<a>...</a>');
+    $('.page-navigator .current').addClass('active');
+    
+        $('pre').addClass('prettyprint linenums');
+        $('.entry-content a').attr('target','_blank');
+</script>
+</body>
+</html>
+

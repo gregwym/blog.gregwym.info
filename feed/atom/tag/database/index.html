@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+xmlns:thr="http://purl.org/syndication/thread/1.0"
+xml:lang="zh-CN"
+xml:base="http://blog.gregwym.info/tag/database/"
+>
+<title type="text">某储备粮的“学习笔记” - database</title>
+<subtitle type="text"></subtitle>
+<updated>2011-10-19T08:49:01+08:00</updated>
+<generator uri="http://typecho.org/" version="0.9/13.12.12">Typecho</generator>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/tag/database/" />
+<id>http://blog.gregwym.info/feed/atom/tag/database/</id>
+<link rel="self" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/tag/database/" />
+<entry>
+<title type="html"><![CDATA[关系模型概念整理 (Relational Model)]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/guan-xi-mo-xing-gai-nian-zheng-li.html" />
+<id>http://blog.gregwym.info/guan-xi-mo-xing-gai-nian-zheng-li.html</id>
+<updated>2011-10-19T08:49:01+08:00</updated>
+<published>2011-10-19T08:49:01+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[Definition实在不知道怎么概括= =...Intention of a relation: relation definition and constrainsExtention of a r...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/guan-xi-mo-xing-gai-nian-zheng-li.html" xml:lang="zh-CN"><![CDATA[
+<p>Definition实在不知道怎么概括= =...</p><ul>
+<li>Intention of a relation: relation definition and constrains</li>
+<li>Extention of a relation: the actual data, tuples</li>
+</ul><h3>Relation properties</h3><ul>
+<li>Set Theory <br />
+<br />
+<ul>
+<li>Attributes has order (not necessary)</li>
+<li>Value are used to identify tuples</li>
+<li>Tuples dont have order</li>
+<li>Tuples cant have duplication</li>
+</ul></li>
+<li>Attribute value are atomic</li>
+<li>Degree: How many attributes in the schema</li>
+<li>Cardinality: How many tuples in an instance</li>
+</ul><h3>Constraints</h3><ul>
+<li>Let the DBMS to ensure the entry or modification on data are legal</li>
+<li>Give applications' bug no chance to ruin the data</li>
+</ul><h3>Three Constraint Level</h3><ul>
+<li>Tuple-level <br />
+<br />
+<ul>
+<li>Domain restrictions (datatype)</li>
+<li>Attribute comparisons (好像是指check)</li>
+</ul></li>
+<li>Relation-level <br />
+<br />
+<ul>
+<li>Special type of keys <br />
+<br />
+<ul>
+<li>Superkey: 能uniquely identifies a tuple的一个or一组attribute</li>
+<li>Candidate key: Superkey的最小集, (最简单的一个or一组attribute)</li>
+<li>Primary key: 被选中, 用来identity tuples的Candidate key</li>
+</ul></li>
+</ul></li>
+<li>Database-level <br />
+<br />
+<ul>
+<li>Referential integrity <br />
+<br />
+<ul>
+<li>Foreign key: 其他relation中的primary key</li>
+<li>Referential integrity: 不允许出现和对应relation中的记录不符的情况</li>
+</ul></li>
+<li>Inclusion dependencies: = =`不懂</li>
+</ul></li>
+</ul>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/guan-xi-mo-xing-gai-nian-zheng-li.html#comments" thr:count="2" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/guan-xi-mo-xing-gai-nian-zheng-li.html" thr:count="2"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[数据库基础概念整理]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/shu-ju-ku-ji-chu-gai-nian-zheng-li.html" />
+<id>http://blog.gregwym.info/shu-ju-ku-ji-chu-gai-nian-zheng-li.html</id>
+<updated>2011-10-19T04:55:14+08:00</updated>
+<published>2011-10-19T04:55:14+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[DefinitionsDatabase: is a large and persistent collection of pieces of information organized in a wa...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/shu-ju-ku-ji-chu-gai-nian-zheng-li.html" xml:lang="zh-CN"><![CDATA[
+<h3>Definitions</h3><ul>
+<li>Database: is a large and persistent collection of pieces of information organized in a way that facilitate efficient retrieval and modification.</li>
+<li>DBMS: is a program that manages details related to storage and access for a database.</li>
+<li>Schema: is a description of the data interface to the database.</li>
+<li>Instance: is a database that conforms to a given schema.</li>
+<li>Transaction: is an application-specified atomic and durable unit of work.</li>
+<li>View: is a relation in the external schema whose instance is determined by the instances of the relations in the conceptual schema.</li>
+<li>Trigger: is a procedure executed by the database in response to a change to the database instance</li>
+</ul><h3>Three Level Schema Architecture</h3><ul>
+<li>External schema (view): visualized data</li>
+<li>Conceptual schema: logical structure</li>
+<li>Physical schema: file/storage devices</li>
+</ul><h3>Data Independence</h3><ul>
+<li>Application access the data through an abstract data model provided by the DBMS, rather than direct access</li>
+<li>Physical: applications cant touch the storage stucture</li>
+<li>Logical: applications cant change the data organization</li>
+</ul><h3>Four Transaction Properties</h3><p>NoSQL据说就是要break these properties= =`IDK why...</p><ul>
+<li>Atomic: once the transaction happens, it happened. No intermediate stage!</li>
+<li>Consistency: transaction follows the database consitences</li>
+<li>Isolated: concurrent transactions wont effect each other</li>
+<li>Durable: transaction results permanently</li>
+</ul><h3>What DBMS do</h3><ul>
+<li>Remoce common code from applications</li>
+<li>Provide uniform access to data</li>
+<li>Guarantee data integrity</li>
+<li>manage concurrent access</li>
+<li>Protect against system failure</li>
+<li>Set access policies for data</li>
+</ul>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/shu-ju-ku-ji-chu-gai-nian-zheng-li.html#comments" thr:count="0" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/shu-ju-ku-ji-chu-gai-nian-zheng-li.html" thr:count="0"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[SQL语法整理]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/sql-yu-fa-zheng-li.html" />
+<id>http://blog.gregwym.info/sql-yu-fa-zheng-li.html</id>
+<updated>2011-10-17T06:00:15+08:00</updated>
+<published>2011-10-17T06:00:15+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[SELECTSELECT attribute-expression-list FROM relation-list [ WHERE condition ];attribute-expression-l...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/sql-yu-fa-zheng-li.html" xml:lang="zh-CN"><![CDATA[
+<h3>SELECT</h3><pre><code>SELECT attribute-expression-list FROM relation-list [ WHERE condition ];
+</code></pre><p>attribute-expression-list:</p><ul>
+<li>[relation-name.]attribute</li>
+<li>[relation-name.]attribute [arithmatic computation] AS another name <br />
+<br />
+<ul>
+<li>i.e., E.Salary - 40000 AS SalaryDiff</li>
+</ul></li>
+<li>CASE WHEN ... THEN ...<br />ELSE ... END <br />
+<br />
+<ul>
+<li>i.e., CASE WHEN E.Salary &lt; 40000 THEN 0<br />ELSE E.Salary - 40000 END</li>
+</ul></li>
+</ul><p>relation-list:</p><ul>
+<li>list of table names</li>
+<li>seperate by comma</li>
+</ul><p>condition:</p><ul>
+<li>arithmetic operation +, -, *, /</li>
+<li>comparisions =, &lt;>, &lt;, &lt;=, >. >=</li>
+<li>logical connectives AND, OR, NOT</li>
+<li>attribute IN (Q)</li>
+<li>attribute NOT IN (Q)</li>
+<li>attribute op SOME (Q)</li>
+<li>attribute op ALL (Q)</li>
+<li>EXISTS (Q)</li>
+<li>NOT EXISTS (Q)</li>
+<li>IS [NOT] NULL</li>
+</ul><p><!--more--></p><h3>NULL</h3><h4>AND Table</h4><table border="1" cellpadding="2" cellspacing="0" width="100%">
+  <tbody>
+    <tr>
+      <td valign="top">AND</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">FALSE</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">NULL</td>
+      
+      <td valign="top">NULL</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL<br /></td>
+    </tr>
+  </tbody>
+</table><h4>OR Table</h4><table border="1" cellpadding="2" cellspacing="0" width="100%">
+  <tbody>
+    <tr>
+      <td valign="top">OR</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">TRUE</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+    
+    <tr>
+      <td valign="top">NULL</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">NULL</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+  </tbody>
+</table><h4>NOT Table</h4><table border="1" cellpadding="2" cellspacing="0" width="100%">
+  <tbody>
+    <tr>
+      <td valign="top">NOT</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+    
+    <tr>
+      <td valign="top"><br /></td>
+      
+      <td valign="top">FALSE</td>
+      
+      <td valign="top">TRUE</td>
+      
+      <td valign="top">NULL</td>
+    </tr>
+  </tbody>
+</table><h3>UNION INTERSECT EXCEPT</h3><p>(Q1 and Q2 must have same attribute-list)</p><p>Q1 UNION Q2 => Together all the tuples in Q1 and Q2<br />Q1 INTERSECT Q2 => Only tuples in both Q1 and Q2<br />Q1 EXCEPT Q2 => Tuples only in Q1 but not in Q2</p><p>ALL关键字: 允许重复<br />UNION ALL will include twice of duplicate tuples<br />INTERSECT ALL will include all possible pairs of match tuples, duplication possible<br />EXCEPT ALL will include all "not in Q2" tuples, duplication possible</p><h3>[INNER]/OUTER JOIN</h3><ol>
+<li>Inner join把两个表连接在一起, 返回两个表中相匹配的记录, 是2和3的交集</li>
+<li>Left outer join, 左侧表所有的记录都返回, 右侧匹配的记录返回, 没有匹配的返回Null</li>
+<li>Right outer join, 与Left outer join相反, 右侧的记录返回, 左侧返回匹配的记录, 没有匹配返回Null</li>
+<li>Full outer join, 2和3的并集</li>
+<li>Cross join, 两个表的笛卡儿积, 返回所有可能的值, 不允许有连接条件</li>
+</ol><h3>ORDER BY</h3><pre><code>SELECT ... ... ORDER BY attribute [DESC/ASC], attribute [DESC/ASC], ......
+</code></pre><p>Note: 如果没有指定Order, return的数据可能是任意顺序</p><h3>GROUP BY, HAVING, Aggregate expressions</h3><p>{count, sum, avg, min, max} => Aggregate expressions</p><p>Order: Group => Having => Aggregate</p><ul>
+<li>count(*): number of tuples</li>
+<li>count(E): number of tupple for which E is non-NULL</li>
+<li>count(distinct E): number of distinct non-NULL E values</li>
+<li>sum(E)</li>
+<li>sum(distinct E)</li>
+<li>avg(E)</li>
+<li>avg(distinct E)</li>
+<li>min(E)</li>
+<li>max(E)</li>
+</ul><p>Note: 没有被group by指定的attribute不能出现在SELECT的attr-list中, 除非是aggregate</p><h3>INSERT INTO</h3><pre><code>INSERT INTO relation-name [( attribute-list )] VALUE ( value-list );
+</code></pre><h3>DELETE</h3><pre><code>DELETE FROM relation-name [ WHERE condition ];
+</code></pre><h3>UPDATE</h3><pre><code>UPDATE relation-name SET attribute-assignment-list [ WHERE condition ]; 
+</code></pre><p>attribute-assignment-list:</p><ul>
+<li>pairs of assignment</li>
+<li>seperate by comma</li>
+<li>i.e., WorkDept = 'E01', Address = 'Waterloo'</li>
+</ul><h3>CREATE TABLE</h3><pre><code>CREATE TABLE relation-name ( attribute-name attribute-type [constraints-list], ... )
+</code></pre><p>attribute-type: <a href="http://www.w3school.com.cn/sql/sql_datatypes.asp">http://www.w3school.com.cn/sql/sql_datatypes.asp</a></p><p>constraints-list: (Constraints的格式在各种数据库中都不太一样, 就不列举了)</p><ul>
+<li>NOT NULL</li>
+<li>PRIMARY KEY</li>
+<li>UNIQUE</li>
+<li>FOREIGN KEY</li>
+<li>Column or Tuple CHECK</li>
+</ul><h3>CREATE VIEW</h3><pre><code>CREATE VIEW view-name AS ( SELECT ... ) 
+</code></pre><p>从View SELECT的方法和table一样</p><h3>CREATE TRIGGER</h3><pre><code>CREATE TRIGGER trigger-name 
+AFTER UPDATE OF attribute-list ON relation-name 
+REFERENCING OLD as instance-name(o) NEW as instance-name(n) 
+FOR EACH ROW ...  
+</code></pre><p>不同database语法不一</p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/sql-yu-fa-zheng-li.html#comments" thr:count="0" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/sql-yu-fa-zheng-li.html" thr:count="0"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[linux服务器`自动备份数据库+网页到邮箱]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html" />
+<id>http://blog.gregwym.info/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html</id>
+<updated>2011-04-05T10:11:48+08:00</updated>
+<published>2011-04-05T10:11:48+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[我的QQ邮箱现在已经有3T容量了...原来玩WordPress的时候其实就一直拿来做数据库备份, 现在容量变大几倍有余, 自然是备份的不二选择. 这可比FDC的大容量VPS划算多了, 特别是当你的网站...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html" xml:lang="zh-CN"><![CDATA[
+<p>我的QQ邮箱现在已经有3T容量了...<br />原来玩WordPress的时候其实就一直拿来做数据库备份, 现在容量变大几倍有余, 自然是备份的不二选择. 这可比<a href="https://www.fdcservers.net/order-1.php?plan_id=358">FDC的大容量VPS</a>划算多了, 特别是当你的网站并没有多大的时候. (书苑现在的数据库也都还没有1G...)</p><p>这个脚本来自<a href="http://www.vpsmm.com/edu/everyday-auto-backup-linux-vps.html">小夜博客</a>, 经我略加修改了一下.<br />下载: <a href="http://blog.gregwym.info/usr/uploads/2011/04/259619282.sh" title="backup_to_mail.sh">backup&#95;to&#95;mail.sh</a></p><p><hr /></p><p>很简单的一段bash script, 只需要自定义下mysql的用户名密码, 邮箱地址和要备份的目录.</p><p>然后进行下边的步骤:</p><p>首先要建立好放置备份文件的目录</p><pre><code>mkdir /home/backup
+</code></pre><p>然后安装发送邮件的程序</p><pre><code>yum install sendmail mutt
+</code></pre><p>把backup&#95;to&#95;mail.sh放到刚刚建立的目录中, 然后给脚本增加运行权限</p><pre><code>chmod a+x /home/backup/backup_to_mail.sh
+</code></pre><p>最后一步是设置定时运行, 输入</p><pre><code>crontab -e
+</code></pre><p>然后在vi编辑界面中加入下面这行文字</p><pre><code>00 00 * * * /home/backup/backup_to_mail.sh
+</code></pre><p>:x + enter就ok了.</p><p>其中00 00表示在每日00分, 00点的时候运行该脚本.</p><p>下边是脚本的内容, 以备附件失效和以后学习...</p><pre><code>#!/bin/bash
+MYSQL_USER=root                             #mysql username
+MYSQL_PASS=***********                      #mysql password
+MAIL_TO=*******@***.**                      #mailling to
+WEB_DATA=/home/wwwroot/                     #to be backup dir
+
+#define variables
+DataBakName=Data_$(date +%Y%m%d).tar.gz
+WebBakName=Web_$(date +%Y%m%d).tar.gz
+OldData=Data_$(date -d -3day +%Y%m%d).tar.gz
+OldWeb=Web_$(date -d -3day +%Y%m%d).tar.gz
+DataSubject="Backup: gregwym.info database "$(date +%Y%m%d)
+WebSubject="Backup: gregwym.info web dir "$(date +%Y%m%d)
+
+#delete data from 3days earlier
+rm -rf /home/backup/$OldData /home/backup/$OldWeb
+cd /home/backup
+
+#export database to compressed gz files
+for db in `/usr/local/mysql/bin/mysql -u$MYSQL_USER -p$MYSQL_PASS -B -N -e 'SHOW DATABASES' | xargs`; do
+    (/usr/local/mysql/bin/mysqldump --single-transaction -u$MYSQL_USER -p$MYSQL_PASS ${db} | gzip -9 - &gt; ${db}.sql.gz)
+done
+
+#compress database files
+tar zcf /home/backup/$DataBakName /home/backup/*.sql.gz
+rm -rf /home/backup/*.sql.gz
+#mail database
+echo $DataSubject | mutt -a /home/backup/$DataBakName -s "${DataSubject}" $MAIL_TO
+
+#compress backup dir
+tar zcf /home/backup/$WebBakName $WEB_DATA
+#mail dir
+echo $WebSubject | mutt -a /home/backup/$WebBakName -s "${WebSubject}" $MAIL_TO
+
+echo "bye"
+#END
+</code></pre><p>如果不希望备份网页文件, 或者希望数据库和网页分别备份的, 可以自行拆分脚本为两个文件.</p><p>如果只是想降低备份网页文件的频率, 可以将#mail dir部分替换为:</p><pre><code>if [ $(date +%A) = "Sunday" ]; then 
+    echo $WebSubject | mutt -a /home/backup/$WebBakName -s "${WebSubject}" $MAIL_TO 
+fi
+</code></pre>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html#comments" thr:count="1" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html" thr:count="1"/>
+</entry>
+</feed>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+xmlns:content="http://purl.org/rss/1.0/modules/content/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+xmlns:atom="http://www.w3.org/2005/Atom"
+xmlns:wfw="http://wellformedweb.org/CommentAPI/">
+<channel>
+<title>某储备粮的“学习笔记” - paypal</title>
+<link>http://blog.gregwym.info/tag/paypal/</link>
+<atom:link href="http://blog.gregwym.info/feed/tag/paypal/" rel="self" type="application/rss+xml" />
+<language>zh-CN</language>
+<description></description>
+<lastBuildDate>Sun, 01 Sep 2013 21:57:27 +0800</lastBuildDate>
+<pubDate>Sun, 01 Sep 2013 21:57:27 +0800</pubDate>
+<item>
+<title>Kaching - Express.js payment solution</title>
+<link>http://blog.gregwym.info/kaching.html</link>
+<guid>http://blog.gregwym.info/kaching.html</guid>
+<pubDate>Sun, 01 Sep 2013 21:57:27 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[Kaching is a simple payments solution for Express-based web app, inspired by Passport.js. Together w...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p><a href="https://github.com/gregwym/kaching">Kaching</a> is a simple payments solution for <a href="https://github.com/visionmedia/express">Express</a>-based web app, inspired by <a href="http://passportjs.org/">Passport.js</a>. Together with various <em>strategies</em>, Kaching provides a unified control flow to hook up with different online payment services.</p><p>For now, Kaching only provides <a href="https://github.com/gregwym/kaching-paypal">kaching-paypal</a> to accepting payment through <a href="http://www.paypal.com">Paypal</a>. More strategies are under plan.</p><h2>Install</h2><pre><code>$ npm install kaching
+$ npm install kaching-paypal
+</code></pre><h2>Example</h2><p><a href="https://github.com/gregwym/kaching/tree/master/example">https://github.com/gregwym/kaching/tree/master/example</a></p><h2>Usage</h2><h3>0. Setup with Kaching</h3><p>Paypal strategy require the <code>client_id</code> and <code>client_secret</code> offered by Paypal to operate. You can obtain them from <a href="https://developer.paypal.com/webapps/developer/applications">https://developer.paypal.com/webapps/developer/applications</a>.</p><p>It use <code>api.sandbox.paypal.com</code> as the default paypal host address. Feel free to change it in production environment.</p><pre><code>var PaypalStrategy = require('kaching-paypal');
+var kaching = require('kaching');
+
+kaching.use(new PaypalStrategy({
+  host: '&lt;paypal_rest_api_endpoint&gt;',        // optional
+  port: '',                                  // optional
+  client_id: '&lt;paypal_client_id&gt;',
+  client_secret: '&lt;paypal_client_secret&gt;'
+}));
+</code></pre><p><!--more--></p><h3>1. Create a payment</h3><p>Use <code>kaching.create</code>, specifying <code>paypal</code> strategy, to create a Paypal payment. The payment detail should be setup and saved in <code>req.payment</code> prior invoking the create middleware.</p><p>After kaching created the pending payment, it replaces <code>req.payment</code> with the real payment object that was returned from Paypal API. Save it securely. (i.e., together with the user's order.)</p><pre><code>app.get('...', function(req, res, next) {
+  // Setup payment detail in `req.payment`.
+  req.payment = {
+    amount:{
+      total:'7.47',
+      currency:'USD'
+    },
+    redirect_urls: {
+      return_url: 'http://&lt;return_url&gt;',
+      cancel_url: 'http://&lt;cancel_url&gt;'
+    },
+    description:'Kaching paypal test transaction'
+  };
+  next();
+}, kaching.create('paypal', {
+  // Optional options
+}), function(req, res) {
+  // Now `req.payment` is the Paypal returned payment object
+  res.json(req.payment);
+});
+</code></pre><h3>2. Redirect user to Paypal to approve the payment</h3><p>For most of the time, user should redirect to Paypal to complete the payment right away. You can find the page url in <code>payment.links</code> and do whatever you want.</p><p>Or simpler, append the <code>kaching.approve</code> middleware after the last request handler. It will redirect the user to the payment approval page.</p><pre><code>app.get('...', function(req, res, next) {
+  ...
+}, kaching.create('paypal', {
+  ...
+}), function(req, res, next) {
+  console.log(JSON.stringify(req.payment));
+  next();
+}, kaching.approve('paypal'));
+</code></pre><p>If you want to use <code>kaching.approve</code> somewhere else, make sure <code>req.payment</code> contain a valid payment object.</p><h3>3. Execute the approved payment to complete the transaction</h3><p>User will be redirect to <code>return_url</code> once the payment has been approved. Paypal will specify the <code>payer_id</code> in <code>req.query.PayerID</code>. This piece of information is required to execute and complete the payment, so save it securely.</p><p>Commonly, execute the payment right after can save many trouble. Here is an example,</p><pre><code>app.get('&lt;return_route&gt;', function(req, res, next) {
+  // Prepare payment information and payerId
+  req.payment = ...;           // Fetch the payment object from anywhere it was saved.
+  req.payment.payer_id = req.query.PayerID;
+  next();
+}, kaching.execute('paypal'), function(req, res) {
+  res.json(req.payment);       // Now the payment has been completed.
+});
+</code></pre><p>Like <code>kaching.create</code>, <code>kaching.execute</code> will update <code>req.payment</code> to the latest. And it's up to you to deal with it.</p><h2>API</h2><p>Note: all the middleware look for the payment informations in <code>req.payment</code>. Make sure it is set before passing control to a middleware.</p><h3>PaypalStrategy(options)</h3><p>Construct a new <code>strategy</code>.</p><pre><code>var options = {
+  host: '&lt;paypal_rest_api_endpoint&gt;',        // optional
+  port: '',                                  // optional
+  client_id: '&lt;paypal_client_id&gt;',
+  client_secret: '&lt;paypal_client_secret&gt;'
+}
+</code></pre><h3>PaypalStrategy#create</h3><p>Build the payment creation middleware.</p><p>It use <code>req.payment</code> as the payment_detail skeleton.</p><pre><code>req.payment = {
+  intent: '[sale | authorize]',             // default: sale
+  payment_method: '[paypal | credit_card]', // default: paypal
+  funding_instruments: {                    // required when payment_method = credit_card
+    ...   // https://developer.paypal.com/webapps/developer/docs/api/#fundinginstrument-object
+  },
+  amount: {                                 // required
+    ...   // https://developer.paypal.com/webapps/developer/docs/api/#amount-object
+  },
+  item_list: {                              // optional
+    ...   // https://developer.paypal.com/webapps/developer/docs/api/#itemlist-object
+  },
+  description: 'Payment description',       // optional
+  redirect_urls: {                          // required when payment_method = paypal
+    return_url: ...,
+    cancel_url: ...
+  }
+};
+</code></pre><p>You may notice that, things like <code>intent</code>, <code>payment_method</code> and <code>redirect_urls</code> are not necessarily be different for each payment. You can set the default value for them when building the middleware.</p><pre><code>...
+}, kaching.create('paypal', {
+  intent: 'sale',
+  payment_method: 'paypal',
+  redirect_urls: { ... } 
+}), 
+...
+</code></pre><p>Then you can omit these fields in <code>req.payment</code>.</p><h3>PaypalStrategy#approve</h3><p>Build the payment approval middleware. Mainly redirect to the <code>approval_url</code> in <code>payment.links</code>.</p><h3>PaypalStrategy#execute</h3><p>Build the approved payment execution middleware. The middleware find the payment in <code>req.payment</code> and execute it with <code>req.payment.payer_id</code>.</p><h2>Credits</h2><ul>
+<li><a href="https://github.com/gregwym">Greg Wang</a></li>
+</ul><h2>License</h2><p><a href="http://opensource.org/licenses/MIT">The MIT License</a></p><p>Copyright (c) 2013 Greg Wang <a href="http://gregwym.info/">http://gregwym.info/</a></p>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/kaching.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/kaching.html</wfw:commentRss>
+</item>
+</channel>
+</rss>

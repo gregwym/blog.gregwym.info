@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/tag/cs350/">
+<title>某储备粮的“学习笔记” - cs350</title>
+<link>http://blog.gregwym.info/tag/cs350/</link>
+<description></description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/os161-memory-management.html"/>
+<rdf:li resource="http://blog.gregwym.info/os161-system-calls-implementation-notes.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/os161-memory-management.html">
+<title>OS161 Memory Management</title>
+<link>http://blog.gregwym.info/os161-memory-management.html</link>
+<dc:date>2011-11-20T13:08:45+08:00</dc:date>
+<description>这次Assignment除了Physical Memory Management, 其他几个部分都相互关联. 所以在设计完成前几部分的时候, 最好将所有需要解决的问题都搞明白, 然后统一设计Address Space的结构.TLB Management和TLB有关的, 需要解决的问题有这么几个:
+Context Switch的时候, 如果不是两个不同的thread, 则不需要flush TLB
+当TLB被占满的时候, 要替换最老的TLB entry
+TLB内保存read-only信息
+然后一个一个说…
+只要检查上一次flush TLB时候的thread, 和现在的是不是同一个thread即可
+这部分这次Assignment已经把code写好大半了…`你需要做的就是把tlb&#95;get&#95;rr_victim return回来的那个entry替换掉
+理解MIPS TLB的每个flag bits的用处, 然后把read-only flag放在对应的位置.当程序试图写入一个read-only的memory时候, vm&#95;fault拿到的faulttype是VM&#95;FAULT_READONLY.Don't PANIC!!!
+TLB基本就这么多= =||`没啥东西…On-Demand LoadingThis is the fun part…哈哈哈这部分, 需要, 灰常严谨的逻辑和计算…`还要对page loading的步骤非常清晰. 任何一点对内存地址或者file offset的计算错误, 或者理解错误, 都会mess up.所以, 咱们重新来列一遍从程序开始运行, 到page loading结束的整个过程:
+runprogram/execv拿到一个progname (ELF file's path), 并call load_elf.
+load_elf不立刻load到physical memory,而是把ELF中的每一个segment所对应的virtual address定义好, 并且保存load这个segment所需要的所有信息.(这些信息如何/以什么样的形式保存, 需要在动手之前就先明确!)
+当系统碰到一个TLB Miss时, 会有两种情况:
+这个page还没有被load到physical memory, 说明这个page是第一次被访问, 
+
+
+找到这个page所对应的segment的信息
+计算load这个page所需要的所有相关数据
+从physical memory steal一个page的内存
+将这个page的数据从file load到physical memory中(提示: PADDR&#95;TO&#95;KVADDR is useful)
+将这个physical memory保存成这个segment vaddr对应的paddr
+将这对vaddr和paddr存入TLB
+
+反之, 直接将已知的一对vaddr和paddr存入TLB即可
+本身, 整个过程还是很straight forward的. 可有一些special case需要handle…
+有的segment不是从一个page的顶头开始的
+有的segment跨越多个page
+有的data segment的filesize是0, 但memsize需要填零
+…好像还有别的, = =想不起来了, 大家写的时候发现了, 告诉我下, 哈哈 最容易出错的部分还是计算, filesize, memsize, file offset, memory offset, 等各种数据…大家加油
+Address Space多写两句和as有关的很多人在刚开始写这个assignment的时候, 最先纠结的就是, as的结构要不要改...这是个好问题, 但答案是: 不一定要改as, 但肯定需要+东西.在解释为什么之前, 咱们先来看看dumb_vm的as里, 每个东西都是干嘛用的.struct addrspace { 
+    #if OPT_DUMBVM 
+        vaddr_t as_vbase1; 
+        paddr_t as_pbase1; 
+        size_t as_npages1; 
+        vaddr_t as_vbase2; 
+        paddr_t as_pbase2; 
+        size_t as_npages2; 
+        paddr_t as_stackpbase; 
+    #else 
+        /* Put stuff here for your VM system */ 
+    #endif 
+};
+dumb_vm里只保存两个segment/region的内存信息
+vbase是每个reg在virtual address上开始的位置
+pbase是每个reg在physical address上开始的位置
+npages是每一个reg一共占用了多少个virtual page/physical frame
+stackpbase顾名思义, stack在physical address上的底是哪里
+然后咱们再研究下, 可能需要记录哪些信息. (并不一定全部都需要记录, 有些可以相互计算)为了计算写入TLB的值, 需要
+每个reg在virtual &amp; physical address的开始位置
+每个reg有多少个page/frame
+每个reg的permission flags
+为了On-Demand Loading, 需要
+当前app对应的ELF file是什么
+每个reg里的每个page/frame是否被load过
+每个reg里的每个page/frame的vaddr和paddr开始位置
+每个reg里的每个page/frame所对应在ELF-FILE中的program header information (例如: file offset)
+stack已经占用了多少个page
+对比一下上下两个列表, 我们缺点什么呢?原来的as没有记录reg的permissions, 没有记录page/frame是不是被load过了, 没有分别记录每个page/frame的vaddr+paddr(当然, 可以通过seg的数据进行计算), 也没有每个reg对应的ELF信息...stack也是固定大小所以原本的as是100%缺少东西的, 但这些额外的东西, 具体应该保存到哪里就自由发挥了.补充1: OS161里假设了一个ELF程序只包括两个segment. 虽然实际可能不止2个, 但现阶段, 只支持2个也没问题.更新1: 叫seg不太确切, 还是叫region好了. 另补充了一些需要记录的内容.Physical Memory Management在dumbvm里, Physical Memory的分配机制非常简单. 在first和last之间, 一页一页的把内存分配出去, first逐次往后移动, 直到first = last, 就没有memory可用了. 也不回收, 不重复使用.要想改变优化这个机制, 首先需要增加一个能够tracking所有可用Physical Frame使用状态的table. 在进行malloc或者free某个frame的时候, 在table中记录下来这个frame的状态. 这样, 如果存在free过的page, 这些page就可以优先被malloc, 从而重复利用已经free了的内存.整体流程:
+系统启动
+进入vm_bootstrap
+取得现在可用的Physical Memory的地址范围
+通过地址范围计算出有多少个可用的frame
+建立保存Physical Frame Status的table
+完成其他vm_bootstrap所需要做的工作
+再次取得可用的Physical Memory的地址范围, 这就是真正可用的内存范围
+停用原本的Physical Memory管理机制, 并接管所有alloc&#95;kpages和free&#95;kpages的操作
+vm系统启动完成
+除此之外, 还需要修改allocation和free时候的操作, 让alloc能够通过某种algorithm来重复使用已经被free的内存位置. (用什么样的Algorithm就看各位了, 实在不行做liner search也是方法之一, 嘿嘿)个别要点:
+建立的table可能比最后实际需要的大, 但并无大碍. (因为table本身占用了一部分内存)
+alloc_kpages的时候, 有可能需要一次alloc超过一页的frame.如果你使用的algorithm不方便在被free的内存中找出多个连续的frame, 那尽管把从未用过的连续frame分配出去吧.
+其他的待补充...
+Instrumentation实在没什么好写的, 把declaration和initialization放对地方就好了.</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/os161-system-calls-implementation-notes.html">
+<title>OS161 System Calls Implementation Notes</title>
+<link>http://blog.gregwym.info/os161-system-calls-implementation-notes.html</link>
+<dc:date>2011-10-31T12:38:37+08:00</dc:date>
+<description>这篇文章的目的是记录CS350 Assignment2中, 我编写各种System Calls时所采用的思路. 实际coding的时候, 同一种System Call的实现方式很可能不止一种, 但殊途同归.注1: 文章顺序和实际coding顺序并不一定一致, 请参考Assignment中的Strategy部分.注2: 如果没有仔细读过code和Assignment...这里很有些东西你可能读的似懂非懂.欢迎在评论中提问...General Tips
+别管写什么function, 第一步永远是检查parameter是否有效!!!(比如, pointer是不是NULL, string是不是空, etc)
+不要放过任何一个warning...需要explicit cast的时候, 千万不要偷懒.
+function一般使用parameter中的pointer进行value return, 正常的return用来return errno.
+开始coding之前, 除了读Assignment, 读code, 还要好好读Assignment Hint! 解答了很多FAQ
+注意在header file里用#ifndef, 保证header不会出现重复include
+kmalloc了的东西...在destroy的时候一定要kfree. 不然A3里, 你会发现各种memory leak(Create某些data structure的中间, 如果出现error, 则需要首先free已经allocated的内存, 然后返回error)
+善用spl解决mutex问题. 当然, 首先你要明白什么样的操作需要mutex!
+
+我会边写这个Note边添加Tips...Part 1, Play with the files and console在OS161中, 所有应用程序在打开, 关闭, 读取, 写入一个文件的时候, 都是通过一个file descriptor [ID]来标识某一个文件的. 需要注意的是, file descriptor [ID]和vnode是完全两个东西.每个thread都有单独一套file descriptors [ID], 但两个thread的两个不同的file descriptor [ID]如果标识的是同一个文件, 则共用一个vnode.(这里所说的file descriptors实际上只是一个int, 是代表一个file descriptor的ID, 而实际上file descriptor要保存很多内容. 后边继续)简单来说, 我们需要给每一个thread都增加一个, 记录所有opened file的机制. 我们暂称之为file table.file table可以就是个简单的array, 但为了让file table的operation和thread以及syscall相互独立, 减少重复code并减少bug机会, 我强烈建议大家把file table相关的所有operations都写成独立的functions, 放在单独的文件里.file table &amp; file descriptorfile table其实很简单, 一个array外加一个size_t记录array的长度, 就ok了. (这里说的所有array都是struct array, OS161中自带的kernel array lib)file descriptor中需要记录以下几个东西,
+vnode pointer
+permission flags
+the current offset in file
+probably need something else, depends on your implementation. (like a reference counter, etc.)
+然后就是操作file table的各种function, 比如
+create file table
+destroy file table
+duplicate file table (is one of the most important part of execv fork, but not nessesary for now)
+add/get/delete a file descriptor
+may need extra functions or helpers for convenience
+至此基本没有难点 (就类似写个小"class").之后要把file table添加到thread里, 并且在thread_fork中进行initialization.Stdin &amp; Stdout 也是FILE!!!这是Assignment在"Implementing file system calls"中特别提到的一点.在建立一个新的process时候, 不止要initialization一个file table, 而且还要把table的0, 1, 2分别设置成standard input, standard output和standard error, 不然printf就不work哦, 哈哈哈.注: OS161中stdout和stderr是一样的.知道了怎么Open, Close就简单了open步骤 1. 创建file descriptor 2. vfs_open打开文件 (获取vnode) 3. 往file descriptor中存需要的数据 4. 把file descriptor加到file table中, 并取得ID 5. return ID给user program如何用vfs_open打开文件, 请参考runprogram.cRead和Write差在细节有file descriptor就有vnode...如何用VOP_READ配合vnode和uio读文件, 请参看loadelf.c注意offset怎么算!!!!!考验你读code读够不够细致的时候到了...好好读vnode.h(的comment)吧.Write和Read差在uio的配置, 和用VOP_WRITE.请细读uio.h(的comment)= =...都是comment有用, code看不懂影响不是很大.Part 2, Get the process organizedfork, getpid, waitpid, _exit...注: 按我的理解, OS161所有的thread都是process, 只不过有parent和child之分.这部分中, PID的管理逻辑是关键, 主要解决几个问题.
+如何让一个process wait在一个PID上, 并在exit的时候wake up所有在当前PID waiting的process
+如何防止deadlock (P1 wait on P2, and P2 wait on P1)
+如何保存exitcode. 并明确, 何时可以安全的删除这个exitcode的记录
+如何重复使用已经空闲的PID 除此之外, fork还要考虑其他问题, 后边再说.
+Table解决一切问题...和file descriptor类似, PID也需要构建一个table. 区别在于, process table必须是global的! 也就是说, 整个系统只有一个process table.然后考虑, 我们需要为每个PID/process保存哪些信息, 才能解决上边列举的几个问题.process table相关的function (仅供参考),
+create process table (use in thread_bootstrap)
+destroy process table (use in thread_shutdown)
+assign and save a PID for new process (use in thread_fork)
+mark a PID as inactive and save the exitcode (use when _exit is called)
+you may also want to add other things here. Like the actual implementation of waitpid, wakeup waitings, release a exited PID or any other PID related functions. But its all depends on your implementation decision.
+Wait&amp;Wakeup的钥匙 - A magical memory address第一个Assignment写完, 对于thread&#95;sleep和thread&#95;wakeup应该都很熟悉了.两个function都consume一个pointer作为钥匙. 只要sleep的thread和wakeup的thread用的是同一个钥匙, 睡着的所有thread就能被唤醒.这在implement waitpid和_exit的时候是很实用的.fork意味着, 一模一样这估计是这次Assignment中最难的部分.fork的作用是生成一个和当前thread完全一样的thread. 说具体点就是,
+CPU的每个register值一模一样
+address space中的memory一模一样
+打开的file一模一样 (duplicate a file table)
+其他一个thread中可能包含的部分
+只有PID不一样!!!
+fork system call要点:
+consume一个东西, trapframe. 这里保存着user program进入privilege mode之前, 所有register的数据.
+用memcpy把trapframe复制一份给新thread用
+调用thread&#95;fork的时候, 用复制的trapframe和md&#95;forkentry作为parameter.
+thread_fork要点:
+thread_fork要想办法知道, 是不是被fork system call调用的
+如果是, 需要复制address space
+如果是, 需要duplicate file table. 否则, 创建新的
+md_forkentry要点:
+trapframe要复制到kernel stack上 (太简单了以至于有时候想不到用)
+fork里复制的trapframe要free掉
+在trapframe里设置return value, (pc貌似也要increment...回忆不起来当时increment的原因了)
+address space需要activate
+Follow这些要点, 应该可以比较顺利的搞定fork. 但我仍推荐先把fork和md_forkentry的工作原理搞明白, 再开始.(如果写完了还没明白, 为什么要把md&#95;forkentry pass给thread&#95;fork, 那你绝对是奇葩)到这里, A2中最难的部分过去了...runprogram和execv, 我不确定有没有时间在下周一之前总结出来.这两个大同小异, runprogram写好, execv只是稍微多点东西.exception handling是打酱油...大家加油</description>
+</item>
+</rdf:RDF>

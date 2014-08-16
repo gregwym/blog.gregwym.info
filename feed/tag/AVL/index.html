@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+xmlns:content="http://purl.org/rss/1.0/modules/content/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+xmlns:atom="http://www.w3.org/2005/Atom"
+xmlns:wfw="http://wellformedweb.org/CommentAPI/">
+<channel>
+<title>某储备粮的“学习笔记” - AVL</title>
+<link>http://blog.gregwym.info/tag/AVL/</link>
+<atom:link href="http://blog.gregwym.info/feed/tag/AVL/" rel="self" type="application/rss+xml" />
+<language>zh-CN</language>
+<description></description>
+<lastBuildDate>Wed, 06 Apr 2011 12:00:49 +0800</lastBuildDate>
+<pubDate>Wed, 06 Apr 2011 12:00:49 +0800</pubDate>
+<item>
+<title>CS 240复习总结之四: Dictionaries &amp; Balanced Search Trees</title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-si--dictionaries-and-balanced-search-trees.html</link>
+<guid>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-si--dictionaries-and-balanced-search-trees.html</guid>
+<pubDate>Wed, 06 Apr 2011 12:00:49 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[AVL Tree性质:BST基础性质左侧和右侧subtree的height最多差1空白Tree的高度为-1Search, Insert, Delete Runtime均为Θ(log n)AV...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<blockquote>AVL Tree性质:<br /><ul>
+<li>BST基础性质</li>
+<li>左侧和右侧subtree的height最多差1</li>
+<li>空白Tree的高度为-1</li>
+<li>Search, Insert, Delete Runtime均为Θ(log n)</li>
+</ul><br />AVL Insertion:<br /><ol>
+<li>执行标准BST Insertion</li>
+<li>从新insert的leaf开始, 从下往上更新balance factor(左右高度差)</li>
+<li>如发现高度差超过1(即为2), 则执行fix</li>
+</ol><br />AVL Fix: 修复高度差为2的subtree<br /><ul>
+<li>Single rotation: 当height最高的leaf位于最左侧/最右侧<br />
+<ul>
+<li>将subtree的root Z向height较低的方向旋转, 即以height较高的child Y为root</li>
+<li>Y原内侧child, 并入Z内侧</li>
+</ul><br />
+<a href="http://blog.gregwym.info/usr/uploads/2011/04/1588174024.png" title="AVL_single_rotation.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/1588174024.png" alt="AVL_single_rotation.png" width=100% /></a></li>
+<li>Double rotation: 当height最高的leaf位于Tree内侧<br />
+<ul>
+<li>将height较高的root child向外侧旋转, 将Tree变形为Single rotation的初始形式</li>
+<li>执行Single rotation</li>
+</ul><br />
+<a href="http://blog.gregwym.info/usr/uploads/2011/04/2278239341.png" title="AVL_double_rotation.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/2278239341.png" alt="AVL_double_rotation.png" width=100% /></a></li>
+</ul></blockquote><br /><blockquote>2-3 Tree性质:<br /><ul>
+<li>BST基础性质</li>
+<li>每个node包含一个KVP*和两个children, 或者包含两个KVP和三个children.</li>
+<li>所有leaf都在同一层(level)</li>
+</ul><br />
+2-3 Tree Insertion:<br /><ol>
+<li>找到KVP应在的leaf (BST规则)</li>
+<li>如果该leaf已经饱和 (已经包含两个KVP), 则将3个KVP排序a < b < c.</li>
+<li>将a和c分割成两个单独的leaf, 并将b插入到parent中.</li>
+<li>重复第2步直到符合2-3 Tree所有性质</li>
+</ol><br />
+2-3 Tree Deletion: 删除x<br /><ol>
+<li>如果x所在的node有两个KVP, 则直接删除x</li>
+<li>如果同parent下, 与该node相邻的child有两个KVP, 则用node与child之间的parent替代x, 并用中间值替代parent</li>
+<li>否则 (同parent下, node相邻child均只有一个KVP), 将相邻child与parent(中间值)合并. 重复直到Tree符合要求.</li>
+</ol></blockquote><br /><blockquote>B-Tree性质:<br /><ul>
+<li>扩展版的2-3 Tree</li>
+<li>每个node包含最多2d个KVP</li>
+<li>非root的node最少包含d个KVP</li>
+<li>2-3 Tree的d = 1</li>
+</ul><br />
+Insertion和Deletion与2-3 Tree大同小异<br /><br />注: 此B-Tree定义不完全符合11W Slide<br /></blockquote><br />备注: KVP意为Key-Value Pair, 即Key与Value的一对, 为一个KVP.<br /><br />今天先到这里了...明天总结后半部分`= =<br /><br /><br />更多CS 240总结请看: <a target="_blank" href="http://blog.gregwym.info/tag/cs240/">http://blog.gregwym.info/tag/cs240/</a><br /></p>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-si--dictionaries-and-balanced-search-trees.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/cs-240-fu-xi-zong-jie-zhi-si--dictionaries-and-balanced-search-trees.html</wfw:commentRss>
+</item>
+</channel>
+</rss>

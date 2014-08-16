@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/tag/heap/">
+<title>某储备粮的“学习笔记” - heap</title>
+<link>http://blog.gregwym.info/tag/heap/</link>
+<description></description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-er--priority-queues.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-er--priority-queues.html">
+<title>CS 240复习总结之二: Priority Queues </title>
+<link>http://blog.gregwym.info/cs-240-fu-xi-zong-jie-zhi-er--priority-queues.html</link>
+<dc:date>2011-04-06T04:57:39+08:00</dc:date>
+<description>Priority Queue 的基础操作:
+insert: 在Queue中加入一个带有对应优先级的item
+deleteMax: 移除优先级最高的item (此操作仅适用于maximum-oriented priority queue)
+deleteMin: 移除优先级最低的item (此操作仅适用于minimum-oriented priority queue)
+三种Implementation:
+无序array (selection sort) 
+
+
+insert: O(1)
+delete: O(n)
+
+有序array (insertion sort) 
+
+
+insert: O(n)
+delete: O(1)
+
+Heap (一种BST) 
+
+
+insert: O(log n)
+delete: O(log n)
+
+Heap的性质:
+从上到下, 从左到右, 必须在一层(level)填满以后再使用下一层
+parent的优先级必须大于等于(小于等于 for min-heap)其children的优先级
+Heap的高度是Θ(log n)
+Heap Insertion:
+将新item放入第一个空闲的位置 (参考heap的第一条性质)
+对其执行bubble-up, 直到符合所有heap性质
+ #bubble-up:
+
+while [parent(v) exists and key(parent(v)) &lt; key(v)] do 
+    swap v and parent(v) v &lt;- parent(v)
+
+Heap deleteMax/Min:
+用heap中的最后一个item取代root
+对其执行bubble-down, 直到符合所有heap性质
+
+bubble-down
+
+while [v is not a leaf] do 
+    u &lt;- child of v with largest key 
+    if key(u) &gt; key(v) then 
+        swap v and u v &lt;- u 
+    else 
+        break
+
+Heap array的特点 (当前item的位置为i):
+Left child位于2i+1
+Right child位于2i+2
+Parent位于floor[(i-1)/2]
+建立heap的两种方法:
+以空heap为起始, 逐个item执行insert
+以含有n个item的array为起始, 从index为floor[(n-1)/2]的item开始, 逐个执行bubble-down, 直到index 0
+注: 使用第二种方法建立heap, 然后执行k次deleteMax/Min, 可快速查找array中第k大的iterm. 运行时间为Θ(n + k log n)其他方法请参考: 找数组/VECTOR内第K大的数更多CS 240总结请看: http://blog.gregwym.info/tag/cs240/</description>
+</item>
+</rdf:RDF>

@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/tag/parse/">
+<title>某储备粮的“学习笔记” - parse</title>
+<link>http://blog.gregwym.info/tag/parse/</link>
+<description></description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/lr-1--parser-example.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/lr-1--parser-example.html">
+<title>LR(1) Parser Example</title>
+<link>http://blog.gregwym.info/lr-1--parser-example.html</link>
+<dc:date>2011-04-19T05:24:08+08:00</dc:date>
+<description>Terminal Symbols: 6个BOF, EOF, id, -, (, )Nonterminal Symbols: 3个S, expr, termStart Symbol:SProduction Rules: 5个
+		
+			0
+			S BOF expr EOF
+		
+		
+			1
+			expr term
+		
+		
+			2
+			expr expr - term
+		
+		
+			3
+			term id
+		
+		
+			4
+			term ( expr )
+		
+	Total State: 11个 (0 to 11)Total Transitions: 28个
+		
+			State
+			Symbol
+			Action
+		
+		
+			0
+			BOF
+			shift to state 6
+		
+		
+			1
+			(
+			shift to state 3
+		
+		
+			1
+			id
+			shift to state 2
+		
+		
+			1
+			term
+			shift to state 8
+		
+		
+			3
+			(
+			shift to state 3
+		
+		
+			3
+			expr
+			shift to state 7
+		
+		
+			3
+			id
+			shift to state 2
+		
+		
+			3
+			term
+			shift to state 4
+		
+		
+			6
+			(
+			shift to state 3
+		
+		
+			6
+			expr
+			shift to state 10
+		
+		
+			6
+			id
+			shift to state 2
+		
+		
+			6
+			term
+			shift to state 4
+		
+		
+			7
+			)
+			shift to state 9
+		
+		
+			7
+			-
+			shift to state 1
+		
+		
+			10
+			-
+			shift to state 1
+		
+		
+			10
+			EOF
+			shift to state 5
+		
+		
+			2
+			)
+			reduce by rule 3
+		
+		
+			2
+			-
+			reduce by rule 3
+		
+		
+			2
+			EOF
+			reduce by rule 3
+		
+		
+			4
+			)
+			reduce by rule 1
+		
+		
+			4
+			-
+			reduce by rule 1
+		
+		
+			4
+			EOF
+			reduce by rule 1
+		
+		
+			8
+			)
+			reduce by rule 2
+		
+		
+			8
+			-
+			reduce by rule 2
+		
+		
+			8
+			EOF
+			reduce by rule 2
+		
+		
+			9
+			)
+			reduce by rule 4
+		
+		
+			9
+			-
+			reduce by rule 4
+		
+		
+			9
+			EOF
+			reduce by rule 4
+		
+	String to Parse:BOF id - ( id ) - id EOFParse Step:蓝色的行是Shift, 灰色的行是ReduceReduce的次数取决于Production Rule RHS的长度当前Symbol所对应的State,
+			
+				
+				
+				
+				
+				
+				
+				
+				State Stack 
+(At EOL)
+				Description
+			
+			
+				S0
+				
+				
+				
+				
+				
+				
+				0
+				Start
+			
+			
+				BOF
+				S6
+				
+				
+				
+				
+				
+				0 6
+				S0 BOF S6
+			
+			
+				
+				id
+				S2
+				
+				
+				
+				
+				0 6 2
+				S6 id S2
+			
+			
+				
+				R3
+				-
+				
+				
+				
+				
+				0 6
+				S2 - Reduce by   rule #3 
+(replace id with term)
+			
+			
+				
+				term
+				S4
+				
+				
+				
+				
+				0 6 4
+				S6 term S4
+			
+			
+				
+				R1
+				-
+				
+				
+				
+				
+				0 6
+				S4 - Reduce by   rule #1 
+(replace term with expr)
+			
+			
+				
+				expr
+				S10
+				
+				
+				
+				
+				0 6 10
+				S6 expr S10
+			
+			
+				
+				
+				-
+				S1
+				
+				
+				
+				0 6 10 1
+				S10 - S1
+			
+			
+				
+				
+				
+				(
+				S3
+				
+				
+				0 6 10 1 3
+				S1 ( S3
+			
+			
+				
+				
+				
+				
+				id
+				S2
+				
+				0 6 10 1 3 2
+				S3 id S2
+			
+			
+				
+				
+				
+				
+				R3
+				)
+				
+				0 6 10 1 3
+				S2 ) Reduce by   rule #3 
+(replace id with term)
+			
+			
+				
+				
+				
+				
+				term
+				S4
+				
+				0 6 10 1 3 4
+				S3 term S4
+			
+			
+				
+				
+				
+				
+				R1
+				)
+				
+				0 6 10 1 3
+				S4 ) Reduce by   rule #1 
+(replace term with expr)
+			
+			
+				
+				
+				
+				
+				expr
+				S7
+				
+				0 6 10 1 3 7
+				S3 expr S7
+			
+			
+				
+				
+				
+				
+				
+				)
+				S9
+				0 6 10 1 3 7 9
+				S7 ) S9
+			
+			
+				
+				
+				
+				R4
+				R4
+				R4
+				-
+				0 6 10 1
+				S9 - Reduce by   rule #4 
+(repace &quot;( expr )&quot; with term)
+			
+			
+				
+				
+				
+				term
+				S8
+				
+				
+				0 6 10 1 8
+				S1 term S8
+			
+			
+				
+				R2
+				R2
+				R2
+				-
+				
+				
+				0 6
+				S8 - Reduce by   rule #2 
+(replace &quot;expr - term&quot; with expr)
+			
+			
+				
+				expr
+				S10
+				
+				
+				
+				
+				0 6 10
+				S6 expr S10
+			
+			
+				
+				
+				-
+				S1
+				
+				
+				
+				0 6 10 1
+				S10 - S1
+			
+			
+				
+				
+				
+				id
+				S2
+				
+				
+				0 6 10 1 2
+				S1 id S2
+			
+			
+				
+				
+				
+				R3
+				EOF
+				
+				
+				0 6 10 1
+				S2 EOF Reduce by rule #3 
+(replace id with term)
+			
+			
+				
+				
+				
+				term
+				S8
+				
+				
+				0 6 10 1 8
+				S1 term S8
+			
+			
+				
+				R2
+				R2
+				R2
+				EOF
+				
+				
+				0 6
+				S8 EOF Reduce by rule #2 
+(replace &quot;expr - term&quot; with expr)
+			
+			
+				
+				expr
+				S10
+				
+				
+				
+				
+				0 6 10
+				S6 expr S10
+			
+			
+				
+				
+				EOF
+				S5
+				
+				
+				
+				Final S5
+				S10 EOF S5
+			
+		
+原题来源: http://www.student.cs.uwaterloo.ca/~cs241/parsing/lr1.html</description>
+</item>
+</rdf:RDF>

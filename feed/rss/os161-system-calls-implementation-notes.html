@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/os161-system-calls-implementation-notes.html">
+<title>某储备粮的“学习笔记” - OS161 System Calls Implementation Notes 的评论</title>
+<link>http://blog.gregwym.info/os161-system-calls-implementation-notes.html</link>
+<description>这篇文章的目的是记录CS350 Assignment2中, 我编写各种System Calls时所采用的思路. 实际coding的时候, 同一种System Call的实现方式很可能不止一种, 但殊途...</description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-564"/>
+<rdf:li resource="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-563"/>
+<rdf:li resource="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-558"/>
+<rdf:li resource="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-557"/>
+<rdf:li resource="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-556"/>
+<rdf:li resource="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-555"/>
+<rdf:li resource="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-554"/>
+<rdf:li resource="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-552"/>
+<rdf:li resource="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-551"/>
+<rdf:li resource="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-513"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-564">
+<title>咳嗽di小鱼</title>
+<link>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-564</link>
+<dc:date>2012-03-31T09:40:25+08:00</dc:date>
+<description>我记得, fork过程中应该是splhigh的吧?</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-563">
+<title>xiaov</title>
+<link>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-563</link>
+<dc:date>2012-03-31T09:07:59+08:00</dc:date>
+<description>你好，请问在实现fork的过程中，需要使用同步原语来控制同步吗？</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-558">
+<title>咳嗽di小鱼</title>
+<link>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-558</link>
+<dc:date>2012-03-29T12:34:32+08:00</dc:date>
+<description>as_create是创建一个address space, 代表的是process运行时可以使用的内存. 是用户空间. 但as这个strcutre本身是kmalloc出来的, 存在在内核空间里.</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-557">
+<title>xiaov</title>
+<link>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-557</link>
+<dc:date>2012-03-29T02:20:19+08:00</dc:date>
+<description>麻烦问一下，做fork拷贝addrspace的时候，会调用到as_copy方法，as_copy之中又会调as_create,问题是如何这个as_create开辟出来的地址空间是属于用户空间，还是内核空间？</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-556">
+<title>saintnoah</title>
+<link>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-556</link>
+<dc:date>2012-03-27T11:53:53+08:00</dc:date>
+<description>嗯 有道理 多谢：）</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-555">
+<title>咳嗽di小鱼</title>
+<link>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-555</link>
+<dc:date>2012-03-27T11:20:08+08:00</dc:date>
+<description>使用array.h里的array可以规范数据存储, 访问, 删除的方式, 帮助你管理Array的内存使用, 省时省力省bug. 用[], 必要时size不可变, 还涉及kmalloc的内存管理问题, 平添很多不必要的麻烦.</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-554">
+<title>saintnoah</title>
+<link>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-554</link>
+<dc:date>2012-03-27T11:14:48+08:00</dc:date>
+<description>是的 就想请教这个 为什么需要用array.h里的array而不能用[]?</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-552">
+<title>咳嗽di小鱼</title>
+<link>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-552</link>
+<dc:date>2012-03-27T10:05:35+08:00</dc:date>
+<description>我的意思是, 所有我文中提到的"array", 都是"kernel/include/array.h"这个array, 而不是[]这个array.</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-551">
+<title>saintnoah</title>
+<link>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-551</link>
+<dc:date>2012-03-27T09:55:00+08:00</dc:date>
+<description>请问为什么 说“所有array都是struct array, OS161中自带的kernel array lib”?这里的filetable声明为一个结构体指针数组可以吗？</description>
+</item>
+<item rdf:about="http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-513">
+<title>Dennis</title>
+<link>http://blog.gregwym.info/os161-system-calls-implementation-notes.html#comment-513</link>
+<dc:date>2012-03-03T11:51:34+08:00</dc:date>
+<description>感谢greg</description>
+</item>
+</rdf:RDF>

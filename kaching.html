@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>Kaching - Express.js payment solution - 某储备粮的“学习笔记”</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 使用url函数转换相关路径 -->
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/style.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/prettify.css" />
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="http://blog.gregwym.info/images/favicon.ico">
+<link rel="apple-touch-icon" href="http://blog.gregwym.info/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="http://blog.gregwym.info/images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="http://blog.gregwym.info/images/apple-touch-icon-114x114.png">
+
+<!-- 通过自有函数输出HTML头部信息 -->
+<meta name="description" content="Kaching is a simple payments solution for Express-based web app, inspired by Passport.js. Together w..." />
+<meta name="keywords" content="node,js,express,paypal,kaching,payment" />
+<meta name="generator" content="Typecho 0.9/13.12.12" />
+<meta name="template" content="trapecho" />
+<link rel="pingback" href="action/xmlrpc.html" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="action/xmlrpc%3Frsd.html" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="action/xmlrpc%3Fwlw.html" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="feed/kaching.html" />
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="feed/rss/kaching.html" />
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="feed/atom/kaching.html" />
+<script type="text/javascript">
+//<![CDATA[
+var TypechoComment = {
+    dom : function (id) {
+        return document.getElementById(id);
+    },
+    
+    create : function (tag, attr) {
+        var el = document.createElement(tag);
+        
+        for (var key in attr) {
+            el.setAttribute(key, attr[key]);
+        }
+        
+        return el;
+    },
+
+    reply : function (cid, coid) {
+        var comment = this.dom(cid), parent = comment.parentNode,
+            response = this.dom('respond-post-105'), input = this.dom('comment-parent'),
+            form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+            textarea = response.getElementsByTagName('textarea')[0];
+
+        if (null == input) {
+            input = this.create('input', {
+                'type' : 'hidden',
+                'name' : 'parent',
+                'id'   : 'comment-parent'
+            });
+
+            form.appendChild(input);
+        }
+        
+        input.setAttribute('value', coid);
+
+        if (null == this.dom('comment-form-place-holder')) {
+            var holder = this.create('div', {
+                'id' : 'comment-form-place-holder'
+            });
+            
+            response.parentNode.insertBefore(holder, response);
+        }
+
+        comment.appendChild(response);
+        this.dom('cancel-comment-reply-link').style.display = '';
+        
+        if (null != textarea && 'text' == textarea.name) {
+            textarea.focus();
+        }
+        
+        return false;
+    },
+
+    cancelReply : function () {
+        var response = this.dom('respond-post-105'),
+        holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+        if (null != input) {
+            input.parentNode.removeChild(input);
+        }
+
+        if (null == holder) {
+            return true;
+        }
+
+        this.dom('cancel-comment-reply-link').style.display = 'none';
+        holder.parentNode.insertBefore(response, holder);
+        return false;
+    }
+}
+//]]>
+</script></head>
+
+<body onload="prettyPrint()">
+
+<div class="container">
+
+<header class="jumbotron" id="overview">
+        <h1>某储备粮的“学习笔记” </h1>
+    <p class="lead">by 咳嗽di小鱼</p>
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                
+                <a class="brand" href="index.html">
+                    Trapecho
+                </a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="index.html">Home</a></li>
+                        <li class="divider-vertical"></li>
+                                                                        <li><a href="category/sum-up/index.html" title="Sum Up">Sum Up</a></li>
+                                                <li><a href="category/code-dump/index.html" title="Code Dump">Code Dump</a></li>
+                                                <li><a href="category/network/index.html" title="Network">Network</a></li>
+                                                <li><a href="category/jotting/index.html" title="Jotting">Jotting</a></li>
+                                                <li><a href="category/Portfolio/index.html" title="Portfolio">Portfolio</a></li>
+                                                <li class="divider-vertical"></li>
+                                                                        <li><a href="linked-in.html" title="Linked In">Linked In</a></li>
+                                                <li><a href="guess-book.html" title="Guest Book">Guest Book</a></li>
+                                                <li><a href="about.html" title="About">About</a></li>
+                                                <li><a href="rss.html" title="RSS">RSS</a></li>
+                                            </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="content">
+
+
+<div class="row">
+    <div class="span9" id="content">
+        <div class="post">
+            <div class="page-header">
+                <h1>
+                    Kaching - Express.js payment solution                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: September 1, 2013</span>
+                    <span>Category: <a href="category/Portfolio/index.html">Portfolio</a></span>
+                </h6>
+            </div>
+            <div class="entry-content"><p><a href="https://github.com/gregwym/kaching">Kaching</a> is a simple payments solution for <a href="https://github.com/visionmedia/express">Express</a>-based web app, inspired by <a href="http://passportjs.org/">Passport.js</a>. Together with various <em>strategies</em>, Kaching provides a unified control flow to hook up with different online payment services.</p><p>For now, Kaching only provides <a href="https://github.com/gregwym/kaching-paypal">kaching-paypal</a> to accepting payment through <a href="http://www.paypal.com">Paypal</a>. More strategies are under plan.</p><h2>Install</h2><pre><code>$ npm install kaching
+$ npm install kaching-paypal
+</code></pre><h2>Example</h2><p><a href="https://github.com/gregwym/kaching/tree/master/example">https://github.com/gregwym/kaching/tree/master/example</a></p><h2>Usage</h2><h3>0. Setup with Kaching</h3><p>Paypal strategy require the <code>client_id</code> and <code>client_secret</code> offered by Paypal to operate. You can obtain them from <a href="https://developer.paypal.com/webapps/developer/applications">https://developer.paypal.com/webapps/developer/applications</a>.</p><p>It use <code>api.sandbox.paypal.com</code> as the default paypal host address. Feel free to change it in production environment.</p><pre><code>var PaypalStrategy = require('kaching-paypal');
+var kaching = require('kaching');
+
+kaching.use(new PaypalStrategy({
+  host: '&lt;paypal_rest_api_endpoint&gt;',        // optional
+  port: '',                                  // optional
+  client_id: '&lt;paypal_client_id&gt;',
+  client_secret: '&lt;paypal_client_secret&gt;'
+}));
+</code></pre><p><!--more--></p><h3>1. Create a payment</h3><p>Use <code>kaching.create</code>, specifying <code>paypal</code> strategy, to create a Paypal payment. The payment detail should be setup and saved in <code>req.payment</code> prior invoking the create middleware.</p><p>After kaching created the pending payment, it replaces <code>req.payment</code> with the real payment object that was returned from Paypal API. Save it securely. (i.e., together with the user's order.)</p><pre><code>app.get('...', function(req, res, next) {
+  // Setup payment detail in `req.payment`.
+  req.payment = {
+    amount:{
+      total:'7.47',
+      currency:'USD'
+    },
+    redirect_urls: {
+      return_url: 'http://&lt;return_url&gt;',
+      cancel_url: 'http://&lt;cancel_url&gt;'
+    },
+    description:'Kaching paypal test transaction'
+  };
+  next();
+}, kaching.create('paypal', {
+  // Optional options
+}), function(req, res) {
+  // Now `req.payment` is the Paypal returned payment object
+  res.json(req.payment);
+});
+</code></pre><h3>2. Redirect user to Paypal to approve the payment</h3><p>For most of the time, user should redirect to Paypal to complete the payment right away. You can find the page url in <code>payment.links</code> and do whatever you want.</p><p>Or simpler, append the <code>kaching.approve</code> middleware after the last request handler. It will redirect the user to the payment approval page.</p><pre><code>app.get('...', function(req, res, next) {
+  ...
+}, kaching.create('paypal', {
+  ...
+}), function(req, res, next) {
+  console.log(JSON.stringify(req.payment));
+  next();
+}, kaching.approve('paypal'));
+</code></pre><p>If you want to use <code>kaching.approve</code> somewhere else, make sure <code>req.payment</code> contain a valid payment object.</p><h3>3. Execute the approved payment to complete the transaction</h3><p>User will be redirect to <code>return_url</code> once the payment has been approved. Paypal will specify the <code>payer_id</code> in <code>req.query.PayerID</code>. This piece of information is required to execute and complete the payment, so save it securely.</p><p>Commonly, execute the payment right after can save many trouble. Here is an example,</p><pre><code>app.get('&lt;return_route&gt;', function(req, res, next) {
+  // Prepare payment information and payerId
+  req.payment = ...;           // Fetch the payment object from anywhere it was saved.
+  req.payment.payer_id = req.query.PayerID;
+  next();
+}, kaching.execute('paypal'), function(req, res) {
+  res.json(req.payment);       // Now the payment has been completed.
+});
+</code></pre><p>Like <code>kaching.create</code>, <code>kaching.execute</code> will update <code>req.payment</code> to the latest. And it's up to you to deal with it.</p><h2>API</h2><p>Note: all the middleware look for the payment informations in <code>req.payment</code>. Make sure it is set before passing control to a middleware.</p><h3>PaypalStrategy(options)</h3><p>Construct a new <code>strategy</code>.</p><pre><code>var options = {
+  host: '&lt;paypal_rest_api_endpoint&gt;',        // optional
+  port: '',                                  // optional
+  client_id: '&lt;paypal_client_id&gt;',
+  client_secret: '&lt;paypal_client_secret&gt;'
+}
+</code></pre><h3>PaypalStrategy#create</h3><p>Build the payment creation middleware.</p><p>It use <code>req.payment</code> as the payment_detail skeleton.</p><pre><code>req.payment = {
+  intent: '[sale | authorize]',             // default: sale
+  payment_method: '[paypal | credit_card]', // default: paypal
+  funding_instruments: {                    // required when payment_method = credit_card
+    ...   // https://developer.paypal.com/webapps/developer/docs/api/#fundinginstrument-object
+  },
+  amount: {                                 // required
+    ...   // https://developer.paypal.com/webapps/developer/docs/api/#amount-object
+  },
+  item_list: {                              // optional
+    ...   // https://developer.paypal.com/webapps/developer/docs/api/#itemlist-object
+  },
+  description: 'Payment description',       // optional
+  redirect_urls: {                          // required when payment_method = paypal
+    return_url: ...,
+    cancel_url: ...
+  }
+};
+</code></pre><p>You may notice that, things like <code>intent</code>, <code>payment_method</code> and <code>redirect_urls</code> are not necessarily be different for each payment. You can set the default value for them when building the middleware.</p><pre><code>...
+}, kaching.create('paypal', {
+  intent: 'sale',
+  payment_method: 'paypal',
+  redirect_urls: { ... } 
+}), 
+...
+</code></pre><p>Then you can omit these fields in <code>req.payment</code>.</p><h3>PaypalStrategy#approve</h3><p>Build the payment approval middleware. Mainly redirect to the <code>approval_url</code> in <code>payment.links</code>.</p><h3>PaypalStrategy#execute</h3><p>Build the approved payment execution middleware. The middleware find the payment in <code>req.payment</code> and execute it with <code>req.payment.payer_id</code>.</p><h2>Credits</h2><ul>
+<li><a href="https://github.com/gregwym">Greg Wang</a></li>
+</ul><h2>License</h2><p><a href="http://opensource.org/licenses/MIT">The MIT License</a></p><p>Copyright (c) 2013 Greg Wang <a href="http://gregwym.info/">http://gregwym.info/</a></p></div>
+            <div class="entry-tags">
+                Labels: 
+                <span class="label label-info">
+                    <a href="tag/node/index.html">node</a></span> <span class="label label-info"><a href="tag/js/index.html">js</a></span> <span class="label label-info"><a href="tag/express/index.html">express</a></span> <span class="label label-info"><a href="tag/paypal/index.html">paypal</a></span> <span class="label label-info"><a href="tag/kaching/index.html">kaching</a></span> <span class="label label-info"><a href="tag/payment/index.html">payment</a>                </span>
+            </div>
+        </div>
+        <hr class="soften" />
+        <div id="comments">
+                                    
+                        <div id="respond-post-105" class="respond">
+            
+            <div class="cancel-comment-reply">
+            <a id="cancel-comment-reply-link" href="kaching.html#respond-post-105" rel="nofollow" style="display:none" onclick="return TypechoComment.cancelReply();">取消回复</a>            </div>
+            
+            <form class="form-horizontal" method="post" action="http://blog.gregwym.info/kaching.html/comment" id="comment_form">
+                <fieldset>
+                    <legend>Add new comment &raquo;</legend>
+                                        <div class="control-group">
+                        <label class="control-label" for="author">Nick name</label>
+                        <div class="controls">
+                            <input type="text" name="author" id="author" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="mail">E-mail<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" name="mail" id="mail" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Web</label>
+                        <div class="controls">
+                            <input type="text" name="url" id="url" class="input-large" value="" />
+                        </div>
+                    </div>
+                                        <div class="control-group">
+                        <label class="control-label" for="url">Comment</label>
+                        <div class="controls">
+                            <textarea class="input-xlarge" name="text" rows="3"></textarea>
+                            <p class="help-block">Enter your comment here...</p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Captcha</label>
+                        <div class="controls">
+                            <img src="action/captcha" alt="captcha" onclick="this.src = this.src + '?' + Math.random()" style="cursor: pointer" title="点击图片刷新验证码" /><br /><input type="text" class="captcha" name="captcha_code" /> <strong>请输入验证码</strong>							                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Submit comment</button>
+                    </div>
+                </fieldset>
+            </form>
+            </div>
+            
+
+        </div>    </div><!-- end #content-->
+    <div class="span3" id="sidebar">
+    <div class="widget_search">
+        <form method="post" id="searchform" class="form-search">
+            <input type="text" class="span2" name="s" id="s" />
+            <button type="submit" class="btn" id="searchsubmit">Search</button>
+        </form>
+    </div>
+    
+        
+                    <div class="widget">
+            <h3>Related Posts</h3>
+                        <ul>
+                        </ul>
+        </div>
+            
+    
+        <div class="widget">
+        <h3>Recent Comments</h3>
+        <ul>
+                                    <li><a href="github-you-should-have-told-me-earlier.html#comment-952">payday loans</a>: wfxqtdq</li>
+                        <li><a href="Trapecho-boostrap-based-typecho-theme.html#comment-936">地铁线路图网</a>: 我也在用typecho，小巧玲珑，稍微改了以下默认模板，站现在简洁速度也不错，点击我的昵称可以访问。</li>
+                        <li><a href="about.html#comment-930">ramble</a>: 博客 ，请问如何显示显示文章前3段的摘要  不打乱格式</li>
+                        <li><a href="about.html#comment-874">清源</a>: 看来暂时只能看着用了，google的高亮的比较不明显。</li>
+                        <li><a href="about.html#comment-870">清源</a>: 大哥呀，主题这几天我看着感觉用中文书写标题字体太大了，正文的字体也太小了，估计还是适合用英文，不知道...</li>
+                    </ul>
+    </div>
+        
+        <div class="widget">
+    		<h3>Labels</h3>
+        <ul>
+                                    <a href="tag/algorithm/index.html" class="size-20">algorithm</a>
+                        <a href="tag/review/index.html" class="size-20">review</a>
+                        <a href="tag/cs240/index.html" class="size-10">cs240</a>
+                        <a href="tag/server/index.html" class="size-10">server</a>
+                        <a href="tag/VPS/index.html" class="size-10">VPS</a>
+                        <a href="tag/code/index.html" class="size-5">code</a>
+                        <a href="tag/database/index.html" class="size-5">database</a>
+                        <a href="tag/cs348/index.html" class="size-5">cs348</a>
+                        <a href="tag/typecho/index.html" class="size-5">typecho</a>
+                        <a href="tag/nginx/index.html" class="size-5">nginx</a>
+                        <a href="tag/search/index.html" class="size-5">search</a>
+                        <a href="tag/GUI/index.html" class="size-5">GUI</a>
+                        <a href="tag/linux/index.html" class="size-5">linux</a>
+                        <a href="tag/java/index.html" class="size-5">java</a>
+                        <a href="tag/DNS/index.html" class="size-5">DNS</a>
+                        <a href="tag/blog/index.html" class="size-5">blog</a>
+                        <a href="tag/apple/index.html" class="size-5">apple</a>
+                        <a href="tag/cs241/index.html" class="size-5">cs241</a>
+                        <a href="tag/compiler/index.html" class="size-5">compiler</a>
+                        <a href="tag/sql/index.html" class="size-5">sql</a>
+                    </ul>
+		</div>
+    
+    
+        <div class="widget">
+        <h3>Archives</h3>
+        <ul>
+            <li><a href="2013/09/index.html">September 2013</a></li>
+<li><a href="2012/12/index.html">December 2012</a></li>
+<li><a href="2012/11/index.html">November 2012</a></li>
+<li><a href="2012/08/index.html">August 2012</a></li>
+<li><a href="2012/06/index.html">June 2012</a></li>
+<li><a href="2012/04/index.html">April 2012</a></li>
+<li><a href="2012/03/index.html">March 2012</a></li>
+<li><a href="2012/02/index.html">February 2012</a></li>
+<li><a href="2011/12/index.html">December 2011</a></li>
+<li><a href="2011/11/index.html">November 2011</a></li>
+<li><a href="2011/10/index.html">October 2011</a></li>
+<li><a href="2011/06/index.html">June 2011</a></li>
+<li><a href="2011/05/index.html">May 2011</a></li>
+<li><a href="2011/04/index.html">April 2011</a></li>
+<li><a href="2011/03/index.html">March 2011</a></li>
+        </ul>
+    </div>
+    
+    
+        <div class="widget">
+        <h3>Others</h3>
+        <ul>
+                        <li class="last"><a href="http://blog.gregwym.info/admin/login.php">Login</a></li>
+                        <li><a href="http://validator.w3.org/check/referer">Valid XHTML</a></li>
+        </ul>
+    </div>
+    
+    </div><!-- end #sidebar -->
+    
+</div>
+<footer>
+    <p>
+        Powered by <a href="http://typecho.org/">Typecho</a>. 
+        <a href="http://dolast.com/pages/trapecho">Trapecho</a> theme by <a href="index.html">咳嗽di小鱼</a>. 
+        Hosting on <a href="https://www.digitalocean.com/?refcode=b846692d6a3a">Digital Ocean</a>
+    </p>
+</footer><!-- end #footer -->
+
+</div>
+</div>
+
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/jquery-1.7.1.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/bootstrap.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/prettify.js"></script>
+<script type="text/javascript">
+    // fix navbar on scroll
+    var $win = $(window)
+      , $nav = $('.navbar')
+      , navTop = $('.navbar').length && $('.navbar').offset().top - 10
+      , isFixed = 0
+
+    processScroll()
+
+    $win.on('scroll', processScroll)
+
+    function processScroll() {
+      var i, scrollTop = $win.scrollTop()
+      if (scrollTop >= navTop && !isFixed) {
+        isFixed = 1
+        $nav.addClass('navbar-fixed-top')
+      } else if (scrollTop <= navTop && isFixed) {
+        isFixed = 0
+        $nav.removeClass('navbar-fixed-top')
+      }
+    }
+    
+    $('.page-navigator li:not(:has(a))').html('<a>...</a>');
+    $('.page-navigator .current').addClass('active');
+    
+        $('pre').addClass('prettyprint linenums');
+        $('.entry-content a').attr('target','_blank');
+</script>
+</body>
+</html>
+

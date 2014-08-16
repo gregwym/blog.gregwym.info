@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="http://blog.gregwym.info/feed/rss/tag/iOS/">
+<title>某储备粮的“学习笔记” - iOS</title>
+<link>http://blog.gregwym.info/tag/iOS/</link>
+<description></description>
+<items>
+<rdf:Seq>
+<rdf:li resource="http://blog.gregwym.info/informatic-toolbar.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="http://blog.gregwym.info/informatic-toolbar.html">
+<title>InformaticToolbar: iOS Toolbar Enhancement Library</title>
+<link>http://blog.gregwym.info/informatic-toolbar.html</link>
+<dc:date>2012-11-05T09:08:18+08:00</dc:date>
+<description>First of all, the repo: https://github.com/gregwym/InformaticToolbarIntroRemember in the Mail App, it shows update status and sending mail progress in the bottom toolbar. I think it is a really neat way to show information, especially for those apps who use native iOS UI elements.However, I couldn't find any lib out there for this task. So I decide to invent the wheel myself.Feel free to post any issues or patch. It's my pleasure for any who like my work.What it doesInformaticToolbar is mainly an UIViewController Category which allows you to add several UIBarButtonItems set to your toolbar.The sets are defined as subclasses of ITBarItemSet. All ITBarItemSet can have a dismiss button if the target and action has been defined. If more than one set has been added, a switch button (an arrow) will be displayed on the left for user to switch between sets.For now, there are three pre-defined set:
+ITLabelBarItemSet: a textLabel and a detailTextLabel
+ITProgressBarItemSet: a textLabel and a progressBar
+ITConfirmationBarItemSet: two label and a check-mark button
+You can easily create new sets by extending ITBarItemSet yourself.Screenshot:How to useFirst: clone it to your project directorycd *your-project-location*
+git submodule add git://github.com/gregwym/InformaticToolbar.git
+Second: add to your projectYou can either add the source codes directly or
+drag and drop InformaticToolbar.xcodeproj to your project.
+In your project setting 
+
+
+In Build Phases->Target Dependencies, add InformaticToolbar (the library)
+In Build Phases->Link Binary With Libraries, add libInformaticToolbar.a
+In Build Settings, add "${PROJECT_DIR}/InformaticToolbar/" to User Header Search Paths, include the quotation marks.
+In Build Settings, set Always Search User Path to YES
+In Build Settings, set Other Linker Flags to -ObjC
+
+Third: add the headerIn any UIViewController that you want to use this lib, add #import "InformaticToolbar.h" at the front.Or easier, you can add the import to YOUR Prefix.pch file.Forth: add an item set to toolbarLet's say I want to add a Label to my toolbar, I can call the following method in an UIViewController:- (IBAction)addLabelBarItemSet:(id)sender
+{
+    ITLabelBarItemSet *labelBarItemSet = [ITLabelBarItemSet labelBarItemSetWithDismissTarget:self andAction:@selector(dismissBarItemSet:)];
+    labelBarItemSet.textLabel.text = @"This is text label. ";
+    labelBarItemSet.detailTextLabel.text = @"This is detail text label. ";
+    [self pushBarItemSet:labelBarItemSet animated:YES];
+}
+
+- (void)dismissBarItemSet:(ITBarItemSet *)sender
+{
+    [self removeBarItemSet:sender animated:YES];
+}
+Demo ProjectIn the project, there is a demo app you can tryout. ITViewController.m includes the sample usage of all three pre-defined item sets.LicenseInformaticToolbar by Greg Wang is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.</description>
+</item>
+</rdf:RDF>

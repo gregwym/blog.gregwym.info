@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>search - 某储备粮的“学习笔记”</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 使用url函数转换相关路径 -->
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/style.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/prettify.css" />
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="http://blog.gregwym.info/tag/search/images/favicon.ico">
+<link rel="apple-touch-icon" href="http://blog.gregwym.info/tag/search/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="http://blog.gregwym.info/tag/search/images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="http://blog.gregwym.info/tag/search/images/apple-touch-icon-114x114.png">
+
+<!-- 通过自有函数输出HTML头部信息 -->
+<meta name="keywords" content="search" />
+<meta name="generator" content="Typecho 0.9/13.12.12" />
+<meta name="template" content="trapecho" />
+<link rel="pingback" href="../../action/xmlrpc.html" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="../../action/xmlrpc%3Frsd.html" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="../../action/xmlrpc%3Fwlw.html" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="../../feed/tag/search/index.html" />
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="../../feed/rss/tag/search/index.html" />
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="../../feed/atom/tag/search/index.html" />
+</head>
+
+<body onload="prettyPrint()">
+
+<div class="container">
+
+<header class="jumbotron" id="overview">
+        <h1>某储备粮的“学习笔记” </h1>
+    <p class="lead">by 咳嗽di小鱼</p>
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                
+                <a class="brand" href="../../index.html">
+                    Trapecho
+                </a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="../../index.html">Home</a></li>
+                        <li class="divider-vertical"></li>
+                                                                        <li><a href="../../category/sum-up/index.html" title="Sum Up">Sum Up</a></li>
+                                                <li><a href="../../category/code-dump/index.html" title="Code Dump">Code Dump</a></li>
+                                                <li><a href="../../category/network/index.html" title="Network">Network</a></li>
+                                                <li><a href="../../category/jotting/index.html" title="Jotting">Jotting</a></li>
+                                                <li><a href="../../category/Portfolio/index.html" title="Portfolio">Portfolio</a></li>
+                                                <li class="divider-vertical"></li>
+                                                                        <li><a href="../../linked-in.html" title="Linked In">Linked In</a></li>
+                                                <li><a href="../../guess-book.html" title="Guest Book">Guest Book</a></li>
+                                                <li><a href="../../about.html" title="About">About</a></li>
+                                                <li><a href="../../rss.html" title="RSS">RSS</a></li>
+                                            </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="content">
+
+
+<div class="row">
+    <div class="span9" id="content">
+                        <div class="post">
+            <div class="page-header">
+                <h1>
+                    <a href="../../jiang-chrome-sou-suo-mo-ren-ding-wei-dao-google-com.html">将Chrome搜索默认定位到google.com</a> 
+                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: November 25, 2011</span>
+                    <span>Category: <a href="../../category/jotting/index.html">Jotting</a></span>
+                    <a href="../../jiang-chrome-sou-suo-mo-ren-ding-wei-dao-google-com.html#comments">No Comments</a>
+                </h6>
+            </div>
+            <div class="entry-content"><p>不同系统, 配置文件的位置不太一样.</p><p>Windows在<br /><em>%USERPROFILE%\Local Settings\Application Data\Google\Chrome\User Data</em></p><p>Mac OS X在<br /><em>~/Library/Application Support/Google/Chrome/</em></p><p>Linux在<br /><em>$HOME/?.config/google-chrome</em></p><p>用编辑器打开Local State这个文件, 找到以下两行</p><blockquote><p>"last&#95;known&#95;google<em>url": "http://www.google.&#42;&#42;&#42;/",<br />"last&#95;prompted&#95;google</em>url": "http://www.google.&#42;&#42;&#42;/",</p></blockquote><p>将它们改为：</p><blockquote><p>"last&#95;known&#95;google<em>url": "http://www.google.com/",<br />"last&#95;prompted&#95;google</em>url": "http://www.google.com/",</p></blockquote><p>打开Chrome以后随便搜索个东西...他会提示你正在使用google.com, 要不要更换到google.&#42;**|.<br />选择继续使用, 大功告成! 嘿嘿</p></div>
+        </div>
+        <hr class="soften" />
+                <div class="post">
+            <div class="page-header">
+                <h1>
+                    <a href="../../cs-240-fu-xi-zong-jie-zhi-qi--range-search-query.html">CS 240复习总结之七: Range Search Query</a> 
+                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: April 7, 2011</span>
+                    <span>Category: <a href="../../category/sum-up/index.html">Sum Up</a></span>
+                    <a href="../../cs-240-fu-xi-zong-jie-zhi-qi--range-search-query.html#comments">No Comments</a>
+                </h6>
+            </div>
+            <div class="entry-content"><p>在我总结这个Module之前允许我吐槽一下...`<br /><blockquote><em>Assignment 5, 泥玛那个是什么脑残傻缺的ADT啊`! 放着Slide里这么好的三种ADT你不用啊`!!! 你跑去弄什么x-min-heap外加y-BST, 还弄个好听的名字叫Heap-tree`!!! 泥玛就是个残废啊`有木有有木有~!!! 不光残废啊, 是连TA自己都搞不懂到底该怎么用啊`!!! 连"You can slightly break the heap proerty"都说出来了...这种东西随便写写就让他过去吧`!!!!! 以后做工程真的用, 程序怎么死的都不知道啊`!!!</em></blockquote><br />
+吐槽完毕= =`回归正题<br /><blockquote>我们日常生活中的很多数据并不是一对一的KVP (不懂KVP的请去看, <a target="_blank" href="../../cs-240-fu-xi-zong-jie-zhi-si--dictionaries-and-balanced-search-trees.html">总结四 - BST篇</a>).<br />拿Slide里的例子来说, 买一台电脑, 不光要看它的CPU是什么型号, 还要看内存多大, 硬盘多大, 显卡怎么样, 价钱多少, etc. 这样的数据都是一个key对多个value.<br /><br />这种情况下, 如果我需要找一台CPU 2.2GHz以上+内存4G-8G的电脑, 就需要从我的data中进行Range Search Query, 而且是2D的Range Search. 如果我在这个条件上再+要至少3T硬盘存xx...那就是3D的Range Search了.<br /></blockquote><br />我们之前学习的Sort也好, Tree也好, 都是针对1D数据的排序和搜索, 碰到2D和3D就都傻了.<br />以下三个ADT就能很好的解决这个问题.<br /><br /><h3>Quadtree</h3><br /><ol>
+<li>将所有数据放在一个平面空间里 (咱们想象力能及的只有2D和3D空间, 这里以2D举例)</li>
+<li>将整个平面以对边中点的连线为基准, 切两刀分成四份 (3D空间的话, 需要多切一刀...)</li>
+<li>针对每一个切出来的平面重复上一步, 直到这个平面内只有一个item为止</li>
+</ol><br />
+<a href="http://blog.gregwym.info/usr/uploads/2011/04/927667422.png" title="Quadtree.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/927667422.png" alt="Quadtree.png" width=100% /></a><br />也就是说, Quadtree每个node最多有4个child, 如果以整个平面的中心为坐标中点的话, 这4个child代表每一个象限内的点的集合, 以此类推. <strong>所有item都只存在于leaf中</strong><br /><ul>
+<li>Search和BST一样, 不解释</li>
+<li>Insert就一个规则, 只要不是单身汉, 别管他3p还是5p, 都要给他们拆散! 直到新item有单间为止</li>
+<li>Delete就是insert相反, 先把item赶走, 然后把单间拆掉</li>
+<li>优点: 简单, 拆两半两半两半再两半就ok了; 对higher dimensions也很容易implementl;</li>
+<li>缺点: 占用空间大; 如果数据分布不平均, Tree就会unbalanced, height就会变得很恐怖;</li>
+</ul><br /><h3>Kd-tree</h3><br /><ol>
+<li>将item以x-coordinate排序, 画一条过median点的纵线(vertical) (同样以2D举例)</li>
+<li>对第1步切分出来的两个平面, 分别以y-coordinate排序, 然后过median画一条横线(horizontal)</li>
+<li>对第2步切分出来的平面(们)...重复第一步</li>
+<li>如果某一步切分出的某个平面内只有一个item, 则停止.</li>
+</ol><br />
+<a href="http://blog.gregwym.info/usr/uploads/2011/04/1772279057.png" title="kd-tree.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/1772279057.png" alt="kd-tree.png" width=100% /></a><br /><ul>
+<li>此法解决了Quadtree会unbalanced的问题, 其他一样.</li>
+<li>与Quadtree相同, <strong>所有item都只存在于leaf中</strong></li>
+</ul><br /><h3>Range Tree</h3><br /><ol>
+<li>以x-coordinate为基准建立balanced BST T (同样以2D举例)</li>
+<li>针对T中的每一个node v<sub>i</sub>, 用v<sub>i</sub>及其所有children建立以y-coordinate为基准的T<sub>assoc</sub>(v<sub>i</sub>)</li>
+<li>将v<sub>i</sub>链接到T<sub>assoc</sub>(v<sub>i</sub>)</li>
+</ol><br />
+<a href="http://blog.gregwym.info/usr/uploads/2011/04/1264267599.png" title="Range_trees.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/1264267599.png" alt="Range_trees.png" width=70% /></a><br /><ul>
+<li>也就是说, Range Tree第一层的每一个subtree背后, 都有一个以y-coordinate排序的另一个BST</li>
+<li>如果是higher dimensions的话, 则要多几层associated BST嵌套</li>
+<li>Search<br />
+<ul>
+<li>用x-coordinate进行BST Search</li>
+<li>对所有inside node的顶部(root of the subtree)的T<sub>assoc</sub>, 执行y-coordinate的BST Search</li>
+<li>对所有不确定的边缘node (卡在指定range的边上), 逐一进行单独判断</li>
+</ul></li>
+<li>Insert<br />
+<ul>
+<li>依照x-coordinate进行BST insertion</li>
+<li>从最终insert的位置, travel回root. 并将item insert到途经的所有node的T<sub>assoc</sub>中</li>
+</ul></li>
+<li>Delete和Insert相反</li>
+<li>缺点: balance难度较大.</li> 
+</ul><br />更新1: 修正了Range Tree的错误解释<br /><br />更多CS 240总结请看: <a target="_blank" href="../cs240/index.html">http://blog.gregwym.info/tag/cs240/</a><br /></p></div>
+        </div>
+        <hr class="soften" />
+                <div class="post">
+            <div class="page-header">
+                <h1>
+                    <a href="../../cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html">CS 240复习总结之六: Dictionary Tricks</a> 
+                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: April 7, 2011</span>
+                    <span>Category: <a href="../../category/sum-up/index.html">Sum Up</a></span>
+                    <a href="../../cs-240-fu-xi-zong-jie-zhi-liu--dictionary-tricks.html#comments">No Comments</a>
+                </h6>
+            </div>
+            <div class="entry-content"><h3>各种Binary Search的变种 <del>(杂种?)</del></h3><br /><blockquote>插值查找法 Interpolation Search<br /><ul>
+<li><a href="http://blog.gregwym.info/usr/uploads/2011/04/3697520527.jpg" title="Interpolation_Search.jpg"><img src="http://blog.gregwym.info/usr/uploads/2011/04/3697520527.jpg" alt="Interpolation_Search.jpg" width="70%" /></a></li>
+<li>在已知Array A大小的前提下, 假设A中的数据呈线性排列</li>
+<li>用比例推测所查找值 K, 可能存在的Index I<br />
+I = I<sub>low</sub> + (I<sub>upper</sub> - I<sub>low</sub>)(K - K<sub>low</sub>) / (K<sub>upper</sub> - K<sub>low</sub>)</li>
+<li>如果A中的数据分布比较平均, 此法效率比BS高</li>
+<li>否则相反</li>
+<li>更详细的解释, 可参考: <a target="_blank" href="http://program-lover.blogspot.com/2008/12/interpolation-search.html">【演算】內插搜尋法 - Interpolation Search</a></li>
+</ul><br />Gallop Search<br /><ul>
+<li>先推测出K所在的范围, 然后执行BS</li>
+<li>适用于数据量大的搜索. 通过减小BS的搜索范围, 优化性能.</li>
+</ul><br />跳跃列表 Skip Lists (我觉得最有意思的数据结构)<br /><ul>
+<li>整个表以多层表的形式出现, 每层均包含"极小"和"极大"两个item</li>
+<li>每个item拥有一个随机的height值</li>
+<li>最顶层只包含两个极值, 层数越低, 包含的item越多, 直到底层.</li>	
+<li>Search方式<ul>
+<li>从顶层起</li>
+<li>如果该层中的下一项item大于K, 则落入下一层</li>
+<li>否则继续在该层向后查找</li>
+</ul></li>
+<li><a href="http://blog.gregwym.info/usr/uploads/2011/04/2207809994.png" title="Skip_List.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/2207809994.png" alt="Skip_List.png" width=100% /></a></li>
+</ul></blockquote><h3>针对访问概率进行的优化</h3><blockquote>自排序搜索 Self-Organizing Search<br /><ul>
+<li>如果我们知道某一系列数据中, 每一个item可能被访问的概率</li>
+<li>依照每一项的概率对数据进行排序, 优化高概率item的访问效率</li>
+<li>如果不知道可能的访问概率, 则需要...</li>
+</ul><p>动态排序 Dynamic Ordering<br /><ul>
+<li>方法一: Move-To-Front(MTF)<br />
+<ul>
+<li>将每次搜索到的item移到最前</li>
+<li>近期内再搜索此item的时候, 效率会提高</li>
+</ul></li>
+<li>方法二: Transpose<br />
+<ul>
+<li>将每次搜索到的item与其前一项互换</li>
+<li>多次访问同一item以后, 该item的排序会提前很多, 访问效率会提高</li>
+</ul></li>
+</ul></blockquote><br />更多CS 240总结请看: <a target="_blank" href="../cs240/index.html">http://blog.gregwym.info/tag/cs240/</a><br /></p></div>
+        </div>
+        <hr class="soften" />
+                
+        <div class="pagination">
+                    </div>
+    </div><!-- end #content-->
+    <div class="span3" id="sidebar">
+    <div class="widget_search">
+        <form method="post" id="searchform" class="form-search">
+            <input type="text" class="span2" name="s" id="s" />
+            <button type="submit" class="btn" id="searchsubmit">Search</button>
+        </form>
+    </div>
+    
+        
+    
+    
+        <div class="widget">
+        <h3>Recent Comments</h3>
+        <ul>
+                                    <li><a href="../../github-you-should-have-told-me-earlier.html#comment-952">payday loans</a>: wfxqtdq</li>
+                        <li><a href="../../Trapecho-boostrap-based-typecho-theme.html#comment-936">地铁线路图网</a>: 我也在用typecho，小巧玲珑，稍微改了以下默认模板，站现在简洁速度也不错，点击我的昵称可以访问。</li>
+                        <li><a href="../../about.html#comment-930">ramble</a>: 博客 ，请问如何显示显示文章前3段的摘要  不打乱格式</li>
+                        <li><a href="../../about.html#comment-874">清源</a>: 看来暂时只能看着用了，google的高亮的比较不明显。</li>
+                        <li><a href="../../about.html#comment-870">清源</a>: 大哥呀，主题这几天我看着感觉用中文书写标题字体太大了，正文的字体也太小了，估计还是适合用英文，不知道...</li>
+                    </ul>
+    </div>
+        
+        <div class="widget">
+    		<h3>Labels</h3>
+        <ul>
+                                    <a href="../algorithm/index.html" class="size-20">algorithm</a>
+                        <a href="../review/index.html" class="size-20">review</a>
+                        <a href="../cs240/index.html" class="size-10">cs240</a>
+                        <a href="../server/index.html" class="size-10">server</a>
+                        <a href="../VPS/index.html" class="size-10">VPS</a>
+                        <a href="../code/index.html" class="size-5">code</a>
+                        <a href="../database/index.html" class="size-5">database</a>
+                        <a href="../cs348/index.html" class="size-5">cs348</a>
+                        <a href="../typecho/index.html" class="size-5">typecho</a>
+                        <a href="../nginx/index.html" class="size-5">nginx</a>
+                        <a href="index.html" class="size-5">search</a>
+                        <a href="../GUI/index.html" class="size-5">GUI</a>
+                        <a href="../linux/index.html" class="size-5">linux</a>
+                        <a href="../java/index.html" class="size-5">java</a>
+                        <a href="../DNS/index.html" class="size-5">DNS</a>
+                        <a href="../blog/index.html" class="size-5">blog</a>
+                        <a href="../apple/index.html" class="size-5">apple</a>
+                        <a href="../cs241/index.html" class="size-5">cs241</a>
+                        <a href="../compiler/index.html" class="size-5">compiler</a>
+                        <a href="../sql/index.html" class="size-5">sql</a>
+                    </ul>
+		</div>
+    
+    
+        <div class="widget">
+        <h3>Archives</h3>
+        <ul>
+            <li><a href="../../2013/09/index.html">September 2013</a></li>
+<li><a href="../../2012/12/index.html">December 2012</a></li>
+<li><a href="../../2012/11/index.html">November 2012</a></li>
+<li><a href="../../2012/08/index.html">August 2012</a></li>
+<li><a href="../../2012/06/index.html">June 2012</a></li>
+<li><a href="../../2012/04/index.html">April 2012</a></li>
+<li><a href="../../2012/03/index.html">March 2012</a></li>
+<li><a href="../../2012/02/index.html">February 2012</a></li>
+<li><a href="../../2011/12/index.html">December 2011</a></li>
+<li><a href="../../2011/11/index.html">November 2011</a></li>
+<li><a href="../../2011/10/index.html">October 2011</a></li>
+<li><a href="../../2011/06/index.html">June 2011</a></li>
+<li><a href="../../2011/05/index.html">May 2011</a></li>
+<li><a href="../../2011/04/index.html">April 2011</a></li>
+<li><a href="../../2011/03/index.html">March 2011</a></li>
+        </ul>
+    </div>
+    
+    
+        <div class="widget">
+        <h3>Others</h3>
+        <ul>
+                        <li class="last"><a href="http://blog.gregwym.info/admin/login.php">Login</a></li>
+                        <li><a href="http://validator.w3.org/check/referer">Valid XHTML</a></li>
+        </ul>
+    </div>
+    
+    </div><!-- end #sidebar -->
+    
+</div>
+<footer>
+    <p>
+        Powered by <a href="http://typecho.org/">Typecho</a>. 
+        <a href="http://dolast.com/pages/trapecho">Trapecho</a> theme by <a href="../../index.html">咳嗽di小鱼</a>. 
+        Hosting on <a href="https://www.digitalocean.com/?refcode=b846692d6a3a">Digital Ocean</a>
+    </p>
+</footer><!-- end #footer -->
+
+</div>
+</div>
+
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/jquery-1.7.1.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/bootstrap.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/prettify.js"></script>
+<script type="text/javascript">
+    // fix navbar on scroll
+    var $win = $(window)
+      , $nav = $('.navbar')
+      , navTop = $('.navbar').length && $('.navbar').offset().top - 10
+      , isFixed = 0
+
+    processScroll()
+
+    $win.on('scroll', processScroll)
+
+    function processScroll() {
+      var i, scrollTop = $win.scrollTop()
+      if (scrollTop >= navTop && !isFixed) {
+        isFixed = 1
+        $nav.addClass('navbar-fixed-top')
+      } else if (scrollTop <= navTop && isFixed) {
+        isFixed = 0
+        $nav.removeClass('navbar-fixed-top')
+      }
+    }
+    
+    $('.page-navigator li:not(:has(a))').html('<a>...</a>');
+    $('.page-navigator .current').addClass('active');
+    
+        $('pre').addClass('prettyprint linenums');
+        $('.entry-content a').attr('target','_blank');
+</script>
+</body>
+</html>

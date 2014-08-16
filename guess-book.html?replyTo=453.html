@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>Guest Book - 某储备粮的“学习笔记”</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 使用url函数转换相关路径 -->
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/style.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/prettify.css" />
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="http://blog.gregwym.info/images/favicon.ico">
+<link rel="apple-touch-icon" href="http://blog.gregwym.info/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="http://blog.gregwym.info/images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="http://blog.gregwym.info/images/apple-touch-icon-114x114.png">
+
+<!-- 通过自有函数输出HTML头部信息 -->
+<meta name="description" content="来过的都把你们的小爪留下吧`!" />
+<meta name="generator" content="Typecho 0.9/13.12.12" />
+<meta name="template" content="trapecho" />
+<link rel="pingback" href="action/xmlrpc.html" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="action/xmlrpc%3Frsd.html" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="action/xmlrpc%3Fwlw.html" />
+<script type="text/javascript">
+//<![CDATA[
+var TypechoComment = {
+    dom : function (id) {
+        return document.getElementById(id);
+    },
+    
+    create : function (tag, attr) {
+        var el = document.createElement(tag);
+        
+        for (var key in attr) {
+            el.setAttribute(key, attr[key]);
+        }
+        
+        return el;
+    },
+
+    reply : function (cid, coid) {
+        var comment = this.dom(cid), parent = comment.parentNode,
+            response = this.dom('respond-page-22'), input = this.dom('comment-parent'),
+            form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+            textarea = response.getElementsByTagName('textarea')[0];
+
+        if (null == input) {
+            input = this.create('input', {
+                'type' : 'hidden',
+                'name' : 'parent',
+                'id'   : 'comment-parent'
+            });
+
+            form.appendChild(input);
+        }
+        
+        input.setAttribute('value', coid);
+
+        if (null == this.dom('comment-form-place-holder')) {
+            var holder = this.create('div', {
+                'id' : 'comment-form-place-holder'
+            });
+            
+            response.parentNode.insertBefore(holder, response);
+        }
+
+        comment.appendChild(response);
+        this.dom('cancel-comment-reply-link').style.display = '';
+        
+        if (null != textarea && 'text' == textarea.name) {
+            textarea.focus();
+        }
+        
+        return false;
+    },
+
+    cancelReply : function () {
+        var response = this.dom('respond-page-22'),
+        holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+        if (null != input) {
+            input.parentNode.removeChild(input);
+        }
+
+        if (null == holder) {
+            return true;
+        }
+
+        this.dom('cancel-comment-reply-link').style.display = 'none';
+        holder.parentNode.insertBefore(response, holder);
+        return false;
+    }
+}
+//]]>
+</script></head>
+
+<body onload="prettyPrint()">
+
+<div class="container">
+
+<header class="jumbotron" id="overview">
+        <h1>某储备粮的“学习笔记” </h1>
+    <p class="lead">by 咳嗽di小鱼</p>
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                
+                <a class="brand" href="index.html">
+                    Trapecho
+                </a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="index.html">Home</a></li>
+                        <li class="divider-vertical"></li>
+                                                                        <li><a href="category/sum-up/index.html" title="Sum Up">Sum Up</a></li>
+                                                <li><a href="category/code-dump/index.html" title="Code Dump">Code Dump</a></li>
+                                                <li><a href="category/network/index.html" title="Network">Network</a></li>
+                                                <li><a href="category/jotting/index.html" title="Jotting">Jotting</a></li>
+                                                <li><a href="category/Portfolio/index.html" title="Portfolio">Portfolio</a></li>
+                                                <li class="divider-vertical"></li>
+                                                                        <li><a href="linked-in.html" title="Linked In">Linked In</a></li>
+                                                <li class="active"><a href="guess-book.html" title="Guest Book">Guest Book</a></li>
+                                                <li><a href="about.html" title="About">About</a></li>
+                                                <li><a href="rss.html" title="RSS">RSS</a></li>
+                                            </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="content">
+
+
+<div class="row">
+    <div class="span9" id="content">
+        <div class="post">
+            <div class="page-header">
+                <h1>
+                    Guest Book                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: April 6, 2011</span>
+                </h6>
+            </div>
+            <div class="entry-content"><p>来过的都把你们的小爪留下吧`!</p></div>
+        </div>
+        <hr class="soften" />
+        <div id="comments">
+                                    <h3>47 comments &raquo;</h3>
+            
+            <ol class="comment-list"><li id="comment-53" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/b09bfa2fdef7d4d34face08939f65429?s=32&amp;r=X&amp;d=" alt="〓 T.T 〓" width="32" height="32" />        <cite class="fn">〓 T.T 〓</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-53">April 6th, 2011 at 08:50 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>留爪！</p>    </div>
+    <div class="comment-reply">
+        <a href="guess-book.html%3FreplyTo=53.html#respond-page-22" rel="nofollow" onclick="return TypechoComment.reply('comment-53', 53);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-54" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-54">April 6th, 2011 at 09:06 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>嘿嘿`谢谢建议...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-55" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/b09bfa2fdef7d4d34face08939f65429?s=32&amp;r=X&amp;d=" alt="〓 T.T 〓" width="32" height="32" />        <cite class="fn">〓 T.T 〓</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-55">April 6th, 2011 at 09:07 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>8k78k7~~ 每次回复都会发到邮箱的哈？</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-56" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-56">April 6th, 2011 at 09:12 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>yep`...毕竟不是校内啊, 如果不发邮箱, 谁知道有没有回复了</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-57" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/b09bfa2fdef7d4d34face08939f65429?s=32&amp;r=X&amp;d=" alt="〓 T.T 〓" width="32" height="32" />        <cite class="fn">〓 T.T 〓</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-57">April 6th, 2011 at 09:16 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>hmm……有道理……没有办法和qq或者校内连在一起嘛？</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-58" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-58">April 6th, 2011 at 09:19 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>这个不太可能...`他们都不会开放这种接口的</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-59" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/b09bfa2fdef7d4d34face08939f65429?s=32&amp;r=X&amp;d=" alt="〓 T.T 〓" width="32" height="32" />        <cite class="fn">〓 T.T 〓</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-59">April 6th, 2011 at 09:24 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>那……通过你的qq号向留言的人发信息呢？？（我完全没概念……随便说说而已……）</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-60" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-60">April 6th, 2011 at 09:26 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>这个...也不太现实= =`网站也不知道你Q号多少啊</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-61" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/b09bfa2fdef7d4d34face08939f65429?s=32&amp;r=X&amp;d=" alt="〓 T.T 〓" width="32" height="32" />        <cite class="fn">〓 T.T 〓</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-61">April 6th, 2011 at 09:28 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>可以像留邮箱一样把Q号也留下哈~~~</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-62" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-62">April 6th, 2011 at 09:31 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>等哪年QQ推出这项服务吧...~( ＞﹏＜)</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-63" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/b09bfa2fdef7d4d34face08939f65429?s=32&amp;r=X&amp;d=" alt="〓 T.T 〓" width="32" height="32" />        <cite class="fn">〓 T.T 〓</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-63">April 6th, 2011 at 09:33 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>哈哈 只要一旦有某个地方成功的推出这项服务了 腾讯肯定会马上copy过去哒！！ XD</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-64" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-64">April 6th, 2011 at 09:35 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>现在也只有mail了`...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-65" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/b09bfa2fdef7d4d34face08939f65429?s=32&amp;r=X&amp;d=" alt="〓 T.T 〓" width="32" height="32" />        <cite class="fn">〓 T.T 〓</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-65">April 6th, 2011 at 09:44 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>嗯嗯……>.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-66" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/8ad7d532088537f546021e9a8e07f43a?s=32&amp;r=X&amp;d=" alt="K" width="32" height="32" />        <cite class="fn">K</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-66">April 6th, 2011 at 10:34 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>拍……</p>    </div>
+    <div class="comment-reply">
+        <a href="guess-book.html%3FreplyTo=66.html#respond-page-22" rel="nofollow" onclick="return TypechoComment.reply('comment-66', 66);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-67" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-67">April 6th, 2011 at 10:48 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>Pia!</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-68" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/8ad7d532088537f546021e9a8e07f43a?s=32&amp;r=X&amp;d=" alt="K" width="32" height="32" />        <cite class="fn">K</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-68">April 6th, 2011 at 10:49 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>……你好暴力……</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-69" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-69">April 6th, 2011 at 10:50 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>...我只是运用了一下象声词`</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-70" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/8ad7d532088537f546021e9a8e07f43a?s=32&amp;r=X&amp;d=" alt="K" width="32" height="32" />        <cite class="fn">K</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-70">April 6th, 2011 at 10:51 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>很暴力的象声词……</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-446" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/18bef0ee126a353af85df10b6fde577a?s=32&amp;r=X&amp;d=" alt="ZTvS" width="32" height="32" />        <cite class="fn"><a href="http://sidaliu.com" rel="external nofollow">ZTvS</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-446">May 6th, 2011 at 07:51 am</a>
+            </div>
+    <div class="comment-content">
+    <p>路过</p>    </div>
+    <div class="comment-reply">
+        <a href="guess-book.html%3FreplyTo=446.html#respond-page-22" rel="nofollow" onclick="return TypechoComment.reply('comment-446', 446);">回复</a>    </div>
+    </li>
+<li id="comment-448" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/edad94c00fcb5138a0aa829bc0b4e8d9?s=32&amp;r=X&amp;d=" alt="鸟" width="32" height="32" />        <cite class="fn">鸟</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-448">May 6th, 2011 at 08:06 am</a>
+            </div>
+    <div class="comment-content">
+    <p>八错八错~~~老僧路过，发觉此站甚亮。。。表示钦佩无比。。</p><p>我马屁拍这么给力~有没有什么奖励~~</p>    </div>
+    <div class="comment-reply">
+        <a href="guess-book.html%3FreplyTo=448.html#respond-page-22" rel="nofollow" onclick="return TypechoComment.reply('comment-448', 448);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-451" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-451">May 6th, 2011 at 08:46 am</a>
+            </div>
+    <div class="comment-content">
+    <p>= =...要批评`发现的这么晚!</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-453" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/b09bfa2fdef7d4d34face08939f65429?s=32&amp;r=X&amp;d=" alt="〓 T.T 〓" width="32" height="32" />        <cite class="fn">〓 T.T 〓</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-453">May 14th, 2011 at 02:54 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>你的tumblr怎么都不更新了呃？>.</p>    </div>
+    <div class="comment-reply">
+        <a href="guess-book.html%3FreplyTo=453.html#respond-page-22" rel="nofollow" onclick="return TypechoComment.reply('comment-453', 453);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-454" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-454">May 14th, 2011 at 02:55 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>...`时间不够用啊, 最近都没翻图了= =</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-455" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/b09bfa2fdef7d4d34face08939f65429?s=32&amp;r=X&amp;d=" alt="〓 T.T 〓" width="32" height="32" />        <cite class="fn">〓 T.T 〓</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-455">May 14th, 2011 at 02:58 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>唉……好吧~<br>
+PS: 验证码好长啊……不在这里聊了……</p>    </div>
+    <div class="comment-reply">
+        <a href="guess-book.html%3FreplyTo=455.html#respond-page-22" rel="nofollow" onclick="return TypechoComment.reply('comment-455', 455);">回复</a>    </div>
+    </li>
+<li id="comment-503" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/12198ca6940395761b36a9ba50e0552d?s=32&amp;r=X&amp;d=" alt="上官小天" width="32" height="32" />        <cite class="fn"><a href="http://blog.collinsz.info" rel="external nofollow">上官小天</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-503">December 15th, 2011 at 11:56 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>留爪印！</p>    </div>
+    <div class="comment-reply">
+        <a href="guess-book.html%3FreplyTo=503.html#respond-page-22" rel="nofollow" onclick="return TypechoComment.reply('comment-503', 503);">回复</a>    </div>
+    </li>
+<li id="comment-516" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/43110ce9dd31ef52b54e761f1110fb50?s=32&amp;r=X&amp;d=" alt="杰森葱" width="32" height="32" />        <cite class="fn"><a href="http://hi.baidu.com/onion/home" rel="external nofollow">杰森葱</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-516">March 14th, 2012 at 10:54 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>新的黑白主题比以前看起来稳重多了 ;)</p>    </div>
+    <div class="comment-reply">
+        <a href="guess-book.html%3FreplyTo=516.html#respond-page-22" rel="nofollow" onclick="return TypechoComment.reply('comment-516', 516);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-517" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="http://gregwym.info" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-517">March 14th, 2012 at 10:56 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>啊哈哈`谢谢...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-519" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/822de4cee7349e4752e11b8ca9480ff3?s=32&amp;r=X&amp;d=" alt="小吹" width="32" height="32" />        <cite class="fn">小吹</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-519">March 17th, 2012 at 11:26 am</a>
+            </div>
+    <div class="comment-content">
+    <p>好童真的验证码....^ ^</p>    </div>
+    <div class="comment-reply">
+        <a href="guess-book.html%3FreplyTo=519.html#respond-page-22" rel="nofollow" onclick="return TypechoComment.reply('comment-519', 519);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-520" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-520">March 17th, 2012 at 11:46 am</a>
+            </div>
+    <div class="comment-content">
+    <p>啊哈`验证码终于调好了...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-559" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/31ecf61a43364896ba72c2daeb71bf7f?s=32&amp;r=X&amp;d=" alt="鳳梨果凍" width="32" height="32" />        <cite class="fn"><a href="http://jingzipanda.com" rel="external nofollow">鳳梨果凍</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-559">March 30th, 2012 at 03:16 am</a>
+            </div>
+    <div class="comment-content">
+    <p>来打酱油。。。。然后顺便问下，我在移植这个板子到emlog的时候为啥css好像有问题似的= =。。te下显示正常的，em下各种链接就变蓝色了，字体也变了，问题是我除了替换函数其他啥也没动啊TAT~~</p>    </div>
+    <div class="comment-reply">
+        <a href="guess-book.html%3FreplyTo=559.html#respond-page-22" rel="nofollow" onclick="return TypechoComment.reply('comment-559', 559);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-560" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-560">March 30th, 2012 at 03:20 am</a>
+            </div>
+    <div class="comment-content">
+    <p>额...`你的blog挂了, 我能看一下效果么?</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-561" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/31ecf61a43364896ba72c2daeb71bf7f?s=32&amp;r=X&amp;d=" alt="鳳梨果凍" width="32" height="32" />        <cite class="fn"><a href="http://jingzipanda.com" rel="external nofollow">鳳梨果凍</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-561">March 30th, 2012 at 03:35 am</a>
+            </div>
+    <div class="comment-content">
+    <p>额。。是本地的。。。能贴地址么？img170.poco.cn/mypoco/myphoto/20120330/16/5569419220120330163506028.jpg 。。</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-562" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-562">March 30th, 2012 at 10:42 am</a>
+            </div>
+    <div class="comment-content">
+    <p>额...`光看这个我不知道CSS哪里有问题, 要看网页才行.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-600" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/18420ab9fe19849442936fa8badefca1?s=32&amp;r=X&amp;d=" alt="Yoki" width="32" height="32" />        <cite class="fn">Yoki</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-600">April 26th, 2012 at 02:21 am</a>
+            </div>
+    <div class="comment-content">
+    <p>请问能留下一个联系方式吗？</p>    </div>
+    <div class="comment-reply">
+        <a href="guess-book.html%3FreplyTo=600.html#respond-page-22" rel="nofollow" onclick="return TypechoComment.reply('comment-600', 600);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-601" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-601">April 26th, 2012 at 05:54 am</a>
+            </div>
+    <div class="comment-content">
+    <p>有事的话, 请先留言说明好么? 有必要的话我会邮件联系您的. 不方便公开留言的话, 也可以微博私信我, 谢谢.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-609" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/18420ab9fe19849442936fa8badefca1?s=32&amp;r=X&amp;d=" alt="Yoki" width="32" height="32" />        <cite class="fn">Yoki</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-609">May 8th, 2012 at 02:17 am</a>
+            </div>
+    <div class="comment-content">
+    <p>你这个回复评论， 然后可就会通知到留言用户邮箱功能是怎么实现的？</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-610" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-610">May 8th, 2012 at 07:41 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>一个叫CommentToMail的插件</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-615" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/822de4cee7349e4752e11b8ca9480ff3?s=32&amp;r=X&amp;d=" alt="小吹" width="32" height="32" />        <cite class="fn">小吹</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-615">June 21st, 2012 at 07:08 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>小爪留下0.0<br>
+我熟么时候才能看懂你这些东西呢....></p>    </div>
+    <div class="comment-reply">
+        <a href="guess-book.html%3FreplyTo=615.html#respond-page-22" rel="nofollow" onclick="return TypechoComment.reply('comment-615', 615);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-619" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-619">June 27th, 2012 at 07:49 am</a>
+            </div>
+    <div class="comment-content">
+    <p>笨蛋`</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-621" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/822de4cee7349e4752e11b8ca9480ff3?s=32&amp;r=X&amp;d=" alt="小吹" width="32" height="32" />        <cite class="fn">小吹</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-621">June 27th, 2012 at 09:31 am</a>
+            </div>
+    <div class="comment-content">
+    <p>原来是点这个回复啊......</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-620" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/822de4cee7349e4752e11b8ca9480ff3?s=32&amp;r=X&amp;d=" alt="小吹" width="32" height="32" />        <cite class="fn">小吹</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-620">June 27th, 2012 at 09:30 am</a>
+            </div>
+    <div class="comment-content">
+    <p>咩0.0</p>    </div>
+    <div class="comment-reply">
+        <a href="guess-book.html%3FreplyTo=620.html#respond-page-22" rel="nofollow" onclick="return TypechoComment.reply('comment-620', 620);">回复</a>    </div>
+    </li>
+<li id="comment-664" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/4969890629c3cc60c418935fd704181e?s=32&amp;r=X&amp;d=" alt="chirs.wu" width="32" height="32" />        <cite class="fn">chirs.wu</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-664">December 2nd, 2012 at 10:50 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>hi ,博主文章不错！经常来更新啊！持续关注！微博也关注你了哦！：）</p>    </div>
+    <div class="comment-reply">
+        <a href="guess-book.html%3FreplyTo=664.html#respond-page-22" rel="nofollow" onclick="return TypechoComment.reply('comment-664', 664);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-665" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-665">December 3rd, 2012 at 03:57 am</a>
+            </div>
+    <div class="comment-content">
+    <p>谢谢...`经常更新真的有压力啊, 哈哈</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-698" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/a88eaa00f743cceacaed49eea81d4561?s=32&amp;r=X&amp;d=" alt="大名不大" width="32" height="32" />        <cite class="fn">大名不大</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-698">April 23rd, 2013 at 08:32 am</a>
+            </div>
+    <div class="comment-content">
+    <p>大婶能分享一下代码高亮的配置么，很喜欢你blog的风格！赞！</p>    </div>
+    <div class="comment-reply">
+        <a href="guess-book.html%3FreplyTo=698.html#respond-page-22" rel="nofollow" onclick="return TypechoComment.reply('comment-698', 698);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-716" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-716">June 3rd, 2013 at 11:08 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>之前服务器发不出来邮件, 没注意到, 不好意思. 如果你用我的Theme的话, 在主题的设置里激活Google Code Prettify就可以了. 这个效果是Google Code Prettify配合Bootstrap实现的.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-778" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/6e1b2c70dc5b194ecdddf77a4a1e0467?s=32&amp;r=X&amp;d=" alt="Gordon" width="32" height="32" />        <cite class="fn">Gordon</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-778">October 26th, 2013 at 02:17 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>萌萌真是造福全人类啊，现在我和我认识的人基本上都在看你的blog写350 >_</p>    </div>
+    <div class="comment-reply">
+        <a href="guess-book.html%3FreplyTo=778.html#respond-page-22" rel="nofollow" onclick="return TypechoComment.reply('comment-778', 778);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-780" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="guess-book.html#comment-780">October 28th, 2013 at 10:48 am</a>
+            </div>
+    <div class="comment-content">
+    <p>...`Blog太久没写了, 都有点想关了= =</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+</ol>            
+            <div class="pagination">
+                            </div>
+            
+                        
+                        <div id="respond-page-22" class="respond">
+            
+            <div class="cancel-comment-reply">
+            <a id="cancel-comment-reply-link" href="guess-book.html#respond-page-22" rel="nofollow" onclick="return TypechoComment.cancelReply();">取消回复</a>            </div>
+            
+            <form class="form-horizontal" method="post" action="http://blog.gregwym.info/guess-book.html/comment?parent=453" id="comment_form">
+                <fieldset>
+                    <legend>Add new comment &raquo;</legend>
+                                        <div class="control-group">
+                        <label class="control-label" for="author">Nick name</label>
+                        <div class="controls">
+                            <input type="text" name="author" id="author" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="mail">E-mail<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" name="mail" id="mail" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Web</label>
+                        <div class="controls">
+                            <input type="text" name="url" id="url" class="input-large" value="" />
+                        </div>
+                    </div>
+                                        <div class="control-group">
+                        <label class="control-label" for="url">Comment</label>
+                        <div class="controls">
+                            <textarea class="input-xlarge" name="text" rows="3"></textarea>
+                            <p class="help-block">Enter your comment here...</p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Captcha</label>
+                        <div class="controls">
+                            <img src="action/captcha" alt="captcha" onclick="this.src = this.src + '?' + Math.random()" style="cursor: pointer" title="点击图片刷新验证码" /><br /><input type="text" class="captcha" name="captcha_code" /> <strong>请输入验证码</strong>							                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Submit comment</button>
+                    </div>
+                </fieldset>
+            </form>
+            </div>
+            
+
+        </div>    </div><!-- end #content-->
+    <div class="span3" id="sidebar">
+    <div class="widget_search">
+        <form method="post" id="searchform" class="form-search">
+            <input type="text" class="span2" name="s" id="s" />
+            <button type="submit" class="btn" id="searchsubmit">Search</button>
+        </form>
+    </div>
+    
+        
+    
+    
+        <div class="widget">
+        <h3>Recent Comments</h3>
+        <ul>
+                                    <li><a href="github-you-should-have-told-me-earlier.html#comment-952">payday loans</a>: wfxqtdq</li>
+                        <li><a href="Trapecho-boostrap-based-typecho-theme.html#comment-936">地铁线路图网</a>: 我也在用typecho，小巧玲珑，稍微改了以下默认模板，站现在简洁速度也不错，点击我的昵称可以访问。</li>
+                        <li><a href="about.html#comment-930">ramble</a>: 博客 ，请问如何显示显示文章前3段的摘要  不打乱格式</li>
+                        <li><a href="about.html#comment-874">清源</a>: 看来暂时只能看着用了，google的高亮的比较不明显。</li>
+                        <li><a href="about.html#comment-870">清源</a>: 大哥呀，主题这几天我看着感觉用中文书写标题字体太大了，正文的字体也太小了，估计还是适合用英文，不知道...</li>
+                    </ul>
+    </div>
+        
+        <div class="widget">
+    		<h3>Labels</h3>
+        <ul>
+                                    <a href="tag/algorithm/index.html" class="size-20">algorithm</a>
+                        <a href="tag/review/index.html" class="size-20">review</a>
+                        <a href="tag/cs240/index.html" class="size-10">cs240</a>
+                        <a href="tag/server/index.html" class="size-10">server</a>
+                        <a href="tag/VPS/index.html" class="size-10">VPS</a>
+                        <a href="tag/code/index.html" class="size-5">code</a>
+                        <a href="tag/database/index.html" class="size-5">database</a>
+                        <a href="tag/cs348/index.html" class="size-5">cs348</a>
+                        <a href="tag/typecho/index.html" class="size-5">typecho</a>
+                        <a href="tag/nginx/index.html" class="size-5">nginx</a>
+                        <a href="tag/search/index.html" class="size-5">search</a>
+                        <a href="tag/GUI/index.html" class="size-5">GUI</a>
+                        <a href="tag/linux/index.html" class="size-5">linux</a>
+                        <a href="tag/java/index.html" class="size-5">java</a>
+                        <a href="tag/DNS/index.html" class="size-5">DNS</a>
+                        <a href="tag/blog/index.html" class="size-5">blog</a>
+                        <a href="tag/apple/index.html" class="size-5">apple</a>
+                        <a href="tag/cs241/index.html" class="size-5">cs241</a>
+                        <a href="tag/compiler/index.html" class="size-5">compiler</a>
+                        <a href="tag/sql/index.html" class="size-5">sql</a>
+                    </ul>
+		</div>
+    
+    
+        <div class="widget">
+        <h3>Archives</h3>
+        <ul>
+            <li><a href="2013/09/index.html">September 2013</a></li>
+<li><a href="2012/12/index.html">December 2012</a></li>
+<li><a href="2012/11/index.html">November 2012</a></li>
+<li><a href="2012/08/index.html">August 2012</a></li>
+<li><a href="2012/06/index.html">June 2012</a></li>
+<li><a href="2012/04/index.html">April 2012</a></li>
+<li><a href="2012/03/index.html">March 2012</a></li>
+<li><a href="2012/02/index.html">February 2012</a></li>
+<li><a href="2011/12/index.html">December 2011</a></li>
+<li><a href="2011/11/index.html">November 2011</a></li>
+<li><a href="2011/10/index.html">October 2011</a></li>
+<li><a href="2011/06/index.html">June 2011</a></li>
+<li><a href="2011/05/index.html">May 2011</a></li>
+<li><a href="2011/04/index.html">April 2011</a></li>
+<li><a href="2011/03/index.html">March 2011</a></li>
+        </ul>
+    </div>
+    
+    
+        <div class="widget">
+        <h3>Others</h3>
+        <ul>
+                        <li class="last"><a href="http://blog.gregwym.info/admin/login.php">Login</a></li>
+                        <li><a href="http://validator.w3.org/check/referer">Valid XHTML</a></li>
+        </ul>
+    </div>
+    
+    </div><!-- end #sidebar -->
+    
+</div>
+<footer>
+    <p>
+        Powered by <a href="http://typecho.org/">Typecho</a>. 
+        <a href="http://dolast.com/pages/trapecho">Trapecho</a> theme by <a href="index.html">咳嗽di小鱼</a>. 
+        Hosting on <a href="https://www.digitalocean.com/?refcode=b846692d6a3a">Digital Ocean</a>
+    </p>
+</footer><!-- end #footer -->
+
+</div>
+</div>
+
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/jquery-1.7.1.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/bootstrap.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/prettify.js"></script>
+<script type="text/javascript">
+    // fix navbar on scroll
+    var $win = $(window)
+      , $nav = $('.navbar')
+      , navTop = $('.navbar').length && $('.navbar').offset().top - 10
+      , isFixed = 0
+
+    processScroll()
+
+    $win.on('scroll', processScroll)
+
+    function processScroll() {
+      var i, scrollTop = $win.scrollTop()
+      if (scrollTop >= navTop && !isFixed) {
+        isFixed = 1
+        $nav.addClass('navbar-fixed-top')
+      } else if (scrollTop <= navTop && isFixed) {
+        isFixed = 0
+        $nav.removeClass('navbar-fixed-top')
+      }
+    }
+    
+    $('.page-navigator li:not(:has(a))').html('<a>...</a>');
+    $('.page-navigator .current').addClass('active');
+    
+        $('pre').addClass('prettyprint linenums');
+        $('.entry-content a').attr('target','_blank');
+</script>
+</body>
+</html>
+

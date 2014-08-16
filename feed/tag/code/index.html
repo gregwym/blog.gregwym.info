@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+xmlns:content="http://purl.org/rss/1.0/modules/content/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+xmlns:atom="http://www.w3.org/2005/Atom"
+xmlns:wfw="http://wellformedweb.org/CommentAPI/">
+<channel>
+<title>某储备粮的“学习笔记” - code</title>
+<link>http://blog.gregwym.info/tag/code/</link>
+<atom:link href="http://blog.gregwym.info/feed/tag/code/" rel="self" type="application/rss+xml" />
+<language>zh-CN</language>
+<description></description>
+<lastBuildDate>Fri, 09 Mar 2012 22:49:35 +0800</lastBuildDate>
+<pubDate>Fri, 09 Mar 2012 22:49:35 +0800</pubDate>
+<item>
+<title>[Java]读取文件成字符串</title>
+<link>http://blog.gregwym.info/read-file-into-string.html</link>
+<guid>http://blog.gregwym.info/read-file-into-string.html</guid>
+<pubDate>Fri, 09 Mar 2012 22:49:35 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[String filename = "path/file.txt";File file = new File(filename);FileInputStream fileinput = new Fil...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<pre><code>String filename = "path/file.txt";
+File file = new File(filename);
+FileInputStream fileinput = new FileInputStream(file.getAbsolutePath());
+int x = fileinput.available();
+byte b[] = new byte[x];
+fileinput.read(b);
+String string = new String(b);
+System.out.println(string);
+</code></pre><p>开始实习以后, 真的没什么自己的时间了. 学到了不少东西, 但还是老样子, 自己摸索自己成长. 长篇的理论知识整理确实重要, 但这些代码片段, 在需要的时候也是实实在在能帮上忙的东西.</p><p>闲的时间少了, 估计以后这类东西会比较多吧...</p><p><hr /></p><p>参考源: <a target="_blank" href="http://mcoffe.blogbus.com/logs/22801413.html">http://mcoffe.blogbus.com/logs/22801413.html</a></p>
+]]></content:encoded>
+<slash:comments>3</slash:comments>
+<comments>http://blog.gregwym.info/read-file-into-string.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/read-file-into-string.html</wfw:commentRss>
+</item>
+<item>
+<title>XLib初接触</title>
+<link>http://blog.gregwym.info/xlib-chu-jie-chu.html</link>
+<guid>http://blog.gregwym.info/xlib-chu-jie-chu.html</guid>
+<pubDate>Sun, 15 May 2011 04:24:52 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[XLib是X Window编程的基础Library, 使用时首先需要在文件头中#include &lt;X11/Xlib.h&gt;在绘制图形界面之前, 第一步要连接到一个Display. 就好比画画...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>XLib是X Window编程的基础Library, 使用时首先需要在文件头中</p><pre><code>#include &lt;X11/Xlib.h&gt;
+</code></pre><p>在绘制图形界面之前, 第一步要连接到一个Display. 就好比画画之前先要找到一张桌子或者画板, 你不能举着一张纸直接就往上泼墨...</p><pre><code>// Open display 
+Display* display; 
+display = XOpenDisplay(""); 
+if(!display){ 
+    printf("Cannot open display\n"); 
+    exit(-1); 
+} 
+</code></pre><p><!--more--></p><p>之后可以通过一些函数, 获取当前Display的各种信息. 如需要, 可以保存到variable里供后边绘图时候使用.</p><pre><code>int printScreenInfo(Display* display){ 
+    int screen_num;  // 当前屏幕的编号 
+    int screen_width;    // 当前屏幕的宽度 
+    int screen_height;   // 当前屏幕的高度 
+    Window root_window; // root窗口的编号 
+    unsigned long white_pixel;   // 白色像素的编号 
+    unsigned long black_pixel;   // 黑色像素的编号 
+    screen_num = DefaultScreen(display); 
+    screen_width = DisplayWidth(display, screen_num); 
+    screen_height = DisplayHeight(display, screen_num); 
+    root_window = RootWindow(display, screen_num); 
+    white_pixel = WhitePixel(display, screen_num); 
+    black_pixel = BlackPixel(display, screen_num); 
+    printf("Screen Number: \t%d\n
+                    Width: \t%d\n
+                   Height: \t%d\n
+                     Root: \t%d\n
+                    White: \t%d\n
+                    Black: \t%d\n", 
+           screen_num, screen_width, screen_height, 
+           root_window, white_pixel, black_pixel); 
+    return 0; 
+}
+</code></pre><p>画板摆好以后, 就要在上边铺上一张用来画画的纸, 也就是一个窗口...</p><pre><code>// Define window properties 
+Window window; 
+int x, y; 
+unsigned int width, height, border_width; 
+width = 850; 
+height = 470; 
+x = y = 50; 
+border_width = 0; 
+
+// Define display constants 
+int screen_num = DefaultScreen(display); 
+unsigned long white_pixel = WhitePixel(display, screen_num); 
+unsigned long black_pixel = BlackPixel(display, screen_num); 
+
+// Create window 
+window = XCreateSimpleWindow(display, RootWindow(display, screen_num), 
+                             x, y, width, height, border_width, 
+                             black_pixel, white_pixel); 
+
+// Map win to display &amp; Flush display 
+XMapWindow(display, win); 
+XFlush(display);
+</code></pre><p>万事俱备只欠画画儿了`XLib的function都挺容易看懂的...</p><pre><code>int drawInterface(Display* display, Window window, unsigned long black_pixel, unsigned long white_pixel ){
+    // Define GCs for drawing 
+    GC foregc; 
+    foregc = XCreateGC (display, window, 0, 0); 
+    XSetBackground( display, foregc, black_pixel ); 
+    XSetForeground( display, foregc, white_pixel ); 
+
+    // Start Drawing 
+    XClearWindow(display, window); 
+    // Door 
+    XDrawRectangle(display, window, foregc, 1, 1, 630, 460); 
+    XFillRectangle(display, window, foregc, 66, 66, 480, 330); 
+    // Dashboard 
+    XDrawRectangle(display, window, foregc, 633, 1, 215, 460); 
+    XDrawRectangle(display, window, foregc, 650, 45, 185, 330); 
+    // Timer 
+    XDrawRectangle(display, window, foregc, 660, 60, 160, 65); 
+    // And More... 
+
+    // Flush display to show everything changed 
+    XFlush(display);
+}
+</code></pre><p><del>Event Handling的部分晚点再整理</del></p>
+]]></content:encoded>
+<slash:comments>0</slash:comments>
+<comments>http://blog.gregwym.info/xlib-chu-jie-chu.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/xlib-chu-jie-chu.html</wfw:commentRss>
+</item>
+<item>
+<title>linux服务器`自动备份数据库+网页到邮箱</title>
+<link>http://blog.gregwym.info/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html</link>
+<guid>http://blog.gregwym.info/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html</guid>
+<pubDate>Tue, 05 Apr 2011 10:11:48 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[我的QQ邮箱现在已经有3T容量了...原来玩WordPress的时候其实就一直拿来做数据库备份, 现在容量变大几倍有余, 自然是备份的不二选择. 这可比FDC的大容量VPS划算多了, 特别是当你的网站...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>我的QQ邮箱现在已经有3T容量了...<br />原来玩WordPress的时候其实就一直拿来做数据库备份, 现在容量变大几倍有余, 自然是备份的不二选择. 这可比<a href="https://www.fdcservers.net/order-1.php?plan_id=358">FDC的大容量VPS</a>划算多了, 特别是当你的网站并没有多大的时候. (书苑现在的数据库也都还没有1G...)</p><p>这个脚本来自<a href="http://www.vpsmm.com/edu/everyday-auto-backup-linux-vps.html">小夜博客</a>, 经我略加修改了一下.<br />下载: <a href="http://blog.gregwym.info/usr/uploads/2011/04/259619282.sh" title="backup_to_mail.sh">backup&#95;to&#95;mail.sh</a></p><p><hr /></p><p>很简单的一段bash script, 只需要自定义下mysql的用户名密码, 邮箱地址和要备份的目录.</p><p>然后进行下边的步骤:</p><p>首先要建立好放置备份文件的目录</p><pre><code>mkdir /home/backup
+</code></pre><p>然后安装发送邮件的程序</p><pre><code>yum install sendmail mutt
+</code></pre><p>把backup&#95;to&#95;mail.sh放到刚刚建立的目录中, 然后给脚本增加运行权限</p><pre><code>chmod a+x /home/backup/backup_to_mail.sh
+</code></pre><p>最后一步是设置定时运行, 输入</p><pre><code>crontab -e
+</code></pre><p>然后在vi编辑界面中加入下面这行文字</p><pre><code>00 00 * * * /home/backup/backup_to_mail.sh
+</code></pre><p>:x + enter就ok了.</p><p>其中00 00表示在每日00分, 00点的时候运行该脚本.</p><p>下边是脚本的内容, 以备附件失效和以后学习...</p><pre><code>#!/bin/bash
+MYSQL_USER=root                             #mysql username
+MYSQL_PASS=***********                      #mysql password
+MAIL_TO=*******@***.**                      #mailling to
+WEB_DATA=/home/wwwroot/                     #to be backup dir
+
+#define variables
+DataBakName=Data_$(date +%Y%m%d).tar.gz
+WebBakName=Web_$(date +%Y%m%d).tar.gz
+OldData=Data_$(date -d -3day +%Y%m%d).tar.gz
+OldWeb=Web_$(date -d -3day +%Y%m%d).tar.gz
+DataSubject="Backup: gregwym.info database "$(date +%Y%m%d)
+WebSubject="Backup: gregwym.info web dir "$(date +%Y%m%d)
+
+#delete data from 3days earlier
+rm -rf /home/backup/$OldData /home/backup/$OldWeb
+cd /home/backup
+
+#export database to compressed gz files
+for db in `/usr/local/mysql/bin/mysql -u$MYSQL_USER -p$MYSQL_PASS -B -N -e 'SHOW DATABASES' | xargs`; do
+    (/usr/local/mysql/bin/mysqldump --single-transaction -u$MYSQL_USER -p$MYSQL_PASS ${db} | gzip -9 - &gt; ${db}.sql.gz)
+done
+
+#compress database files
+tar zcf /home/backup/$DataBakName /home/backup/*.sql.gz
+rm -rf /home/backup/*.sql.gz
+#mail database
+echo $DataSubject | mutt -a /home/backup/$DataBakName -s "${DataSubject}" $MAIL_TO
+
+#compress backup dir
+tar zcf /home/backup/$WebBakName $WEB_DATA
+#mail dir
+echo $WebSubject | mutt -a /home/backup/$WebBakName -s "${WebSubject}" $MAIL_TO
+
+echo "bye"
+#END
+</code></pre><p>如果不希望备份网页文件, 或者希望数据库和网页分别备份的, 可以自行拆分脚本为两个文件.</p><p>如果只是想降低备份网页文件的频率, 可以将#mail dir部分替换为:</p><pre><code>if [ $(date +%A) = "Sunday" ]; then 
+    echo $WebSubject | mutt -a /home/backup/$WebBakName -s "${WebSubject}" $MAIL_TO 
+fi
+</code></pre>
+]]></content:encoded>
+<slash:comments>1</slash:comments>
+<comments>http://blog.gregwym.info/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/linux-fu-wu-qi-%60-zi-dong-bei-fen-shu-ju-ku---wang-ye-dao-you-xiang.html</wfw:commentRss>
+</item>
+<item>
+<title>找数组/vector内第k大的数</title>
+<link>http://blog.gregwym.info/zhao-shu-zu-vector-nei-di-k-da-de-shu.html</link>
+<guid>http://blog.gregwym.info/zhao-shu-zu-vector-nei-di-k-da-de-shu.html</guid>
+<pubDate>Fri, 01 Apr 2011 05:26:20 +0800</pubDate>
+<dc:creator>咳嗽di小鱼</dc:creator>
+<description><![CDATA[= =...`消极怠工消极怠工, 240拖到最后一秒算是交掉了. w/e找一个vector里第k大的数一直是个有意思的课题, 这次又碰到了, 自己写了一个. 记下来记下来, 以后八成用得到.网上给的思...]]></description>
+<content:encoded xml:lang="zh-CN"><![CDATA[
+<p>= =...`消极怠工消极怠工, 240拖到最后一秒算是交掉了. w/e</p><p>找一个vector里第k大的数一直是个有意思的课题, 这次又碰到了, 自己写了一个. 记下来记下来, 以后八成用得到.</p><p>网上给的思路很多, 大家普遍认为用<a href="http:///cs-240-fu-xi-zong-jie-zhi-san--sorting-and-randomized-algorithms.html">quicksort的algorithm</a>是效率最好的. 原本也不怎么在乎效率问题, 完全是被240逼的啊啊啊啊啊...</p><p>vector好像并不是高效率的选择, 不过随它去吧`这次的tree实在有够恶心</p><pre><code>#include &lt;vector&gt; 
+
+int kTh(vector&lt;int&gt; &amp; vals, int k){ 
+    if(k == 0){ // 如果k为0, 则取中点 
+        k = vals.size(); 
+        k = k / 2 + k % 2; 
+    }
+
+    vector&lt;int&gt; v, l ,r; 
+    int i; 
+    v = vals; 
+    int c, n = 0, s = v.size(), p = v[0]; // pivot = the first 
+
+    while(true){ 
+        for(i = s-1; i &gt;= 0; i--){ // partite 
+            c = v[i]; 
+            if(c &lt;= p) l.push_back(c); 
+            else if(c &gt; p) r.push_back(c); 
+        } 
+        s = l.size(); 
+        if(s == k) break; // find the k'th 
+        else if(s &gt; k) v = l; // in left 
+        else if(s &lt; k) { // in right 
+            k = k - l.size(); 
+            v = r; 
+        } 
+
+        l.clear(); 
+        r.clear(); 
+        s = v.size(); 
+        p = v[0]; // re-choose pivot 
+    } 
+    return p; 
+}
+</code></pre><p>欢迎大家批评指正...= =`</p><p>更新更规范的写法, 请见 <a href="http:///cs-240-fu-xi-zong-jie-zhi-san--sorting-and-randomized-algorithms.html">CS 240复习总结之三: Sorting and Randomized Algorithms</a></p>
+]]></content:encoded>
+<slash:comments>1</slash:comments>
+<comments>http://blog.gregwym.info/zhao-shu-zu-vector-nei-di-k-da-de-shu.html#comments</comments>
+<wfw:commentRss>http://blog.gregwym.info/feed/zhao-shu-zu-vector-nei-di-k-da-de-shu.html</wfw:commentRss>
+</item>
+</channel>
+</rss>

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>review - 某储备粮的“学习笔记”</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 使用url函数转换相关路径 -->
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/style.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/prettify.css" />
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="http://blog.gregwym.info/tag/review/2/images/favicon.ico">
+<link rel="apple-touch-icon" href="http://blog.gregwym.info/tag/review/2/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="http://blog.gregwym.info/tag/review/2/images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="http://blog.gregwym.info/tag/review/2/images/apple-touch-icon-114x114.png">
+
+<!-- 通过自有函数输出HTML头部信息 -->
+<meta name="keywords" content="review" />
+<meta name="generator" content="Typecho 0.9/13.12.12" />
+<meta name="template" content="trapecho" />
+<link rel="pingback" href="../../../action/xmlrpc.html" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="../../../action/xmlrpc%3Frsd.html" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="../../../action/xmlrpc%3Fwlw.html" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="../../../feed/tag/review/index.html" />
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="../../../feed/rss/tag/review/index.html" />
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="../../../feed/atom/tag/review/index.html" />
+</head>
+
+<body onload="prettyPrint()">
+
+<div class="container">
+
+<header class="jumbotron" id="overview">
+        <h1>某储备粮的“学习笔记” </h1>
+    <p class="lead">by 咳嗽di小鱼</p>
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                
+                <a class="brand" href="../../../index.html">
+                    Trapecho
+                </a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="../../../index.html">Home</a></li>
+                        <li class="divider-vertical"></li>
+                                                                        <li><a href="../../../category/sum-up/index.html" title="Sum Up">Sum Up</a></li>
+                                                <li><a href="../../../category/code-dump/index.html" title="Code Dump">Code Dump</a></li>
+                                                <li><a href="../../../category/network/index.html" title="Network">Network</a></li>
+                                                <li><a href="../../../category/jotting/index.html" title="Jotting">Jotting</a></li>
+                                                <li><a href="../../../category/Portfolio/index.html" title="Portfolio">Portfolio</a></li>
+                                                <li class="divider-vertical"></li>
+                                                                        <li><a href="../../../linked-in.html" title="Linked In">Linked In</a></li>
+                                                <li><a href="../../../guess-book.html" title="Guest Book">Guest Book</a></li>
+                                                <li><a href="../../../about.html" title="About">About</a></li>
+                                                <li><a href="../../../rss.html" title="RSS">RSS</a></li>
+                                            </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="content">
+
+
+<div class="row">
+    <div class="span9" id="content">
+                        <div class="post">
+            <div class="page-header">
+                <h1>
+                    <a href="../../../cs-240-fu-xi-zong-jie-zhi-wu--hashing.html">CS 240复习总结之五: Hashing</a> 
+                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: April 6, 2011</span>
+                    <span>Category: <a href="../../../category/sum-up/index.html">Sum Up</a></span>
+                    <a href="../../../cs-240-fu-xi-zong-jie-zhi-wu--hashing.html#comments">3 Comments</a>
+                </h6>
+            </div>
+            <div class="entry-content"><blockquote><h4>Direct Addressing</h4><br /><ul>
+<li>key和地址直接对应</li>
+<li>与Counting Sort同理</li>
+<li>Runtime: Θ(1), Space: Θ(n)</li>
+<li>浪费空间, 且只能用于int</li>
+</ul></blockquote><br /><h3>Hashing</h3><br /><blockquote>Hash Function<br /><ul>
+<li>将key经过function运算以后, 得到对应的hash value</li>
+<li>Hash function的好坏决定于数据的性质, 不同的数据适用不同的function</li>
+<li>好的Hash funtion, 高效, 与数据规律无关联, 依赖于key的所有部分</li>
+</ul><br />
+冲突解决方案(Collision Resolution)<br />Basic concept:<br /><ul>
+<li>Buckets: 多个item共存</li>
+<li>Open Addressing: 一个item对应多个位置</li>
+<li>Load Balance: α = n/M (n: item数量, M: hash table大小)</li>
+</ul></blockquote><br /><blockquote>方案一: Chaining (Buckets)<br /><ul>
+<li>将新的item放入对应位置, 并link到原来位置所存放的item</li>
+<li>缺点: 大量数据会导致大量重复, 效率降低</li>
+</ul><br />方案二: Linear Probing<br /><ul>
+<li>如果要insert的位置非空, 则将item放入下一个位置. 重复这一条直到insert成功/回到原位置(insert失败)</li>
+<li>某个item被delete以后, 该位置须标记为deleted, 不能再使用</li>
+<li>缺点: 大量数据后会有明显的效率降低, deleted以后会有空间浪费, 增加M以后rehash可以解决部分问题, 但cost很高.</li>
+</ul><br />方案三:  Double Hashing<br /><ul>
+<li>在Linear Probing基础上增加一个与h1独立的functions h2.</li>
+<li>如果要insert的位置非空, hash value = [原hash value + h2(k)] % M. 重复这一条直到insert成功/回到原位置(insert失败)</li>
+<li>缺点: 与Linear Probing相同, 只是increment由1变为了h2的结果, 所以降低了第二次insert的失败概率.</li>
+</ul><br />方案四: Cuckoo Hasing<br /><ol>
+<li>有两个相互独立的hash functions, h1和h2</li>
+<li>将item insert到h1(k)中</li>
+<li>如果原来h1(k)的位置并不为空, 将原item重新insert到与h1(k)值不同的hash value中去</li>
+<li>如出现loop的情况, insert失败, rehash</li>
+</ol><br /><ul style="margin-top: -12px;"><li>优点: iterm只能出现在h1(k)或者h2(k)中, search效率高.</li></ul></blockquote><br /><del>继续编辑中...</del><br />谁能告诉我, 咱们学Extendible Hashing了么`? 貌似没有吧...<br /><br />更多CS 240总结请看: <a target="_blank" href="../../cs240/index.html">http://blog.gregwym.info/tag/cs240/</a></p></div>
+        </div>
+        <hr class="soften" />
+                <div class="post">
+            <div class="page-header">
+                <h1>
+                    <a href="../../../cs-240-fu-xi-zong-jie-zhi-si--dictionaries-and-balanced-search-trees.html">CS 240复习总结之四: Dictionaries & Balanced Search Trees</a> 
+                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: April 5, 2011</span>
+                    <span>Category: <a href="../../../category/sum-up/index.html">Sum Up</a></span>
+                    <a href="../../../cs-240-fu-xi-zong-jie-zhi-si--dictionaries-and-balanced-search-trees.html#comments">No Comments</a>
+                </h6>
+            </div>
+            <div class="entry-content"><blockquote>AVL Tree性质:<br /><ul>
+<li>BST基础性质</li>
+<li>左侧和右侧subtree的height最多差1</li>
+<li>空白Tree的高度为-1</li>
+<li>Search, Insert, Delete Runtime均为Θ(log n)</li>
+</ul><br />AVL Insertion:<br /><ol>
+<li>执行标准BST Insertion</li>
+<li>从新insert的leaf开始, 从下往上更新balance factor(左右高度差)</li>
+<li>如发现高度差超过1(即为2), 则执行fix</li>
+</ol><br />AVL Fix: 修复高度差为2的subtree<br /><ul>
+<li>Single rotation: 当height最高的leaf位于最左侧/最右侧<br />
+<ul>
+<li>将subtree的root Z向height较低的方向旋转, 即以height较高的child Y为root</li>
+<li>Y原内侧child, 并入Z内侧</li>
+</ul><br />
+<a href="http://blog.gregwym.info/usr/uploads/2011/04/1588174024.png" title="AVL_single_rotation.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/1588174024.png" alt="AVL_single_rotation.png" width=100% /></a></li>
+<li>Double rotation: 当height最高的leaf位于Tree内侧<br />
+<ul>
+<li>将height较高的root child向外侧旋转, 将Tree变形为Single rotation的初始形式</li>
+<li>执行Single rotation</li>
+</ul><br />
+<a href="http://blog.gregwym.info/usr/uploads/2011/04/2278239341.png" title="AVL_double_rotation.png"><img src="http://blog.gregwym.info/usr/uploads/2011/04/2278239341.png" alt="AVL_double_rotation.png" width=100% /></a></li>
+</ul></blockquote><br /><blockquote>2-3 Tree性质:<br /><ul>
+<li>BST基础性质</li>
+<li>每个node包含一个KVP*和两个children, 或者包含两个KVP和三个children.</li>
+<li>所有leaf都在同一层(level)</li>
+</ul><br />
+2-3 Tree Insertion:<br /><ol>
+<li>找到KVP应在的leaf (BST规则)</li>
+<li>如果该leaf已经饱和 (已经包含两个KVP), 则将3个KVP排序a < b < c.</li>
+<li>将a和c分割成两个单独的leaf, 并将b插入到parent中.</li>
+<li>重复第2步直到符合2-3 Tree所有性质</li>
+</ol><br />
+2-3 Tree Deletion: 删除x<br /><ol>
+<li>如果x所在的node有两个KVP, 则直接删除x</li>
+<li>如果同parent下, 与该node相邻的child有两个KVP, 则用node与child之间的parent替代x, 并用中间值替代parent</li>
+<li>否则 (同parent下, node相邻child均只有一个KVP), 将相邻child与parent(中间值)合并. 重复直到Tree符合要求.</li>
+</ol></blockquote><br /><blockquote>B-Tree性质:<br /><ul>
+<li>扩展版的2-3 Tree</li>
+<li>每个node包含最多2d个KVP</li>
+<li>非root的node最少包含d个KVP</li>
+<li>2-3 Tree的d = 1</li>
+</ul><br />
+Insertion和Deletion与2-3 Tree大同小异<br /><br />注: 此B-Tree定义不完全符合11W Slide<br /></blockquote><br />备注: KVP意为Key-Value Pair, 即Key与Value的一对, 为一个KVP.<br /><br />今天先到这里了...明天总结后半部分`= =<br /><br /><br />更多CS 240总结请看: <a target="_blank" href="../../cs240/index.html">http://blog.gregwym.info/tag/cs240/</a><br /></p></div>
+        </div>
+        <hr class="soften" />
+                <div class="post">
+            <div class="page-header">
+                <h1>
+                    <a href="../../../cs-240-fu-xi-zong-jie-zhi-san--sorting-and-randomized-algorithms.html">CS 240复习总结之三: Sorting and Randomized Algorithms</a> 
+                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: April 5, 2011</span>
+                    <span>Category: <a href="../../../category/sum-up/index.html">Sum Up</a>,<a href="../../../category/code-dump/index.html">Code Dump</a></span>
+                    <a href="../../../cs-240-fu-xi-zong-jie-zhi-san--sorting-and-randomized-algorithms.html#comments">No Comments</a>
+                </h6>
+            </div>
+            <div class="entry-content"><h2>Comparison-based sorting</h2><p>最优Runtime为Ω(n log n)</p><h3>QuickSelect</h3><p>用QuickSort algorithm快速查找第k大的数 (avg rumtime: Θ(n))</p><h4>组成函数</h4><ul>
+<li>choose-pivot(A) 在数据中选择其中一个作为pivot</li>
+<li>partition(A, p) 使用A[p]作为pivot, 将A中的数据分为 <br />
+<br />
+<ul>
+<li>所有小于等于pivot的数据</li>
+<li>pivot本身</li>
+<li>所有大于pivot的数据</li>
+</ul></li>
+</ul><h4>Implementation</h4><p>下载: <a href="http://blog.gregwym.info/usr/uploads/2011/04/78276328.cc" title="quickselect.cc">quickselect.cc</a></p><pre><code>void swap(int *A, int i, int j){ 
+    int temp; 
+    temp = A[i]; 
+    A[i] = A[j]; 
+    A[j] = temp; 
+    return; 
+}
+</code></pre><p></p><p class="more"><a href="../../../cs-240-fu-xi-zong-jie-zhi-san--sorting-and-randomized-algorithms.html" title="CS 240复习总结之三: Sorting and Randomized Algorithms">Read more...</a></p></div>
+        </div>
+        <hr class="soften" />
+                <div class="post">
+            <div class="page-header">
+                <h1>
+                    <a href="../../../cs-240-fu-xi-zong-jie-zhi-er--priority-queues.html">CS 240复习总结之二: Priority Queues </a> 
+                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: April 5, 2011</span>
+                    <span>Category: <a href="../../../category/sum-up/index.html">Sum Up</a></span>
+                    <a href="../../../cs-240-fu-xi-zong-jie-zhi-er--priority-queues.html#comments">No Comments</a>
+                </h6>
+            </div>
+            <div class="entry-content"><p>Priority Queue 的基础操作:</p><ul>
+<li>insert: 在Queue中加入一个带有对应优先级的item</li>
+<li>deleteMax: 移除优先级最高的item (此操作仅适用于maximum-oriented priority queue)</li>
+<li>deleteMin: 移除优先级最低的item (此操作仅适用于minimum-oriented priority queue)</li>
+</ul><p>三种Implementation:</p><ol>
+<li>无序array (selection sort) <br />
+<br />
+<ul>
+<li>insert: O(1)</li>
+<li>delete: O(n)</li>
+</ul></li>
+<li>有序array (insertion sort) <br />
+<br />
+<ul>
+<li>insert: O(n)</li>
+<li>delete: O(1)</li>
+</ul></li>
+<li>Heap (一种BST) <br />
+<br />
+<ul>
+<li>insert: O(log n)</li>
+<li>delete: O(log n)</li>
+</ul></li>
+</ol><p>Heap的性质:</p><ol>
+<li>从上到下, 从左到右, 必须在一层(level)填满以后再使用下一层</li>
+<li>parent的优先级必须大于等于(小于等于 for min-heap)其children的优先级</li>
+<li>Heap的高度是Θ(log n)</li>
+</ol><p>Heap Insertion:</p><ul>
+<li>将新item放入第一个空闲的位置 (参考heap的第一条性质)</li>
+<li><p>对其执行bubble-up, 直到符合所有heap性质<br />
+ #bubble-up:</p><br />
+<br />
+<pre><code>while [parent(v) exists and key(parent(v)) &lt; key(v)] do 
+    swap v and parent(v) v &lt;- parent(v)
+</code></pre></li>
+</ul><p>Heap deleteMax/Min:</p><ul>
+<li>用heap中的最后一个item取代root</li>
+<li><p>对其执行bubble-down, 直到符合所有heap性质</p><br />
+<br />
+<h1>bubble-down</h1><br />
+<br />
+<pre><code>while [v is not a leaf] do 
+    u &lt;- child of v with largest key 
+    if key(u) &gt; key(v) then 
+        swap v and u v &lt;- u 
+    else 
+        break
+</code></pre></li>
+</ul><p>Heap array的特点 (当前item的位置为i):</p><ul>
+<li>Left child位于2i+1</li>
+<li>Right child位于2i+2</li>
+<li>Parent位于floor[(i-1)/2]</li>
+</ul><p>建立heap的两种方法:</p><ul>
+<li>以空heap为起始, 逐个item执行insert</li>
+<li>以含有n个item的array为起始, 从index为floor[(n-1)/2]的item开始, 逐个执行bubble-down, 直到index 0</li>
+</ul><p>注: 使用第二种方法建立heap, 然后执行k次deleteMax/Min, 可快速查找array中第k大的iterm. 运行时间为Θ(n + k log n)</p><p>其他方法请参考: <a href="../../../zhao-shu-zu-vector-nei-di-k-da-de-shu.html">找数组/VECTOR内第K大的数</a></p><p>更多CS 240总结请看: <a href="../../cs240/index.html">http://blog.gregwym.info/tag/cs240/</a></p></div>
+        </div>
+        <hr class="soften" />
+                <div class="post">
+            <div class="page-header">
+                <h1>
+                    <a href="../../../cs-240-fu-xi-zong-jie-zhi-yi--asymptotic-analysis.html">CS 240复习总结之一: Asymptotic Analysis </a> 
+                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: April 5, 2011</span>
+                    <span>Category: <a href="../../../category/sum-up/index.html">Sum Up</a></span>
+                    <a href="../../../cs-240-fu-xi-zong-jie-zhi-yi--asymptotic-analysis.html#comments">No Comments</a>
+                </h6>
+            </div>
+            <div class="entry-content"><p>Runtime的符号<br /><ul>
+<li>Big-O 表示当c和n0在达到一定大小以后, runtime<strong>小于等于</strong>某一数级[g(x)]</li>
+<li>Little-O (与Big-O对应) 表示当c和n0为任意值时, runtime<strong>一定小于</strong>某一数级[g(x)]</li>
+<li>Ω 表示当c和n0达到一定大小以后, runtime<strong>大于等于</strong>某一数级[g(x)]</li>
+<li>ω (与Ω对应) 表示c和n0为任意值时, runtime<strong>一定大于</strong>某一数级[g(x)]</li>
+<li>Θ 为<strong>同时</strong>满足Big-O和Ω</li>
+</ul><br />
+常见的Runtime数级<br /><ul>
+<li>Logarithmic (log n)</li>
+<li>Linear (n)</li>
+<li>Linearithmic (n log n)</li>
+<li>Quadratic (n^2)</li>
+<li>Cubic (n^3)</li>
+<li>Exponential (2^n)</li>
+</ul><br />
+更多CS 240总结请看: <a target="_blank" href="../../cs240/index.html">http://blog.gregwym.info/tag/cs240/</a><br /></p></div>
+        </div>
+        <hr class="soften" />
+                
+        <div class="pagination">
+            <ol class="page-navigator"><li><a class="prev" href="../1/index.html">&laquo;</a></li><li><a href="../1/index.html">1</a></li><li class="current"><a href="index.html">2</a></li></ol>        </div>
+    </div><!-- end #content-->
+    <div class="span3" id="sidebar">
+    <div class="widget_search">
+        <form method="post" id="searchform" class="form-search">
+            <input type="text" class="span2" name="s" id="s" />
+            <button type="submit" class="btn" id="searchsubmit">Search</button>
+        </form>
+    </div>
+    
+        
+    
+    
+        <div class="widget">
+        <h3>Recent Comments</h3>
+        <ul>
+                                    <li><a href="../../../github-you-should-have-told-me-earlier.html#comment-952">payday loans</a>: wfxqtdq</li>
+                        <li><a href="../../../Trapecho-boostrap-based-typecho-theme.html#comment-936">地铁线路图网</a>: 我也在用typecho，小巧玲珑，稍微改了以下默认模板，站现在简洁速度也不错，点击我的昵称可以访问。</li>
+                        <li><a href="../../../about.html#comment-930">ramble</a>: 博客 ，请问如何显示显示文章前3段的摘要  不打乱格式</li>
+                        <li><a href="../../../about.html#comment-874">清源</a>: 看来暂时只能看着用了，google的高亮的比较不明显。</li>
+                        <li><a href="../../../about.html#comment-870">清源</a>: 大哥呀，主题这几天我看着感觉用中文书写标题字体太大了，正文的字体也太小了，估计还是适合用英文，不知道...</li>
+                    </ul>
+    </div>
+        
+        <div class="widget">
+    		<h3>Labels</h3>
+        <ul>
+                                    <a href="../../algorithm/index.html" class="size-20">algorithm</a>
+                        <a href="../index.html" class="size-20">review</a>
+                        <a href="../../cs240/index.html" class="size-10">cs240</a>
+                        <a href="../../server/index.html" class="size-10">server</a>
+                        <a href="../../VPS/index.html" class="size-10">VPS</a>
+                        <a href="../../code/index.html" class="size-5">code</a>
+                        <a href="../../database/index.html" class="size-5">database</a>
+                        <a href="../../cs348/index.html" class="size-5">cs348</a>
+                        <a href="../../typecho/index.html" class="size-5">typecho</a>
+                        <a href="../../nginx/index.html" class="size-5">nginx</a>
+                        <a href="../../search/index.html" class="size-5">search</a>
+                        <a href="../../GUI/index.html" class="size-5">GUI</a>
+                        <a href="../../linux/index.html" class="size-5">linux</a>
+                        <a href="../../java/index.html" class="size-5">java</a>
+                        <a href="../../DNS/index.html" class="size-5">DNS</a>
+                        <a href="../../blog/index.html" class="size-5">blog</a>
+                        <a href="../../apple/index.html" class="size-5">apple</a>
+                        <a href="../../cs241/index.html" class="size-5">cs241</a>
+                        <a href="../../compiler/index.html" class="size-5">compiler</a>
+                        <a href="../../sql/index.html" class="size-5">sql</a>
+                    </ul>
+		</div>
+    
+    
+        <div class="widget">
+        <h3>Archives</h3>
+        <ul>
+            <li><a href="../../../2013/09/index.html">September 2013</a></li>
+<li><a href="../../../2012/12/index.html">December 2012</a></li>
+<li><a href="../../../2012/11/index.html">November 2012</a></li>
+<li><a href="../../../2012/08/index.html">August 2012</a></li>
+<li><a href="../../../2012/06/index.html">June 2012</a></li>
+<li><a href="../../../2012/04/index.html">April 2012</a></li>
+<li><a href="../../../2012/03/index.html">March 2012</a></li>
+<li><a href="../../../2012/02/index.html">February 2012</a></li>
+<li><a href="../../../2011/12/index.html">December 2011</a></li>
+<li><a href="../../../2011/11/index.html">November 2011</a></li>
+<li><a href="../../../2011/10/index.html">October 2011</a></li>
+<li><a href="../../../2011/06/index.html">June 2011</a></li>
+<li><a href="../../../2011/05/index.html">May 2011</a></li>
+<li><a href="../../../2011/04/index.html">April 2011</a></li>
+<li><a href="../../../2011/03/index.html">March 2011</a></li>
+        </ul>
+    </div>
+    
+    
+        <div class="widget">
+        <h3>Others</h3>
+        <ul>
+                        <li class="last"><a href="http://blog.gregwym.info/admin/login.php">Login</a></li>
+                        <li><a href="http://validator.w3.org/check/referer">Valid XHTML</a></li>
+        </ul>
+    </div>
+    
+    </div><!-- end #sidebar -->
+    
+</div>
+<footer>
+    <p>
+        Powered by <a href="http://typecho.org/">Typecho</a>. 
+        <a href="http://dolast.com/pages/trapecho">Trapecho</a> theme by <a href="../../../index.html">咳嗽di小鱼</a>. 
+        Hosting on <a href="https://www.digitalocean.com/?refcode=b846692d6a3a">Digital Ocean</a>
+    </p>
+</footer><!-- end #footer -->
+
+</div>
+</div>
+
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/jquery-1.7.1.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/bootstrap.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/prettify.js"></script>
+<script type="text/javascript">
+    // fix navbar on scroll
+    var $win = $(window)
+      , $nav = $('.navbar')
+      , navTop = $('.navbar').length && $('.navbar').offset().top - 10
+      , isFixed = 0
+
+    processScroll()
+
+    $win.on('scroll', processScroll)
+
+    function processScroll() {
+      var i, scrollTop = $win.scrollTop()
+      if (scrollTop >= navTop && !isFixed) {
+        isFixed = 1
+        $nav.addClass('navbar-fixed-top')
+      } else if (scrollTop <= navTop && isFixed) {
+        isFixed = 0
+        $nav.removeClass('navbar-fixed-top')
+      }
+    }
+    
+    $('.page-navigator li:not(:has(a))').html('<a>...</a>');
+    $('.page-navigator .current').addClass('active');
+    
+        $('pre').addClass('prettyprint linenums');
+        $('.entry-content a').attr('target','_blank');
+</script>
+</body>
+</html>

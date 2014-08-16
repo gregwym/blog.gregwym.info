@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+xmlns:thr="http://purl.org/syndication/thread/1.0"
+xml:lang="zh-CN"
+xml:base="http://blog.gregwym.info/tag/google/"
+>
+<title type="text">某储备粮的“学习笔记” - google</title>
+<subtitle type="text"></subtitle>
+<updated>2011-11-25T22:46:19+08:00</updated>
+<generator uri="http://typecho.org/" version="0.9/13.12.12">Typecho</generator>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/tag/google/" />
+<id>http://blog.gregwym.info/feed/atom/tag/google/</id>
+<link rel="self" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/tag/google/" />
+<entry>
+<title type="html"><![CDATA[将Chrome搜索默认定位到google.com]]></title>
+<link rel="alternate" type="text/html" href="http://blog.gregwym.info/jiang-chrome-sou-suo-mo-ren-ding-wei-dao-google-com.html" />
+<id>http://blog.gregwym.info/jiang-chrome-sou-suo-mo-ren-ding-wei-dao-google-com.html</id>
+<updated>2011-11-25T22:46:19+08:00</updated>
+<published>2011-11-25T22:46:19+08:00</published>
+<author>
+    <name>咳嗽di小鱼</name>
+    <uri>http://blog.gregwym.info</uri>
+</author>
+<summary type="html"><![CDATA[不同系统, 配置文件的位置不太一样.Windows在%USERPROFILE%\Local Settings\Application Data\Google\Chrome\User DataMac O...]]></summary>
+<content type="html" xml:base="http://blog.gregwym.info/jiang-chrome-sou-suo-mo-ren-ding-wei-dao-google-com.html" xml:lang="zh-CN"><![CDATA[
+<p>不同系统, 配置文件的位置不太一样.</p><p>Windows在<br /><em>%USERPROFILE%\Local Settings\Application Data\Google\Chrome\User Data</em></p><p>Mac OS X在<br /><em>~/Library/Application Support/Google/Chrome/</em></p><p>Linux在<br /><em>$HOME/?.config/google-chrome</em></p><p>用编辑器打开Local State这个文件, 找到以下两行</p><blockquote><p>"last&#95;known&#95;google<em>url": "http://www.google.&#42;&#42;&#42;/",<br />"last&#95;prompted&#95;google</em>url": "http://www.google.&#42;&#42;&#42;/",</p></blockquote><p>将它们改为：</p><blockquote><p>"last&#95;known&#95;google<em>url": "http://www.google.com/",<br />"last&#95;prompted&#95;google</em>url": "http://www.google.com/",</p></blockquote><p>打开Chrome以后随便搜索个东西...他会提示你正在使用google.com, 要不要更换到google.&#42;**|.<br />选择继续使用, 大功告成! 嘿嘿</p>
+]]></content>
+<link rel="replies" type="text/html" href="http://blog.gregwym.info/jiang-chrome-sou-suo-mo-ren-ding-wei-dao-google-com.html#comments" thr:count="0" />
+<link rel="replies" type="application/atom+xml" href="http://blog.gregwym.info/feed/atom/jiang-chrome-sou-suo-mo-ren-ding-wei-dao-google-com.html" thr:count="0"/>
+</entry>
+</feed>

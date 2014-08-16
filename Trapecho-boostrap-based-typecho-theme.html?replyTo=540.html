@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>Trapecho - 基于Bootstrap的Typecho主题 - 某储备粮的“学习笔记”</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 使用url函数转换相关路径 -->
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/style.css" />
+<link rel="stylesheet" type="text/css" media="all" href="http://blog.gregwym.info/usr/themes/trapecho/css/prettify.css" />
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="http://blog.gregwym.info/images/favicon.ico">
+<link rel="apple-touch-icon" href="http://blog.gregwym.info/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="http://blog.gregwym.info/images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="http://blog.gregwym.info/images/apple-touch-icon-114x114.png">
+
+<!-- 通过自有函数输出HTML头部信息 -->
+<meta name="description" content="之前的浮云主题也用了快一年了, 有些腻味.主题本身也有很多问题, 比如代码质量不是很好, 主题的CSS对博客文章的Typography没有很规范的支持, 浮云比较吃CPU...一直想换主题却没有找到好..." />
+<meta name="keywords" content="typecho,trapecho,theme,design,bootstrap" />
+<meta name="generator" content="Typecho 0.9/13.12.12" />
+<meta name="template" content="trapecho" />
+<link rel="pingback" href="action/xmlrpc.html" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="action/xmlrpc%3Frsd.html" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="action/xmlrpc%3Fwlw.html" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="feed/Trapecho-boostrap-based-typecho-theme.html" />
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="feed/rss/Trapecho-boostrap-based-typecho-theme.html" />
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="feed/atom/Trapecho-boostrap-based-typecho-theme.html" />
+<script type="text/javascript">
+//<![CDATA[
+var TypechoComment = {
+    dom : function (id) {
+        return document.getElementById(id);
+    },
+    
+    create : function (tag, attr) {
+        var el = document.createElement(tag);
+        
+        for (var key in attr) {
+            el.setAttribute(key, attr[key]);
+        }
+        
+        return el;
+    },
+
+    reply : function (cid, coid) {
+        var comment = this.dom(cid), parent = comment.parentNode,
+            response = this.dom('respond-post-86'), input = this.dom('comment-parent'),
+            form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+            textarea = response.getElementsByTagName('textarea')[0];
+
+        if (null == input) {
+            input = this.create('input', {
+                'type' : 'hidden',
+                'name' : 'parent',
+                'id'   : 'comment-parent'
+            });
+
+            form.appendChild(input);
+        }
+        
+        input.setAttribute('value', coid);
+
+        if (null == this.dom('comment-form-place-holder')) {
+            var holder = this.create('div', {
+                'id' : 'comment-form-place-holder'
+            });
+            
+            response.parentNode.insertBefore(holder, response);
+        }
+
+        comment.appendChild(response);
+        this.dom('cancel-comment-reply-link').style.display = '';
+        
+        if (null != textarea && 'text' == textarea.name) {
+            textarea.focus();
+        }
+        
+        return false;
+    },
+
+    cancelReply : function () {
+        var response = this.dom('respond-post-86'),
+        holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+        if (null != input) {
+            input.parentNode.removeChild(input);
+        }
+
+        if (null == holder) {
+            return true;
+        }
+
+        this.dom('cancel-comment-reply-link').style.display = 'none';
+        holder.parentNode.insertBefore(response, holder);
+        return false;
+    }
+}
+//]]>
+</script></head>
+
+<body onload="prettyPrint()">
+
+<div class="container">
+
+<header class="jumbotron" id="overview">
+        <h1>某储备粮的“学习笔记” </h1>
+    <p class="lead">by 咳嗽di小鱼</p>
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                
+                <a class="brand" href="index.html">
+                    Trapecho
+                </a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="index.html">Home</a></li>
+                        <li class="divider-vertical"></li>
+                                                                        <li><a href="category/sum-up/index.html" title="Sum Up">Sum Up</a></li>
+                                                <li><a href="category/code-dump/index.html" title="Code Dump">Code Dump</a></li>
+                                                <li><a href="category/network/index.html" title="Network">Network</a></li>
+                                                <li><a href="category/jotting/index.html" title="Jotting">Jotting</a></li>
+                                                <li><a href="category/Portfolio/index.html" title="Portfolio">Portfolio</a></li>
+                                                <li class="divider-vertical"></li>
+                                                                        <li><a href="linked-in.html" title="Linked In">Linked In</a></li>
+                                                <li><a href="guess-book.html" title="Guest Book">Guest Book</a></li>
+                                                <li><a href="about.html" title="About">About</a></li>
+                                                <li><a href="rss.html" title="RSS">RSS</a></li>
+                                            </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="content">
+
+
+<div class="row">
+    <div class="span9" id="content">
+        <div class="post">
+            <div class="page-header">
+                <h1>
+                    Trapecho - 基于Bootstrap的Typecho主题                    <small></small>
+                </h1>
+                <h6>
+                    <span>Author: 咳嗽di小鱼</span>
+                    <span>Date: March 17, 2012</span>
+                    <span>Category: <a href="category/Portfolio/index.html">Portfolio</a></span>
+                </h6>
+            </div>
+            <div class="entry-content"><p>之前的浮云主题也用了快一年了, 有些腻味.<br />主题本身也有很多问题, 比如代码质量不是很好, 主题的CSS对博客文章的Typography没有很规范的支持, 浮云比较吃CPU...</p><p>一直想换主题却没有找到好的. 最近对Bootstrap很是痴迷, 又有了点空闲, 就顺手仿着Bootstrap官网风格做了一个Typecho的主题.<br />自己觉得效果还不错, po出来给喜欢的朋友.</p><h2>设计风格</h2><ul>
+<li>黑白灰</li>
+<li>简洁明了</li>
+</ul><h2>特色功能</h2><ul>
+<li>自动吸附顶端的导航栏</li>
+<li>在各种设备上自适应显示 (如: iPhone/iPad)</li>
+<li>侧栏的新浪微博展示插件</li>
+<li>集成Google Code Prettify</li>
+</ul><h2>应用的技术</h2><ul>
+<li>Bootstrap + jQuery</li>
+<li>HTML5 + CSS3</li>
+<li>Responsive CSS</li>
+</ul><h3>下载</h3><p><del>下载我放在doLast.com上了, 点Download即可</del></p><blockquote><p><del><a href="http://dolast.com/pages/trapecho">http://dolast.com/pages/trapecho</a></del><br /><a href="https://github.com/gregwym/Trapecho/zipball/master">https://github.com/gregwym/Trapecho/zipball/master</a></p></blockquote><p><!--more--></p><p><hr /></p><h2>功能详解</h2><h3>新浪微博</h3><ul>
+<li>在<code>/admin/options-theme.php</code>主题设置页中填入新浪微博的UID, 侧栏中就会显示新浪微博的插件.</li>
+<li>在设置中删除UID号码并保存, 即可关闭插件</li>
+</ul><h3>根据分辨率自适应布局</h3><ul>
+<li>如果您在看我的博客, 现在把浏览器缩小就能看出效果.</li>
+<li>在iPhone/iPad等移动设备上也能有很好的博客阅读体验</li>
+<li>支持iOS的阅读器模式</li>
+</ul><h3>侧栏可选项</h3><ul>
+<li>显示最新文章</li>
+<li>显示相关文章</li>
+<li>显示最近回复</li>
+<li>显示标签</li>
+<li>显示分类</li>
+<li>显示归档</li>
+<li>显示友情链接(需要友情链接插件)</li>
+<li>显示其它杂项</li>
+</ul><h3>Google Code Prettify</h3><ul>
+<li>为了统一主题风格, 也特别定义了代码的高亮方式, 如果有朋友不喜欢, 从<code>footer.php</code>最后删除和<code>pre</code>有关的几行JavaScript即可.</li>
+<li><p>使用很简单, 展示大段的代码, 使用<code>&lt;pre&gt;</code>将代码括住, 就会自动高亮, 语言类型自动识别.</p><br />
+<br />
+<pre><code>&lt;pre&gt;
+    &lt;!--你的代码放在中间--&gt;
+&lt;/pre&gt;
+</code></pre></li>
+<li><p>比如,</p><br />
+<br />
+<pre><code>int main(){
+    cout &lt;&lt; "Welcome to Trapecho" &lt;&lt; endl;
+    return 0;
+}
+</code></pre></li>
+<li><p>更多使用方法请参考, <a href="http://google-code-prettify.googlecode.com/svn/trunk/README.html">google-code-prettify README</a></p></li>
+</ul></div>
+            <div class="entry-tags">
+                Labels: 
+                <span class="label label-info">
+                    <a href="tag/typecho/index.html">typecho</a></span> <span class="label label-info"><a href="tag/trapecho/index.html">trapecho</a></span> <span class="label label-info"><a href="tag/theme/index.html">theme</a></span> <span class="label label-info"><a href="tag/design/index.html">design</a></span> <span class="label label-info"><a href="tag/bootstrap/index.html">bootstrap</a>                </span>
+            </div>
+        </div>
+        <hr class="soften" />
+        <div id="comments">
+                                    <h3>47 comments &raquo;</h3>
+            
+            <ol class="comment-list"><li id="comment-521" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/d2ad946411bb7848e873d0c3588bfe45?s=32&amp;r=X&amp;d=" alt="gongyi" width="32" height="32" />        <cite class="fn"><a href="http://gongyi.info/" rel="external nofollow">gongyi</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-521">March 18th, 2012 at 12:14 am</a>
+            </div>
+    <div class="comment-content">
+    <p>这个板子不错，挺简洁的！</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=521.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-521', 521);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-523" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-523">March 18th, 2012 at 12:44 am</a>
+            </div>
+    <div class="comment-content">
+    <p>哈哈`欢迎Neal...你站现在用的什么主机? 我这个从国内访问还是有点慢.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-524" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/d2ad946411bb7848e873d0c3588bfe45?s=32&amp;r=X&amp;d=" alt="gongyi" width="32" height="32" />        <cite class="fn"><a href="http://gongyi.info/" rel="external nofollow">gongyi</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-524">March 18th, 2012 at 03:51 am</a>
+            </div>
+    <div class="comment-content">
+    <p>现在用的是linode的vps，选的是日本数据中心的，国内速度还是挺不错的，你的还是原来的quickweb不？</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=524.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-524', 524);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-526" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-526">March 18th, 2012 at 04:16 am</a>
+            </div>
+    <div class="comment-content">
+    <p>是啊`还是那个...挺好用的, 我在加拿大的时候访问速度非常行, 但这段时间回国感觉还是有点卡, ping都在500以上. 考虑中...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-545" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/53a1a553658671768bbac0fd067fd981?s=32&amp;r=X&amp;d=" alt="letonode" width="32" height="32" />        <cite class="fn"><a href="http://www.letonlife.com" rel="external nofollow">letonode</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-545">March 23rd, 2012 at 03:34 am</a>
+            </div>
+    <div class="comment-content">
+    <p>一直用linode的。。。</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-546" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-546">March 23rd, 2012 at 03:46 am</a>
+            </div>
+    <div class="comment-content">
+    <p>linode还是贵>_</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-525" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/d2ad946411bb7848e873d0c3588bfe45?s=32&amp;r=X&amp;d=" alt="gongyi" width="32" height="32" />        <cite class="fn"><a href="http://gongyi.info/" rel="external nofollow">gongyi</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-525">March 18th, 2012 at 03:52 am</a>
+            </div>
+    <div class="comment-content">
+    <p>你的验证码怎么回事？教教我呗！</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=525.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-525', 525);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-527" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-527">March 18th, 2012 at 04:17 am</a>
+            </div>
+    <div class="comment-content">
+    <p>Typecho的插件, http://typecho.us/plugins/comments-fancy-captcha.html</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-529" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/31ecf61a43364896ba72c2daeb71bf7f?s=32&amp;r=X&amp;d=" alt="鳳梨果凍" width="32" height="32" />        <cite class="fn"><a href="http://lixox.net" rel="external nofollow">鳳梨果凍</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-529">March 19th, 2012 at 07:52 am</a>
+            </div>
+    <div class="comment-content">
+    <p>喜欢下面这个防垃圾评论的。。。哈哈<br>
+悲剧，刚才没完全拖进，结果提示验证码错误了</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=529.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-529', 529);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-530" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-530">March 19th, 2012 at 08:02 am</a>
+            </div>
+    <div class="comment-content">
+    <p>哈哈`时不时有垃圾评论...普通的验证码又很难看. 碰巧看到这个插件, 我也喜欢的很.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-531" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/31ecf61a43364896ba72c2daeb71bf7f?s=32&amp;r=X&amp;d=" alt="鳳梨果凍" width="32" height="32" />        <cite class="fn"><a href="http://lixox.net" rel="external nofollow">鳳梨果凍</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-531">March 19th, 2012 at 08:46 am</a>
+            </div>
+    <div class="comment-content">
+    <p>于是这是te上的一个插件？还是都可以通用的~</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-532" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-532">March 19th, 2012 at 09:08 am</a>
+            </div>
+    <div class="comment-content">
+    <p>是TE一个插件, 不过可以移植到别的地方...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-534" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/17948ba5d78626f5d9eb0ff010e8df92?s=32&amp;r=X&amp;d=" alt="CzBiX" width="32" height="32" />        <cite class="fn"><a href="http://czbix.tk" rel="external nofollow">CzBiX</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-534">March 19th, 2012 at 07:24 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>比我做的主题好看多了</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=534.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-534', 534);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-535" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-535">March 19th, 2012 at 08:26 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>小盒子你太谦虚了...哈哈`</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-538" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/c32479f992444c6f2bf3e15f6449d5c4?s=32&amp;r=X&amp;d=" alt="satikey" width="32" height="32" />        <cite class="fn"><a href="http://blog.satikey.com" rel="external nofollow">satikey</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-538">March 20th, 2012 at 12:25 am</a>
+            </div>
+    <div class="comment-content">
+    <p>之前我做了个WP的,后来我发现 那是对IE来说是一个悲剧........你的 ..那个验证的东西是什么?</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=538.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-538', 538);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-539" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-539">March 20th, 2012 at 01:19 am</a>
+            </div>
+    <div class="comment-content">
+    <p>IE 6就算了...Bootstrap对IE7以后的支持还说得过去. 验证是Fancy Captcha</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-540" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/4181e657f5d6f03bf43f2967286292bd?s=32&amp;r=X&amp;d=" alt="xue" width="32" height="32" />        <cite class="fn">xue</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-540">March 21st, 2012 at 03:34 am</a>
+            </div>
+    <div class="comment-content">
+    <p>微博秀提示“XXX微博秀好像出了点小问题”</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=540.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-540', 540);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-541" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-541">March 21st, 2012 at 08:50 am</a>
+            </div>
+    <div class="comment-content">
+    <p>非常感谢...没想到新浪还+了个类似密钥的东西.<br>
+已经更新解决了, 改成直接填写代码, 代码里包含密钥, 还可以自定义样式, 哈哈.</p><p>重新下载即可.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-542" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5c26b1ab9bcf0e9575b1369ad379d2bf?s=32&amp;r=X&amp;d=" alt="xue" width="32" height="32" />        <cite class="fn">xue</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-542">March 21st, 2012 at 10:54 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>能提供你用的验证码插件么/？很好看。。我找不到。。。。</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-543" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-543">March 22nd, 2012 at 02:40 am</a>
+            </div>
+    <div class="comment-content">
+    <p>你搜Typecho Fancy Captcha</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-582" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/fced911bad3c55189724d2d5edfd2060?s=32&amp;r=X&amp;d=" alt="powerson" width="32" height="32" />        <cite class="fn"><a href="http://hai.ma" rel="external nofollow">powerson</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-582">April 4th, 2012 at 01:46 am</a>
+            </div>
+    <div class="comment-content">
+    <p>好喜欢这么简洁的主题啊</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=582.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-582', 582);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-583" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-583">April 4th, 2012 at 04:13 am</a>
+            </div>
+    <div class="comment-content">
+    <p>哈哈`谢谢...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-586" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/dd5ad44e8808119b32966b5626d803f2?s=32&amp;r=X&amp;d=" alt="mercuryhg" width="32" height="32" />        <cite class="fn"><a href="http://blog.km-hg.tk" rel="external nofollow">mercuryhg</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-586">April 4th, 2012 at 09:41 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>使用了你提供的主题，报个BUG，分类里面会有一个重复的条目，用其它的主题没有。<br>
+我的网站可以看到。</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=586.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-586', 586);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-588" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-588">April 5th, 2012 at 02:07 am</a>
+            </div>
+    <div class="comment-content">
+    <p>确实有这个问题, 删掉header里的<br><pre>
+&lt;?php $this-&gt;widget('Widget_Metas_Category_List')-&gt;to($categories); ?&gt;
+&lt;?php while($categories-&gt;next()): ?&gt;
+&lt;li&lt;?php if($this-&gt;is('category', $categories-&gt;slug)): ?&gt; class=\&quot;current\&quot;&lt;?php endif; ?&gt;&gt;&lt;a href=&quot;&lt;?php $categories-&gt;permalink(); ?&gt;&quot; title=&quot;&lt;?php $categories-&gt;name(); ?&gt;&quot;&gt;&lt;?php $categories-&gt;name(); ?&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;?php endwhile; ?&gt;
+</pre><br>
+就可以了.<br>感觉是Typecho的bug, 前边调用过->to($**)然后用while($**->next()), 后边再输出的时候就会出重复项. 但导航栏因为要高亮当前页面, 不能直接用parse, 不知道有什么别的办法修复.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-616" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/93ad3c7079aa542eee34b32bf93b4d94?s=32&amp;r=X&amp;d=" alt="MeeSii" width="32" height="32" />        <cite class="fn"><a href="http://www.ichuanyi.com" rel="external nofollow">MeeSii</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-616">June 27th, 2012 at 03:19 am</a>
+            </div>
+    <div class="comment-content">
+    <p>好喜欢你这个代码高亮，能不能单独提供一个插件啊？我自己看了好久都无从下手啊。</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=616.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-616', 616);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-617" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-617">June 27th, 2012 at 07:47 am</a>
+            </div>
+    <div class="comment-content">
+    <p>这...`我抽空研究下吧, 但估计得等放假, 哈哈. 上学太忙了.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-618" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/93ad3c7079aa542eee34b32bf93b4d94?s=32&amp;r=X&amp;d=" alt="MeeSii" width="32" height="32" />        <cite class="fn"><a href="http://www.ichuanyi.com" rel="external nofollow">MeeSii</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-618">June 27th, 2012 at 07:48 am</a>
+            </div>
+    <div class="comment-content">
+    <p>好的好的，今天弄这个代码高亮，整了一天都没像样。。然后随便找了一个。</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-623" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/9db63e2467edfcd0534aa764aa763a90?s=32&amp;r=X&amp;d=" alt="ooon" width="32" height="32" />        <cite class="fn"><a href="http://ooon.me" rel="external nofollow">ooon</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-623">July 17th, 2012 at 12:57 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>博主你好，感谢分享你的主题，我现在正在使用，但是有一个问题想麻烦你，验证码怎么添加上去的，我按照那个插件的说明做还是失败了。。。</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=623.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-623', 623);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-624" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-624">July 18th, 2012 at 11:32 pm</a>
+            </div>
+    <div class="comment-content">
+    <pre>
+&lt;div class=&quot;control-group&quot;&gt;
+    &lt;label class=&quot;control-label&quot; for=&quot;url&quot;&gt;Captcha&lt;/label&gt;
+    &lt;div class=&quot;controls&quot;&gt;
+        &lt;?php FancyCaptcha_Plugin::output(); ?&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</pre>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-625" class="comment-body comment-child comment-level-odd comment-even comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-625">July 18th, 2012 at 11:38 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>加在"提交评论"的div之前应该就可以了<br><pre>
+&lt;div class=&quot;form-actions&quot;&gt;
+	&lt;button type=&quot;submit&quot; class=&quot;btn btn-primary&quot;&gt;&lt;?php _e(\'提交评论\'); ?&gt;&lt;/button&gt;
+&lt;/div&gt;
+</pre>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-629" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/38c6d7897a4e7263b666ed2c995f86ad?s=32&amp;r=X&amp;d=" alt="故作调" width="32" height="32" />        <cite class="fn">故作调</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-629">July 26th, 2012 at 02:56 am</a>
+            </div>
+    <div class="comment-content">
+    <p>非常感谢这个主题，挺喜欢的<br>
+可以自己DIY咩。。。</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=629.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-629', 629);">回复</a>    </div>
+    </li>
+<li id="comment-630" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/38c6d7897a4e7263b666ed2c995f86ad?s=32&amp;r=X&amp;d=" alt="故作调" width="32" height="32" />        <cite class="fn">故作调</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-630">July 26th, 2012 at 02:56 am</a>
+            </div>
+    <div class="comment-content">
+    <p>感谢主题，可以下载自己更改么。。</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=630.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-630', 630);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-631" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-631">July 26th, 2012 at 09:19 am</a>
+            </div>
+    <div class="comment-content">
+    <p>项目在Github上, 请随意fork</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-647" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/ba0405aecfae86382026e3499bada4fa?s=32&amp;r=X&amp;d=" alt="labchy" width="32" height="32" />        <cite class="fn">labchy</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-647">August 20th, 2012 at 10:22 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>放在apache 下面访问报错 错误代码如下<br>
+Fatal error: Using $this when not in object context in /var/www/Trapecho/index.php on line 11<br>
+能否指点一下？</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=647.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-647', 647);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-648" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-648">August 21st, 2012 at 12:51 am</a>
+            </div>
+    <div class="comment-content">
+    <p>这是一个Typecho博客程序用的主题, 不是独立的网页网站, 不能直接打开index.php.</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li id="comment-649" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/ba0405aecfae86382026e3499bada4fa?s=32&amp;r=X&amp;d=" alt="labchy" width="32" height="32" />        <cite class="fn">labchy</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-649">August 21st, 2012 at 01:30 am</a>
+            </div>
+    <div class="comment-content">
+    <p>非常感谢 ~</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-650" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/2d551d8f7e7028aefb4e6b442ed87651?s=32&amp;r=X&amp;d=" alt="秦琴大师" width="32" height="32" />        <cite class="fn"><a href="http://blog.zayl.net" rel="external nofollow">秦琴大师</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-650">August 21st, 2012 at 08:55 am</a>
+            </div>
+    <div class="comment-content">
+    <p>这个主题很好，我悄悄地偷过去了，只是友链那个要怎么弄，还麻烦指点下。</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=650.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-650', 650);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-651" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-651">August 21st, 2012 at 06:19 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>友链插件么? http://www.imhan.com/typecho/</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-652" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/2d551d8f7e7028aefb4e6b442ed87651?s=32&amp;r=X&amp;d=" alt="秦琴大师" width="32" height="32" />        <cite class="fn"><a href="http://blog.zayl.net" rel="external nofollow">秦琴大师</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-652">August 21st, 2012 at 09:16 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>友链插件弄好了，你那个验证码插件我很喜欢，麻烦发个链接给我。谢谢。</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=652.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-652', 652);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-653" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-653">August 21st, 2012 at 10:07 pm</a>
+            </div>
+    <div class="comment-content">
+    <p>http://typecho.us/plugins/comments-fancy-captcha.html<br>
+Fancy Captcha</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-654" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/2d551d8f7e7028aefb4e6b442ed87651?s=32&amp;r=X&amp;d=" alt="秦琴大师" width="32" height="32" />        <cite class="fn"><a href="http://blog.zayl.net" rel="external nofollow">秦琴大师</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-654">August 23rd, 2012 at 04:21 am</a>
+            </div>
+    <div class="comment-content">
+    <p>下载了，但是在调试的时候遇到了一些麻烦，需要你继续知道，麻烦加下我Q406237346</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=654.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-654', 654);">回复</a>    </div>
+        <div class="comment-children">
+        <ol class="comment-list"><li id="comment-655" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5fb3ae4e38be4697f5a8dcfca867b69c?s=32&amp;r=X&amp;d=" alt="咳嗽di小鱼" width="32" height="32" />        <cite class="fn"><a href="index.html" rel="external nofollow">咳嗽di小鱼</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-655">August 23rd, 2012 at 09:51 am</a>
+            </div>
+    <div class="comment-content">
+    <p>抱歉`不加生人...你可以在这里留言, 或者去微博私信我. 不好意思哈`</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li id="comment-660" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/84147bb143d6ba187e59066ecf29872c?s=32&amp;r=X&amp;d=" alt="astaxie" width="32" height="32" />        <cite class="fn">astaxie</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-660">October 23rd, 2012 at 08:47 am</a>
+            </div>
+    <div class="comment-content">
+    <p>我在使用你的主题Typecho过程中，装好之后就出现如下错误： PHP Fatal error:  Using $this when not in object context in wp-content/themes/trapecho/index.php on line 11" while reading response header from upstream</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=660.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-660', 660);">回复</a>    </div>
+    </li>
+<li id="comment-662" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/b2eaae132703845803e9aafe8c13b10b?s=32&amp;r=X&amp;d=" alt="sadf" width="32" height="32" />        <cite class="fn">sadf</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-662">November 27th, 2012 at 03:47 am</a>
+            </div>
+    <div class="comment-content">
+    <p>afsafsafsaf</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=662.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-662', 662);">回复</a>    </div>
+    </li>
+<li id="comment-663" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/d40fe5343bcafa0e7ca9799f2e40eff6?s=32&amp;r=X&amp;d=" alt="验证码绕过测试" width="32" height="32" />        <cite class="fn">验证码绕过测试</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-663">November 27th, 2012 at 04:13 am</a>
+            </div>
+    <div class="comment-content">
+    <p>测试绕过验证码，博主抱歉了</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=663.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-663', 663);">回复</a>    </div>
+    </li>
+<li id="comment-670" class="comment-body comment-parent comment-odd">
+    <div class="comment-author">
+        <img class="avatar" src="http://0.gravatar.com/avatar/2556b70f20c9575ce39f60415ee7bafd?s=32&amp;r=X&amp;d=" alt="锋速软件" width="32" height="32" />        <cite class="fn"><a href="http://fengsu3.net" rel="external nofollow">锋速软件</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-670">December 11th, 2012 at 07:37 am</a>
+            </div>
+    <div class="comment-content">
+    <p>Bootstrap我经常用来做后台面板...相当舒坦</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=670.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-670', 670);">回复</a>    </div>
+    </li>
+<li id="comment-936" class="comment-body comment-parent comment-even">
+    <div class="comment-author">
+        <img class="avatar" src="http://1.gravatar.com/avatar/5b18c9105da7d95d0c28f37438a6081d?s=32&amp;r=X&amp;d=" alt="地铁线路图网" width="32" height="32" />        <cite class="fn"><a href="http://www.tiexian.org/" rel="external nofollow">地铁线路图网</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="Trapecho-boostrap-based-typecho-theme.html#comment-936">July 17th, 2014 at 05:28 am</a>
+            </div>
+    <div class="comment-content">
+    <p>我也在用typecho，小巧玲珑，稍微改了以下默认模板，站现在简洁速度也不错，点击我的昵称可以访问。</p>    </div>
+    <div class="comment-reply">
+        <a href="Trapecho-boostrap-based-typecho-theme.html%3FreplyTo=936.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.reply('comment-936', 936);">回复</a>    </div>
+    </li>
+</ol>            
+            <div class="pagination">
+                            </div>
+            
+                        
+                        <div id="respond-post-86" class="respond">
+            
+            <div class="cancel-comment-reply">
+            <a id="cancel-comment-reply-link" href="Trapecho-boostrap-based-typecho-theme.html#respond-post-86" rel="nofollow" onclick="return TypechoComment.cancelReply();">取消回复</a>            </div>
+            
+            <form class="form-horizontal" method="post" action="http://blog.gregwym.info/Trapecho-boostrap-based-typecho-theme.html/comment?parent=540" id="comment_form">
+                <fieldset>
+                    <legend>Add new comment &raquo;</legend>
+                                        <div class="control-group">
+                        <label class="control-label" for="author">Nick name</label>
+                        <div class="controls">
+                            <input type="text" name="author" id="author" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="mail">E-mail<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" name="mail" id="mail" class="input-large" value="" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Web</label>
+                        <div class="controls">
+                            <input type="text" name="url" id="url" class="input-large" value="" />
+                        </div>
+                    </div>
+                                        <div class="control-group">
+                        <label class="control-label" for="url">Comment</label>
+                        <div class="controls">
+                            <textarea class="input-xlarge" name="text" rows="3"></textarea>
+                            <p class="help-block">Enter your comment here...</p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url">Captcha</label>
+                        <div class="controls">
+                            <img src="action/captcha" alt="captcha" onclick="this.src = this.src + '?' + Math.random()" style="cursor: pointer" title="点击图片刷新验证码" /><br /><input type="text" class="captcha" name="captcha_code" /> <strong>请输入验证码</strong>							                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Submit comment</button>
+                    </div>
+                </fieldset>
+            </form>
+            </div>
+            
+
+        </div>    </div><!-- end #content-->
+    <div class="span3" id="sidebar">
+    <div class="widget_search">
+        <form method="post" id="searchform" class="form-search">
+            <input type="text" class="span2" name="s" id="s" />
+            <button type="submit" class="btn" id="searchsubmit">Search</button>
+        </form>
+    </div>
+    
+        
+                    <div class="widget">
+            <h3>Related Posts</h3>
+                        <ul>
+                            <li><a href="software-architecture-CS446-midterm.html" title="Software Architecture - CS 446 Midterm Outline">Software Architecture - CS 446 Midterm Outline</a></li>
+                            <li><a href="typecho-markdown-editor.html" title="Typecho用Markdown编辑器">Typecho用Markdown编辑器</a></li>
+                            <li><a href="shuo-shuo-typecho`.html" title="说说Typecho`">说说Typecho`</a></li>
+                        </ul>
+        </div>
+            
+    
+        <div class="widget">
+        <h3>Recent Comments</h3>
+        <ul>
+                                    <li><a href="github-you-should-have-told-me-earlier.html#comment-952">payday loans</a>: wfxqtdq</li>
+                        <li><a href="Trapecho-boostrap-based-typecho-theme.html#comment-936">地铁线路图网</a>: 我也在用typecho，小巧玲珑，稍微改了以下默认模板，站现在简洁速度也不错，点击我的昵称可以访问。</li>
+                        <li><a href="about.html#comment-930">ramble</a>: 博客 ，请问如何显示显示文章前3段的摘要  不打乱格式</li>
+                        <li><a href="about.html#comment-874">清源</a>: 看来暂时只能看着用了，google的高亮的比较不明显。</li>
+                        <li><a href="about.html#comment-870">清源</a>: 大哥呀，主题这几天我看着感觉用中文书写标题字体太大了，正文的字体也太小了，估计还是适合用英文，不知道...</li>
+                    </ul>
+    </div>
+        
+        <div class="widget">
+    		<h3>Labels</h3>
+        <ul>
+                                    <a href="tag/algorithm/index.html" class="size-20">algorithm</a>
+                        <a href="tag/review/index.html" class="size-20">review</a>
+                        <a href="tag/cs240/index.html" class="size-10">cs240</a>
+                        <a href="tag/server/index.html" class="size-10">server</a>
+                        <a href="tag/VPS/index.html" class="size-10">VPS</a>
+                        <a href="tag/code/index.html" class="size-5">code</a>
+                        <a href="tag/database/index.html" class="size-5">database</a>
+                        <a href="tag/cs348/index.html" class="size-5">cs348</a>
+                        <a href="tag/typecho/index.html" class="size-5">typecho</a>
+                        <a href="tag/nginx/index.html" class="size-5">nginx</a>
+                        <a href="tag/search/index.html" class="size-5">search</a>
+                        <a href="tag/GUI/index.html" class="size-5">GUI</a>
+                        <a href="tag/linux/index.html" class="size-5">linux</a>
+                        <a href="tag/java/index.html" class="size-5">java</a>
+                        <a href="tag/DNS/index.html" class="size-5">DNS</a>
+                        <a href="tag/blog/index.html" class="size-5">blog</a>
+                        <a href="tag/apple/index.html" class="size-5">apple</a>
+                        <a href="tag/cs241/index.html" class="size-5">cs241</a>
+                        <a href="tag/compiler/index.html" class="size-5">compiler</a>
+                        <a href="tag/sql/index.html" class="size-5">sql</a>
+                    </ul>
+		</div>
+    
+    
+        <div class="widget">
+        <h3>Archives</h3>
+        <ul>
+            <li><a href="2013/09/index.html">September 2013</a></li>
+<li><a href="2012/12/index.html">December 2012</a></li>
+<li><a href="2012/11/index.html">November 2012</a></li>
+<li><a href="2012/08/index.html">August 2012</a></li>
+<li><a href="2012/06/index.html">June 2012</a></li>
+<li><a href="2012/04/index.html">April 2012</a></li>
+<li><a href="2012/03/index.html">March 2012</a></li>
+<li><a href="2012/02/index.html">February 2012</a></li>
+<li><a href="2011/12/index.html">December 2011</a></li>
+<li><a href="2011/11/index.html">November 2011</a></li>
+<li><a href="2011/10/index.html">October 2011</a></li>
+<li><a href="2011/06/index.html">June 2011</a></li>
+<li><a href="2011/05/index.html">May 2011</a></li>
+<li><a href="2011/04/index.html">April 2011</a></li>
+<li><a href="2011/03/index.html">March 2011</a></li>
+        </ul>
+    </div>
+    
+    
+        <div class="widget">
+        <h3>Others</h3>
+        <ul>
+                        <li class="last"><a href="http://blog.gregwym.info/admin/login.php">Login</a></li>
+                        <li><a href="http://validator.w3.org/check/referer">Valid XHTML</a></li>
+        </ul>
+    </div>
+    
+    </div><!-- end #sidebar -->
+    
+</div>
+<footer>
+    <p>
+        Powered by <a href="http://typecho.org/">Typecho</a>. 
+        <a href="http://dolast.com/pages/trapecho">Trapecho</a> theme by <a href="index.html">咳嗽di小鱼</a>. 
+        Hosting on <a href="https://www.digitalocean.com/?refcode=b846692d6a3a">Digital Ocean</a>
+    </p>
+</footer><!-- end #footer -->
+
+</div>
+</div>
+
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/jquery-1.7.1.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/bootstrap.min.js"></script>
+<script src="http://blog.gregwym.info/usr/themes/trapecho/js/prettify.js"></script>
+<script type="text/javascript">
+    // fix navbar on scroll
+    var $win = $(window)
+      , $nav = $('.navbar')
+      , navTop = $('.navbar').length && $('.navbar').offset().top - 10
+      , isFixed = 0
+
+    processScroll()
+
+    $win.on('scroll', processScroll)
+
+    function processScroll() {
+      var i, scrollTop = $win.scrollTop()
+      if (scrollTop >= navTop && !isFixed) {
+        isFixed = 1
+        $nav.addClass('navbar-fixed-top')
+      } else if (scrollTop <= navTop && isFixed) {
+        isFixed = 0
+        $nav.removeClass('navbar-fixed-top')
+      }
+    }
+    
+    $('.page-navigator li:not(:has(a))').html('<a>...</a>');
+    $('.page-navigator .current').addClass('active');
+    
+        $('pre').addClass('prettyprint linenums');
+        $('.entry-content a').attr('target','_blank');
+</script>
+</body>
+</html>
+
